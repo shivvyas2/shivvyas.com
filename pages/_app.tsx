@@ -47,7 +47,7 @@ export default function App({ Component, pageProps }: AppProps) {
                     property="og:description"
                     content="Discover my web development and design portfolio. I craft beautiful, responsive websites that bring ideas to life."
                 />
-                <meta property="og:url" content="https://shiv-vyas.vercel.app/" />
+                <meta property="og:url" content="https://shivvyas-com.vercel.app" />
                 <meta property="og:type" content="website" />
             </Head>
 
@@ -91,3 +91,4 @@ export default function App({ Component, pageProps }: AppProps) {
         </>
     );
 }
+
