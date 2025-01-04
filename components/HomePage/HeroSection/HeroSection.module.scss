@@ -89,6 +89,45 @@
       }
     }
   }
+  /* Button Container */
+  .button-container {
+    z-index: 10; // Place above other elements
+    position: absolute;
+    bottom: 2rem; // Position near the bottom
+    left: 50%; // Center horizontally
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    div {
+      width: 35px;
+      height: 64px;
+      border: 4px solid #5cb8e4;
+      border-radius: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 4px;
+
+      .motion-circle {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #5cb8e4;
+      }
+    }
+
+    @media (max-width: 768px) {
+      bottom: 1.5rem; // Adjust for smaller screens
+      transform: translateX(-50%) scale(0.8); // Scale button down
+    }
+
+    @media (max-width: 480px) {
+      bottom: 1rem;
+      transform: translateX(-50%) scale(0.7);
+    }
+  }
 
   /* Marquee */
   .marquee {
