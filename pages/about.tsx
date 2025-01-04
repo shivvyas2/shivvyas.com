@@ -13,8 +13,9 @@ export default function AboutPage() {
             </Head>
             <AboutHeroSection />
             <AboutDetailsSection />
-            <AwardSection />
+          
             <BookCallSection />
         </>
     );
 }
+

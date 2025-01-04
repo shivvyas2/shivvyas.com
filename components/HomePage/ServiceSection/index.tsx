@@ -16,9 +16,9 @@ interface Service {
 // Define the services data
 const services: Service[] = [
     {
-        title: "Strategy",
+        title: "Mobile Application Development",
         numbering: "01",
-        listItems: ["Discovery", "Research", "Analysis", "Consultation", "Optimization"],
+        listItems: ["Discovery", "Research", "iOS", "Android", "React Native"],
     },
     {
         title: "Design",
@@ -28,12 +28,12 @@ const services: Service[] = [
     {
         title: "Development",
         numbering: "03",
-        listItems: ["Frontend", "Framer", "API Integration", "Testing", "Deployment"],
+        listItems: ["Frontend", "React", "API Integration", "Testing", "Deployment","Full Stack"],
     },
     {
-        title: "Production",
+        title: "Others",
         numbering: "04",
-        listItems: ["3D modeling", "VR Experiences", "Visualization", "Motion Graphics", "Animations"],
+        listItems: ["3D Websites","Visualization", "Music Production", "Animations"],
     },
 ];
 
@@ -197,3 +197,4 @@ export default function ServiceSection() {
         </section>
     );
 }
+

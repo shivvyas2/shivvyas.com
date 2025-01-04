@@ -51,15 +51,14 @@ export default function ContactSection() {
             <section className={styles.linkSection}>
                 <p ref={textRef}>{splitText("Contact me on")}</p>
                 <div className={styles.wrapper}>
-                    <Link href="mailto:mrzaidsaeed@gmail.com">Email</Link>
-                    <Link href="https://www.instagram.com/zaidkhan3419/" target="_blank">Instagram</Link>
-                    <Link href="https://www.facebook.com/z.khan3419/" target="_blank">Facebook</Link>
-                    <Link href="https://www.linkedin.com/in/zaid-k-6a824310b/" target="_blank">Linkedin</Link>
-                    <Link href="https://dribbble.com/zaidkhan3419" target="_blank">Dribble</Link>
-                    <Link href="https://www.behance.net/zaidkhan3419" target="_blank">Behance</Link>
-                    <Link href="https://www.framer.com/marketplace/creator/zaid-khan/" target="_blank">Framer</Link>
+                    <Link href="mailto:shivvyas0209@gmail.com">Email</Link>
+                    <Link href="https://www.instagram.com/shivvyas_/" target="_blank">Instagram</Link>
+                    <Link href="https://www.linkedin.com/in/shivvyas/" target="_blank">Linkedin</Link>
+                    <Link href="https://www.youtube.com/channel/UCLsQR29bzbW9xQkg4hX3Mfw" target="_blank">Youtube</Link>
+                    <Link href="https://github.com/shivvyas2" target="_blank">Github</Link>
                 </div>
             </section>
         </>
     );
 }
+

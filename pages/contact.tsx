@@ -6,10 +6,11 @@ export default function ContactPage() {
     return (
         <>
             <Head>
-                <title>Kael | Contact</title>
+                <title>Shiv | Contact</title>
             </Head>
             <ContactSection />
             <BookCallSection />
         </>
     )
 }
+
