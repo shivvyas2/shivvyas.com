@@ -1,43 +1,46 @@
 export const projects = [
   {
     // For Post
-    title: "Electric Car",
-    slug: "electric-car",
-    category: ["UIUX Design", "Branding"],
+    title: "Futeur AI",
+    slug: "futeur-ai",
+    category: [ "React Development","UIUX Design", "Branding",],
     img: "/images/project1_1.jpeg",
 
     // Sticky
-    owner: "Krystyna Pyatashova",
-    date: "Nov 2, 2024",
-    services: "UIUX design, Branding",
-    duration: "28 Days",
-    budget: "3000$",
-    live: "https://frontendzaid.lemonsqueezy.com/",
+    owner: "Futeur AI",
+    date: "Jan 6, 2025",
+    services: "React Development, UIUX design, Branding",
+    duration: "4 Months",
+   
+    live: "https://www.futeur.ai/",
 
     // Scroll
     overview:
-      "Electric Car is a forward-thinking transportation solution that aims to revolutionize the driving experience through intuitive design and sustainable branding. The project’s goal was to create a seamless user experience for electric vehicle owners while reflecting a modern, eco-friendly brand identity. The design needed to be not only functional but also engaging, conveying the innovative and sustainable values that the electric vehicle represents.",
-    objective:
-      "The primary objective of this project was to design a user interface that mirrors the futuristic and sleek nature of electric vehicles, while maintaining an intuitive experience for the user. This involved a deep focus on creating an easy-to-navigate mobile app and in-car dashboard, each serving the needs of the driver with real-time data on battery life, performance, and navigation. At the same time, the branding had to evoke a sense of trust, innovation, and environmental consciousness.",
-    process:
-      "The design journey began with extensive user research, where we gathered insights from electric vehicle owners to understand their unique needs. By analyzing competitor solutions and conducting interviews, we identified the most important features users expect from an electric vehicle’s digital interface. Armed with this knowledge, we moved to the wireframing and prototyping phase, where we mapped out key user flows that would ensure a smooth, efficient, and enjoyable user experience. In crafting the user interface, we employed a clean, minimalist aesthetic that aligned with the forward-thinking nature of the electric vehicle. The color palette was chosen to highlight eco-consciousness, combining shades of green with metallic accents and deep tones to reflect both sustainability and luxury. The branding design, which included a sleek logo and modern typography, communicated the brand’s commitment to advanced technology and a greener future. Every element, from the visual design to the app features, was made with the goal of simplifying the user experience while maintaining a high-tech, luxury feel.",
-    impact:
-      "The branding for Electric Car was carefully designed to communicate the company’s dedication to sustainability and cutting-edge technology. The visual identity was clean, modern, and designed to appeal to a tech-savvy, eco-conscious audience. This consistency in branding across all touchpoints—whether digital or physical—helped establish a strong, recognizable brand image. The design wasn’t just about aesthetics; it was about creating an experience that aligned with the values of those who drive electric vehicles: forward-thinking, environmentally responsible, and connected to the future.",
+    "Futeur AI is a cutting-edge business intelligence solution specifically designed for small and medium-sized enterprises (SMEs). By harnessing real-time data analytics and advanced AI algorithms, Futeur AI empowers businesses to predict trends, optimize operations, and accelerate growth. This project aimed to create a seamless, forward-thinking platform that embodies innovation and accessibility, reflecting the brand’s commitment to democratizing AI for everyday business use.",
+
+  objective:
+    "Our primary objective was to design a user-friendly interface and brand identity that resonates with time-strapped entrepreneurs and business owners. The platform had to be intuitive enough for non-technical users while offering robust, data-driven insights for strategic decisions. From forecasting to survival feasibility analysis, Futeur AI’s features were developed to give SMEs an edge in a rapidly evolving marketplace. Every element needed to reinforce trust, forward-thinking innovation, and tangible value.",
+
+  process:
+    "The journey began with extensive market research and user interviews to understand the unique hurdles small businesses face. We then mapped out core features—real-time analytics dashboards, predictive modeling, and social-economic trend tracking—to help business owners make data-backed decisions quickly. During the design phase, wireframes and prototypes were iterated to ensure a frictionless user flow. A sleek, modern aesthetic was chosen to signal innovation and accessibility, using a blend of vibrant accent colors and cooler base tones, reflecting Futeur AI’s balance between approachability and cutting-edge technology. Branding elements, including a bold logo and contemporary typography, further emphasized the sense of dynamic progress and reliability. Throughout development, we consistently revisited user feedback to refine the platform’s overall experience, ensuring it remained as practical as it was futuristic.",
+
+  impact:
+    "Futeur AI’s final design speaks directly to a tech-savvy yet time-constrained audience, clearly communicating the brand’s dedication to real-time, predictive insights. The cohesive brand identity—across platform dashboards, website materials, and marketing assets—reinforces trust and authority in the AI-driven solutions space. By aligning the platform’s functionality with a forward-focused visual design, Futeur AI successfully positions itself as the go-to partner for small businesses seeking sustainable growth and operational resilience, ultimately bridging the gap between cutting-edge innovation and everyday business needs."
   },
   {
     // For Post
-    title: "Immersive VR",
-    slug: "immersive-vr",
-    category: ["Product", "Branding"],
+    title: "Ghor Kalyug",
+    slug: "ghor-kalyug",
+    category: ["Node.js", "React Development", "Backend Development", "Google Cloud Platform"],
     img: "/images/project2_1.jpeg",
 
     // Sticky
-    owner: "Tim Davic",
-    date: "Oct 28, 2024",
-    services: "Product, Branding",
-    duration: "15 Days",
+    owner: "Shiv Vyas",
+    date: "Dec 12, 2024",
+    services: "Backend Development, Frontend Development, Google Cloud Platform",
+    duration: "20 Days",
     budget: "1500$",
-    live: "https://frontendzaid.lemonsqueezy.com/",
+    live: "https://frontend-dot-gen-lang-client-0403310649.ue.r.appspot.com/home",
 
     //Scroll
     overview:
@@ -125,3 +128,4 @@ export const projects = [
       "Radiant Blooms has resonated with art lovers and nature enthusiasts alike, finding its place in both private collections and gallery exhibitions. The series has been praised for its vibrant use of color and its ability to capture the essence of nature in a way that feels both fresh and timeless. These illustrations have been used across a variety of formats, from wall art to prints, offering versatile applications that bring a sense of joy and beauty to any space.",
   },
 ];
+
