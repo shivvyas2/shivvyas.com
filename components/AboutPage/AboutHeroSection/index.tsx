@@ -59,10 +59,10 @@ export default function AboutHeroSection() {
             <div className={styles.wrapper}>
                 <div className={styles.text}>
                     <h2 ref={headingRef}>
-                        {splitText("Over 8 years of experience, continuously pushing the boundaries of design and development.")}
+                        {splitText("Over 3 years of experience, crafting applications for the future.")}
                     </h2>
                     <h2 ref={heading2Ref}>
-                        {splitText("Enthusiastic about crafting seamless experiences that combine ideas, visuals, design, and development.")}
+                        {splitText("Let's build something amazing together.")}
                     </h2>
                 </div>
 
@@ -73,3 +73,4 @@ export default function AboutHeroSection() {
         </section>
     );
 }
+

@@ -21,18 +21,34 @@ const animateText = (ref: React.RefObject<HTMLElement>, startOffset: string = '7
 };
 
 // Prepare data for rendering
-const tools = ['photoshop', 'illustrator', 'figma', 'after effects', 'HTML', 'CSS', 'SCSS', 'Tailwind', 'JS', 'React', 'NextJS', 'ThreeJS', 'Framer', 'spline', 'blender'];
+const tools = ['ios','android', 'React-Native','photoshop', 'figma', 'after effects', 'HTML', 'CSS', 'SCSS', 'Tailwind', 'JS', 'React', 'NextJS', 'ThreeJS', 'spline', 'Framer Motion', 'NodeJS', 'Express', 'MongoDB', 'Firebase', 'REST', 'Postman', 'Heroku',];
 const experiences = [
     {
-        position: "Web Developer / Motion Designer",
-        company: "at Digiverse Studio",
-        period: "sep 2018 - present"
+        position: "Full Stack Mobile Developer/ Frontend Developer",
+        company: "at FuteurAI",
+        period: "Aug 2024 - present"
     },
     {
-        position: "UIUX Designer / Web Developer",
-        company: "at Innvoise Agency",
-        period: "jan 2016 - aug 2018"
+        position: "Lab Coordinator Assistant",
+        company: "at Pace University",
+        period: "Apr 2024 - Aug 2024"
+    },
+    {
+        position: "Co-Founder",
+        company: "at Aero Delivery System",
+        period: "May 2022 - Dec 2023"
+    },
+    {
+        position: "React Native Developer",
+        company: "at Ordex Technology",
+        period: "Feb 2023 - Jul 2023"
+    },
+    {
+        position: "Flutter Developer",
+        company: "at BrainyBeam",
+        period: "Jun 2022 - Jul 2022"
     }
+
 ];
 
 export default function AboutDetailsSection() {
@@ -89,7 +105,7 @@ export default function AboutDetailsSection() {
     return (
         <section className={styles.aboutDetails}>
             <h2 ref={headingRef}>
-                {splitText("I focus on understanding your goals to create a visually stunning, user-friendly website that performs flawlessly. Combining creative design and cutting-edge technology, I deliver results that make an impact from day one.")}
+                {splitText("By aligning creative design with the latest technology—and always prioritizing your specific goals—I craft visually captivating, user-friendly websites that run flawlessly and deliver real results from day one.")}
             </h2>
 
             {/* Toolbox */}
@@ -122,3 +138,4 @@ export default function AboutDetailsSection() {
         </section>
     );
 }
+

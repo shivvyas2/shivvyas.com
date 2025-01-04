@@ -18,9 +18,10 @@ export default function HomePage() {
             <AboutSection />
             <ProjectSection />
             <ServiceSection />
-            <AwardSection />
-            <DribbleSection />
+            
+           
             <BookCallSection />
         </>
     );
 }
+
