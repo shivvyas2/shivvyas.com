@@ -28,6 +28,9 @@
       height: 100%;
       object-fit: cover;
     }
+    @media (max-width: 768px) {
+      object-fit: contain;  
+    }
   }
 
   /* Text Container for Top-Right Placement */
@@ -39,16 +42,15 @@
     text-align: left; // Align text to the right
 
     @media (max-width: 768px) {
-      top: 1rem;
-      right: 1rem;
+      top: 5rem;
+      left: 2rem;
     }
 
     h1 {
       font-weight: 900;
       color: white;
       font-size: 80px;
-      line-height: 98px;
-
+    
       span {
         color: #5cb8e4; // Highlighted color for the name
       }
@@ -89,58 +91,29 @@
       }
     }
   }
-  /* Button Container */
-  .button-container {
-    z-index: 10; // Place above other elements
-    position: absolute;
-    bottom: 2rem; // Position near the bottom
-    left: 50%; // Center horizontally
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    div {
-      width: 35px;
-      height: 64px;
-      border: 4px solid #5cb8e4;
-      border-radius: 3rem;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 4px;
-
-      .motion-circle {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: #5cb8e4;
-      }
-    }
-
-    @media (max-width: 768px) {
-      bottom: 1.5rem; // Adjust for smaller screens
-      transform: translateX(-50%) scale(0.8); // Scale button down
-    }
-
-    @media (max-width: 480px) {
-      bottom: 1rem;
-      transform: translateX(-50%) scale(0.7);
-    }
-  }
-
+ 
   /* Marquee */
   .marquee {
     position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100vw;
+    bottom: 10%;
+    width: 100%;
     overflow: hidden;
-    display: flex;
     white-space: nowrap;
-    z-index: 1; // Keep it below the text
 
+    .content {
+      display: inline-block;
+      font-size: 1.5rem;
+      color: #fff;
+    }
+
+    &.mobileMarquee {
+      text-align: center;
+      font-size: 1rem; // Smaller font for mobile
+      color: #fff;
+      position: absolute;
+      bottom: 20%;
+      width: 100%;
+    }
     .content {
       font-size: 12vw;
       letter-spacing: -0.8rem;
