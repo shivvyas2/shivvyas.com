@@ -53,7 +53,7 @@ const ComputersCanvas = () => {
       camera={{ position: [20, 3, 5], fov: 25 }}
       gl={{ preserveDrawingBuffer: true }}
     >
-      
+     
         <OrbitControls
           enableZoom={false}
           maxPolarAngle={Math.PI / 2}
@@ -61,7 +61,7 @@ const ComputersCanvas = () => {
         />
         <Environment preset="city" /> {/* Adds an environment map */}
         <Computers isMobile={isMobile} />
-    
+  
       <Preload all />
     </Canvas>
   );
