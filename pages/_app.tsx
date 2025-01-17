@@ -45,7 +45,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 <meta property="og:title" content="Shiv Vyas | Web Developer & Mobile Developer" />
                 <meta
                     property="og:description"
-                    content="Discover my web development and design portfolio. I craft beautiful, responsive websites that bring ideas to life."
+                    content="Discover my react web development and design portfolio. I craft beautiful, responsive websites that bring ideas to life."
                 />
                 <meta property="og:url" content="https://shivvyas-com.vercel.app" />
                 <meta property="og:type" content="website" />

@@ -10,6 +10,8 @@
   overflow: hidden;
   position: relative;
 
+  background-size: cover; // Ensure the image covers the section
+
   @media (max-width: 600px) {
     height: 90vh;
   }
@@ -95,7 +97,7 @@
   /* Marquee */
   .marquee {
     position: absolute;
-    bottom: 10%;
+    bottom: 30%;
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
