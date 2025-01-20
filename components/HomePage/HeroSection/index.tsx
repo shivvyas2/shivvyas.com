@@ -3,17 +3,18 @@ import { gsap } from "@/libs/gsap";
 import styles from "./HeroSection.module.scss";
 import ComputersCanvas from "@/components/canvas/Computer";
 import { motion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 
 export default function HeroSection() {
   const marqueeRef = useRef<HTMLDivElement | null>(null);
   const marqueeTextRef = useRef<HTMLDivElement | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  const scrollToNext = () => {
-    const nextSection = document.getElementById("about");
-    if (nextSection) {
-      nextSection.scrollIntoView({ behavior: "smooth" });
-    }
+  const handleScroll = () => {
+    document.getElementById('about')?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
   };
 
   useEffect(() => {
@@ -79,25 +80,29 @@ export default function HeroSection() {
         </div>
       )}
 
-      {/* Scroll to Next Section Button */}
-      <div className='absolute xs:bottom-10 bottom-12 w-full flex justify-center items-center'>
-      <a href='#about'>
-        <div className='w-[35px] h-[64px] rounded-3xl border-4 border-[#5CB8E4] flex justify-center items-start p-2'>
+      {/* Scroll Down Button */}
+      <div 
+        className="absolute left-1/2 bottom-10 -translate-x-1/2 z-[9999] cursor-pointer pointer-events-auto group"
+        onClick={handleScroll}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.5 }}
+          className="bg-[#5CB8E4]/10 backdrop-blur-sm p-3 rounded-full group-hover:bg-[#5CB8E4]/20 transition-all group-hover:scale-110 border border-[#5CB8E4]/20"
+        >
           <motion.div
-            animate={{
-              y: [0, 24, 0],
-            }}
+            animate={{ y: [0, 8, 0] }}
             transition={{
               duration: 1.5,
               repeat: Infinity,
               repeatType: "loop",
             }}
-            className='w-3 h-3 rounded-full bg-[#5CB8E4] mb-1'
-          />
-        </div>
-      </a>
-    </div>
+          >
+            <ChevronDown className="w-6 h-6 text-[#5CB8E4]" strokeWidth={2.5} />
+          </motion.div>
+        </motion.div>
+      </div>
     </section>
   );
 }
-
