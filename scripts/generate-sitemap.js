@@ -13,58 +13,22 @@ const BASE_URL = 'https://shivvyas.com';
 async function generateSitemap() {
   const currentDate = new Date().toISOString().split('T')[0];
 
-  const sitemap = `
-    <?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-      <!-- Static pages -->
-      <url>
-        <loc>${BASE_URL}</loc>
-        <lastmod>${currentDate}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
-      </url>
-      <url>
-        <loc>${BASE_URL}/about</loc>
-        <lastmod>${currentDate}</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-      </url>
-      <url>
-        <loc>${BASE_URL}/contact</loc>
-        <lastmod>${currentDate}</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-      </url>
-      <url>
-        <loc>${BASE_URL}/projects</loc>
-        <lastmod>${currentDate}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.9</priority>
-      </url>
-      
-      <!-- Dynamic project pages -->
-      ${projects
-        .map((project) => `
-        <url>
-          <loc>${BASE_URL}/projects/${project.slug}</loc>
-          <lastmod>${currentDate}</lastmod>
-          <changefreq>monthly</changefreq>
-          <priority>0.7</priority>
-        </url>
-      `)
-        .join('')}
-    </urlset>
-  `;
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>${BASE_URL}</loc><lastmod>${currentDate}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+<url><loc>${BASE_URL}/about</loc><lastmod>${currentDate}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>${BASE_URL}/contact</loc><lastmod>${currentDate}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>${BASE_URL}/projects</loc><lastmod>${currentDate}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>${projects
+    .map(
+      (project) =>
+        `<url><loc>${BASE_URL}/projects/${project.slug}</loc><lastmod>${currentDate}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`
+    )
+    .join('')}</urlset>`;
 
-  const prettierConfig = await prettier.resolveConfig('./.prettierrc');
-  const formattedSitemap = await prettier.format(sitemap, {
-    ...prettierConfig,
-    parser: 'html',
-  });
-
+  // Write the sitemap without prettier formatting to keep it compact
   fs.writeFileSync(
     path.join(process.cwd(), 'public', 'sitemap.xml'),
-    formattedSitemap
+    sitemap
   );
 }
 
