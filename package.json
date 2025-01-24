@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node ./scripts/generate-sitemap.js",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-sitemap": "node ./scripts/generate-sitemap.js"
   },
   "dependencies": {
     "@react-three/drei": "^9.120.5",
@@ -15,6 +16,7 @@
     "@studio-freight/react-lenis": "^0.0.47",
     "framer-motion": "^11.15.0",
     "gsap": "^3.12.5",
+    "lucide-react": "^0.473.0",
     "next": "14.2.15",
     "react": "^18",
     "react-dom": "^18",
@@ -28,6 +30,7 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
+    "prettier": "^3.4.2",
     "typescript": "^5"
   }
 }

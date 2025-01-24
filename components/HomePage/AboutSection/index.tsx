@@ -64,7 +64,7 @@ export default function AboutSection() {
     }, []);
 
     return (
-        <section className={styles.about}>
+        <section id="about" className={`${styles.about} relative w-full h-screen mx-auto`}>
             <div className={styles.container}>
                 <div ref={taglineRef}>
                   
@@ -79,4 +79,3 @@ export default function AboutSection() {
         </section>
     );
 }
-
