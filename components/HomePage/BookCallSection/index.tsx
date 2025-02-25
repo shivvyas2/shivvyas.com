@@ -57,7 +57,7 @@ export default function BookCallSection() {
                         {splitText("Ready to Transform Your Vision?")}
                     </h2>
                     <p ref={paragraphRef}>
-                        {splitText("Let's discuss how we can bring your ideas to life. Book a quick call with our team, and we'll guide you through the next steps.")}
+                        {splitText("Let's discuss how we can bring your ideas to life. Book a quick call with me.")}
                     </p>
                     <div className={styles.btnSpace} ref={btnWrapperRef}>
                         <Button text="Book a call" href="https://calendly.com/shiv-futeur/30min" targetBlank={true} />
