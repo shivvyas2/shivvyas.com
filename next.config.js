@@ -13,15 +13,8 @@ const nextConfig = {
         destination: 'https://shivvyas.com/:path*',
         permanent: true,
       }
-            type: 'host',
-            value: 'www.shivvyas.com',
-          },
-        ],
-        destination: 'https://shivvyas.com/:path*',
-        permanent: true,
-      },
-    ]
-  },
-}
+    ];
+  }
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
