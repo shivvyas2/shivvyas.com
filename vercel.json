@@ -1,13 +1,7 @@
 {
   "redirects": [
     {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.shivvyas.com"
-        }
-      ],
+      "source": "https://www.shivvyas.com/:path*",
       "destination": "https://shivvyas.com/:path*",
       "permanent": true
     }
