@@ -53,32 +53,13 @@ export default function HeroSection() {
           Hi, I'm <span>Shiv</span>
         </h1>
         <p>
-          I am a <span>Software Developer</span> based in New York, currently interning at a fintech company. <br />
+          I am a <span>Software Developer</span> based in New York, currently interning at <span>FuteurAI</span>. <br />
         </p>
       </div>
-
       {/* 3D Computer Background */}
       <div className={styles.background}>
         <ComputersCanvas />
       </div>
-
-      {/* Marquee */}
-      {!isMobile && (
-        <div className={styles.marquee} ref={marqueeRef}>
-          <div className={styles.content} ref={marqueeTextRef}>
-            &nbsp;Shiv Vyas - Shiv Vyas - Shiv Vyas - Shiv Vyas - Shiv Vyas -
-            Shiv Vyas - Shiv Vyas - Shiv Vyas - Shiv Vyas - Shiv Vyas - Shiv Vyas
-            - Shiv Vyas - Shiv Vyas - Shiv Vyas - Shiv Vyas -
-          </div>
-        </div>
-      )}
-      {isMobile && (
-        <div className={`${styles.marquee} ${styles.mobileMarquee}`}>
-          <div className={styles.content}>
-            Shiv Vyas - Software Developer
-          </div>
-        </div>
-      )}
 
       {/* Scroll Down Button */}
       <div 
@@ -106,3 +87,4 @@ export default function HeroSection() {
     </section>
   );
 }
+

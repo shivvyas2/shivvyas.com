@@ -64,12 +64,34 @@ export default function AboutHeroSection() {
                     <h2 ref={heading2Ref}>
                         {splitText("Let's build something amazing together.")}
                     </h2>
+                    <div className={styles.resumeDownload}>
+                
+                <a 
+                    href="/resume/ShivVyas_Resume.pdf" 
+                    download
+                    className={styles.downloadButton}
+                    onClick={(e) => {
+                        // Prevent download if file doesn't exist
+                        const link = e.currentTarget;
+                        fetch(link.href).then(response => {
+                            if (!response.ok) {
+                                e.preventDefault();
+                                alert('Resume will be available soon!');
+                            }
+                        });
+                    }}
+                >
+                    Download Resume
+                </a>
+            </div>
                 </div>
-
+               
                 <div className={styles.image} ref={imageRef}>
                     <Image src='/images/about.jpeg' alt='Shiv Vyas' width={500} height={500} unoptimized />
                 </div>
+                
             </div>
+            
         </section>
     );
 }
