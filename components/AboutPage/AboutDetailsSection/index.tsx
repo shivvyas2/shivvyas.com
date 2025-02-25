@@ -107,6 +107,7 @@ export default function AboutDetailsSection() {
             <h2 ref={headingRef}>
                 {splitText("By aligning creative design with the latest technology—and always prioritizing your specific goals—I craft visually captivating, user-friendly websites that run flawlessly and deliver real results from day one.")}
             </h2>
+           
 
             {/* Toolbox */}
             <div className={styles.Toolbox}>
