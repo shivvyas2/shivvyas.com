@@ -1,6 +1,90 @@
 export const projects = [
   {
     // For Post
+    title: "Inhale",
+    slug: "inhale",
+    category: [ "React Development","iOS Development", "Android Development","Clerk"],
+    img: "/images/Inhale.png",
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "February 12, 2025",
+    services: "React Development, iOS Development, Android Development, Clerk",
+    duration: "2 Days",
+   
+    live: "https://github.com/shivvyas2/Inhale-Breathing-App",
+
+    // Scroll
+    overview:
+    "Inhale is a comprehensive breathing and meditation application that builds upon the foundation of Calm Pulse. The platform offers guided sessions with customizable breathing techniques tailored to specific user needs such as focus, relaxation, and sleep improvement. Featuring techniques like Box Breathing and 4-7-8, Inhale enhances the meditation experience with haptic feedback synchronized to breathing patterns, allowing users to practice with their eyes closed. The app incorporates engagement features like daily streaks and point rewards for completed sessions, while also supporting local artists by integrating their focus tracks into the meditation experience.",
+
+  objective:
+    "Our primary objective was to create an accessible, feature-rich breathing and meditation platform that could serve users across various needs and preferences. The solution needed to provide personalized experiences while maintaining ease of use, with techniques specifically designed for different mental states. Each feature was crafted to enhance user engagement, promote consistent practice, and deliver tangible benefits for mental wellbeing through guided breathing exercises.",
+
+  process:
+    "Development began by expanding on the foundation of the Calm Pulse app, enhancing its core functionality with additional features. We focused on implementing customizable breathing techniques tailored to specific wellness goals, creating an intuitive interface for session guidance. The team incorporated haptic feedback technology to allow for eyes-closed practice, significantly enhancing the immersion of the breathing experience. We integrated mood tracking capabilities and personalized recommendations based on user history, along with motivation-enhancing features like daily streaks and completion points. Throughout the HackNYU event, team members Vighanesh Gaund and Adam Soliman contributed significantly to evolving the application, refining the user experience based on feedback and testing. The collaboration resulted in a functional prototype demonstrating the app's core capabilities.",
+
+  impact:
+    "Inhale addresses the growing need for accessible mental wellness tools by providing guided breathing techniques that can be practiced anywhere, anytime. The application empowers users to incorporate effective stress-management practices into their daily routines, potentially improving focus, relaxation, and sleep quality. By including features that encourage consistent practice through streaks and rewards, Inhale helps users develop sustainable wellness habits. The incorporation of local artists' focus tracks creates connections within the community while supporting creators. The haptic feedback innovation allows for truly immersive practice sessions, differentiating Inhale in the wellness app marketplace and making mindfulness more accessible to users seeking stress relief in their busy lives."
+  },
+  {
+    // For Post
+    title: "AuraMax",
+    slug: "aura-max",
+    category: [ "React Development","iOS Development", "Android Development","Clerk"],
+    img: "/images/AuraMaxS3.png",
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "March 29, 2025",
+    services: "React Development, iOS Development, Android Development, Clerk",
+    duration: "2 Days",
+   
+    live: "https://github.com/shivvyas2/PrincetonHacks",
+
+    // Scroll
+    overview:
+    "Aura Max is an innovative micro-investment platform connecting small businesses with community investors. The platform creates a marketplace where local businesses can secure modest capital injections needed to sustain operations through challenging periods, while offering investors fractional profit sharing and unique perks. By democratizing investment in local enterprises, Aura Max addresses the critical funding gap that often leads to premature business closures, particularly for establishments that need smaller investments compared to venture-backed tech startups.",
+
+  objective:
+    "Our primary objective was to build a user-friendly platform that enables small business owners to present their funding needs while allowing community members to make micro-investments with minimal risk. The solution needed to be accessible to both business owners with limited financial expertise and everyday investors looking to support local establishments while receiving tangible benefits. Each feature was designed to foster trust, transparency, and mutual benefit between businesses and their community investors.",
+
+  process:
+    "Development began with identifying the funding challenges unique to small local businesses. We focused on creating essential features including business profiles, investment options with clear terms, and a secure transaction system. The platform was designed with a simple, inviting interface that makes investment opportunities easy to discover and understand. We incorporated dual-value incentives, combining financial returns with experiential perks like exclusive discounts or special access. Throughout the 48-hour hackathon, we continuously refined the concept based on mentor feedback, particularly focusing on the practical implementation of community-based investment models and regulatory considerations. The rapid development process resulted in a working prototype that demonstrates the platform's core functionality.",
+
+  impact:
+    "Aura Max bridges the critical gap between small businesses needing modest capital and community members seeking meaningful local investment opportunities. The platform empowers businesses to maintain operations during challenging periods while pivoting toward sustainability. For investors, it offers a way to diversify investments with manageable risk while directly supporting community establishments they value. By creating this symbiotic relationship, Aura Max strengthens local economic ecosystems and transforms community members into stakeholders in businesses they frequent. The successful prototype development during the hackathon demonstrated both the technical feasibility and market potential of this community-centered investment approach."
+  },
+  {
+    // For Post
+    title: "Ghor Kalyug",
+    slug: "ghor-kalyug",
+    category: ["Node.js", "React Development", "Backend Development", "Google Cloud Platform"],
+    img: "/images/project2_1.jpeg",
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "Dec 12, 2024",
+    services: "Backend Development, Frontend Development, Google Cloud Platform",
+    duration: "20 Days",
+    budget: "Class Project",
+    live: "https://frontend-dot-gen-lang-client-0403310649.ue.r.appspot.com/home",
+
+    //Scroll
+    overview:
+    "In today’s digital-first learning environment, students often need flexible, personalized study tools that go beyond traditional methods. Our quiz system was designed to empower students to learn any topic by uploading their own content and data. By selecting the topic, difficulty level, and number of questions, learners can generate quizzes tailored to their unique needs. This self-directed approach maximizes engagement and helps each student focus on the areas that matter most to them.",
+
+  objective:
+    "The primary goal was to create an intuitive quiz-building platform where students can effortlessly turn their study materials into interactive quizzes. Students needed the freedom to pick which subject or chapter they’d focus on, as well as fine-tune quiz difficulty and length. Another crucial objective was to enable immediate feedback through answer review, allowing students to learn from their mistakes and reinforce their knowledge. From the branding perspective, we wanted to establish a modern, student-friendly identity that emphasizes personalization, simplicity, and an encouraging learning atmosphere.",
+
+  process:
+    "We began by conducting user research with students across different grade levels and academic disciplines to identify pain points in existing quiz tools. Prototyping focused on a clean, uncluttered interface where uploading materials, selecting topics, and configuring quiz settings could be done with minimal steps. Multiple rounds of usability testing helped us refine the quiz-generation workflow, ensuring it remained straightforward yet flexible for advanced customization. We developed a cohesive brand identity—complete with a fresh color palette, friendly typography, and playful iconography—to communicate accessibility and motivation. Throughout the design phase, we iterated on the user experience for both the quiz creation and completion processes, emphasizing clear feedback and insightful result reviews that guide students toward deeper understanding.",
+
+  impact:
+    "The launch of the quiz system made it simpler for students to study on their own terms. By giving them control over which topics to focus on and how challenging the questions should be, it encourages personalized, self-paced learning. The integrated review feature offers immediate feedback, which has proven to boost retention and confidence. As a result, adoption has grown steadily, with students reporting higher engagement and improved test scores. From a branding standpoint, the system’s approachable design and positive tone have resonated, creating an active community of learners who appreciate the platform’s flexibility and effectiveness."
+  },
+  {
+    // For Post
     title: "Futeur AI",
     slug: "futeur-ai",
     category: [ "React Development","UIUX Design", "Branding",],
