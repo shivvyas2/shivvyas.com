@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shivvyas Yadav's Portfolio
+
+A personal portfolio website built with Next.js, React, TypeScript, and SCSS Modules.
+
+## Table of Contents
+
+- [About](#about)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Navigation](#navigation)
+- [Styling (SCSS)](#styling-scss)
+- [Data Management](#data-management)
+- [Getting Started](#getting-started)
+- [Available Scripts](#available-scripts)
+- [Deployment](#deployment)
+- [License](#license)
+
+## About
+
+This is the personal portfolio website for Shivvyas Yadav. It showcases projects, skills, and contact information using modern web technologies.
+
+## Tech Stack
+
+- Next.js (Pages Router)
+- React
+- TypeScript
+- SCSS Modules
+- Node.js
+- Vercel (for deployment)
+
+## Project Structure
+
+```
+/components    # Reusable React components styled with SCSS modules
+/data          # Static data files (e.g., project information)
+/pages         # Next.js pages (/, /projects)
+/public        # Static assets (images, fonts)
+/styles        # Global SCSS files (variables and globals)
+README.md      # Project overview and instructions
+package.json   # Dependencies and scripts
+```
+
+## Navigation
+
+- **Home** (`/`): Hero section, services overview, featured projects, and call-to-action.
+- **Projects** (`/projects`): Full listing of projects with detailed descriptions.
+- **Project Details**: Accessed by clicking on any project card.
+
+Navigation is implemented in `components/Nav/Nav.tsx` using Next.js `<Link>` for client-side routing.
+
+## Styling (SCSS)
+
+- **Global Styles**: Defined in `styles/globals.scss`, including resets and base typography.
+- **Variables & Mixins**: Stored in `styles/variables.scss` (colors, font-sizes, breakpoints).
+- **CSS Modules**: Each component folder includes a `.module.scss` file (e.g., `HeroSection.module.scss`).
+  Styles are imported as scoped objects and applied via `className` in TSX.
+- Next.js compiles SCSS out of the box once you install the `sass` package.
+
+## Data Management
+
+Project details are stored in `data/projectsData.ts` as a TypeScript array of objects.
+Both Home and Projects pages consume this data to render project cards dynamically.
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+    ```bash
+    git clone https://github.com/yourusername/shivvyas.com.git
+    ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+    ```bash
+    npm install
+    # or
+yarn install
+    # or
+    pnpm install
+    ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Run the development server:
 
-## Learn More
+    ```bash
+    npm run dev
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Available Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `npm run dev` - Start the development server
+- `npm run build` - Build the application for production
+- `npm run start` - Run the production build locally
+- `npm run lint` - Run ESLint checks
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This site is deployed on Vercel. Connect your GitHub repository to Vercel for automatic builds on push.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+This project is licensed under the MIT License.
