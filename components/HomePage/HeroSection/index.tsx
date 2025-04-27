@@ -53,7 +53,7 @@ export default function HeroSection() {
           Hi, I'm <span>Shiv</span>
         </h1>
         <p>
-          I am a <span>Software Developer</span> based in New York, currently interning at <span>FuteurAI</span>. <br />
+        I'm a <span>Software Developer</span> from New York, currently building at <span>FuteurAI</span>. <br />
         </p>
       </div>
       {/* 3D Computer Background */}
