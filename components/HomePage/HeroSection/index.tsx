@@ -10,11 +10,34 @@ export default function HeroSection() {
   const marqueeTextRef = useRef<HTMLDivElement | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  const handleScroll = () => {
-    document.getElementById('about')?.scrollIntoView({ 
-      behavior: 'smooth',
-      block: 'start'
-    });
+  const handleScroll = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault(); // Prevent default behavior
+    e.stopPropagation(); // Stop event propagation
+    
+    // Force a small timeout to ensure DOM is ready
+    setTimeout(() => {
+      // Option 1: Try to find the about section by ID
+      const aboutSection = document.getElementById('about');
+      
+      if (aboutSection) {
+        // Use window.scrollTo for better cross-browser support
+        const offsetTop = aboutSection.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo({
+          top: offsetTop,
+          behavior: 'smooth'
+        });
+      } else {
+        // Option 2: Find the next section after hero
+        const heroSection = document.querySelector(`.${styles.hero}`);
+        if (heroSection && heroSection.nextElementSibling) {
+          const offsetTop = heroSection.nextElementSibling.getBoundingClientRect().top + window.pageYOffset;
+          window.scrollTo({
+            top: offsetTop,
+            behavior: 'smooth'
+          });
+        }
+      }
+    }, 50);
   };
 
   useEffect(() => {
@@ -55,6 +78,7 @@ export default function HeroSection() {
         <p>
         I'm a <span>Software Developer</span> from New York, currently building at <span>FuteurAI</span>. <br />
         </p>
+       
       </div>
       {/* 3D Computer Background */}
       <div className={styles.background}>
@@ -63,14 +87,17 @@ export default function HeroSection() {
 
       {/* Scroll Down Button */}
       <div 
-        className="absolute left-1/2 bottom-10 -translate-x-1/2 z-[9999] cursor-pointer pointer-events-auto group"
+        className="absolute left-1/2 bottom-10 -translate-x-1/2 z-[99999] cursor-pointer pointer-events-auto group"
+        style={{ touchAction: 'manipulation', position: 'relative' }}
         onClick={handleScroll}
+        onTouchEnd={handleScroll}
       >
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1, duration: 0.5 }}
-          className="bg-[#5CB8E4]/10 backdrop-blur-sm p-3 rounded-full group-hover:bg-[#5CB8E4]/20 transition-all group-hover:scale-110 border border-[#5CB8E4]/20"
+          className="bg-[#f44e00]/40 backdrop-blur-sm p-4 rounded-full group-hover:bg-[#f44e00]/60 transition-all group-hover:scale-110 border-2 border-[#f44e00] shadow-lg shadow-[#f44e00]/30"
+          style={{ zIndex: 99999 }}
         >
           <motion.div
             animate={{ y: [0, 8, 0] }}
@@ -80,7 +107,7 @@ export default function HeroSection() {
               repeatType: "loop",
             }}
           >
-            <ChevronDown className="w-6 h-6 text-[#5CB8E4]" strokeWidth={2.5} />
+            <ChevronDown className="w-8 h-8 text-white" strokeWidth={3} />
           </motion.div>
         </motion.div>
       </div>
