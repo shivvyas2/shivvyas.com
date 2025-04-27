@@ -10,6 +10,7 @@
   overflow: hidden;
   position: relative;
 
+  background: linear-gradient(to bottom, #000000 80%, #331000 90%, #f44e00 100%);
   background-size: cover; // Ensure the image covers the section
 
   @media (max-width: 600px) {
@@ -84,7 +85,7 @@
       font-size: 80px;
     
       span {
-        color: #5cb8e4; // Highlighted color for the name
+        color: $primary; // Highlighted color for the name
       }
 
       @media (max-width: 1024px) {
@@ -107,7 +108,7 @@
       line-height: 40px;
       margin-top: 0.5rem;
       span {
-        color: #5cb8e4; // Highlighted color for the name
+        color: $primary; // Highlighted color for the name
       }
 
       @media (max-width: 1024px) {
