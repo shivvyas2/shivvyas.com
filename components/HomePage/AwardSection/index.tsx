@@ -5,10 +5,10 @@ import styles from './AwardSection.module.scss';
 import { splitText } from '@/utils/textUtils';
 
 const awardImages = [
-    ['/images/awwards.webp', '/images/awwards.webp'],
-    ['/images/awwards.webp', '/images/awwards.webp'],
-    ['/images/awwards.webp', '/images/awwards.webp'],
-    ['/images/awwards.webp', '/images/awwards.webp'],
+    ['/images/awwards.webp', '/images/awwards2.webp'],
+    ['/images/awwards2.webp', '/images/awwards.webp'],
+    ['/images/awwards.webp', '/images/awwards2.webp'],
+    ['/images/awwards2.webp', '/images/awwards.webp'],
 ];
 
 export default function AwardSection() {
@@ -60,11 +60,10 @@ export default function AwardSection() {
             <div className={styles.text}>
                 <div className={styles.wrapper}>
                     <h2 ref={headingRef}>
-                        {splitText("I have already a variety of awards won")}
+                        {splitText("Promoting Indian Heritage Globally: Excellence in Cultural Diplomacy")}
                     </h2>
                     <div className={styles.logos} ref={logosRef}>
-                        <Image src='/images/awwardsLogo.svg' alt='awwards' width={100} height={50} />
-                        <Image src='/images/cssdLogo.svg' alt='cssd' width={100} height={50} />
+                        <Image src='/images/nysa.svg' alt='nysa' width={100} height={50} />
                     </div>
                 </div>
                 <div className={styles.border}></div>
