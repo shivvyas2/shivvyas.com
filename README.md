@@ -1,4 +1,4 @@
-# Shivvyas Yadav's Portfolio
+# Shivvyas Portfolio
 
 A personal portfolio website built with Next.js, React, TypeScript, and SCSS Modules.
 
