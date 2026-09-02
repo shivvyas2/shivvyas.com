@@ -96,11 +96,11 @@ export const projects = [
     services: "AI Agent Development, Backend Engineering, iOS Development, Web Design",
     duration: "8 Months",
     budget: "Startup Project",
-    live: "https://contextual-intel.vercel.app",
+    live: "https://www.contextualintelligence.co",
 
     // Scroll
     overview:
-    "Luna is a contextual intelligence agent that lives in iMessage. A person tells it what they love, who they want to see, and when they are free, and Luna quietly turns that into real plans: a dinner reservation, tickets, an introduction to someone worth meeting, a ride. Partner venues in New York receive the people they most want to reach. Behind the conversation is a FastAPI and LangGraph service on Google Gemini, with a marketing site, a Clerk-authenticated API, and a customized SwiftUI chat interface.",
+    "Luna is a contextual intelligence agent that lives in iMessage. Its public face is Clo, your Chief Life Officer. A person tells it what they love, who they want to see, and when they are free, and Luna quietly turns that into real plans: a dinner reservation, tickets, an introduction to someone worth meeting, a ride. Partner venues in New York receive the people they most want to reach. Behind the conversation is a FastAPI and LangGraph service on Google Gemini, with a marketing site, a Clerk-authenticated API, and a customized SwiftUI chat interface.",
 
   objective:
     "The aim was an assistant that acts rather than answers. Luna had to hold long-lived context about a person, decide when to reach out proactively, and complete tasks end to end through real integrations, all inside a messaging channel with no app to install. Consent had to be explicit at every step, especially for introductions between people, and the system had to gate access during launch, meter usage, and run safely with a staging instance beside production.",

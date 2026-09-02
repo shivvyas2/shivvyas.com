@@ -76,7 +76,7 @@ export default function HeroSection() {
           Hi, I'm <span>Shiv</span>
         </h1>
         <p>
-        I'm a <span>Software Developer</span> from New York, currently building at <span>FuteurAI</span>. <br />
+        I'm a <span>Founding Engineer</span> from New York, currently building at <span>Contextual Intelligence</span>. <br />
         </p>
        
       </div>
