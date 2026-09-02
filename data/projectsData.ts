@@ -1,6 +1,174 @@
 export const projects = [
   {
     // For Post
+    title: "Life OS",
+    slug: "life-os",
+    category: ["Swift", "iOS Development", "Supabase", "Plaid"],
+    img: "/images/LifeOS.png",
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "Ongoing",
+    services: "iOS Development, Swift, Supabase, Product Design",
+    duration: "Ongoing",
+    budget: "Personal Project",
+    live: "https://github.com/shivvyas2/LifeOS",
+
+    // Scroll
+    overview:
+    "Life OS is a native iOS app that brings the scattered parts of daily life into one operating system. Instead of switching between a calendar, a budgeting app, a fitness tracker, and a notes app, Life OS gives each of those a module inside a single home: Today, Plan, Money, Health, Body, Activity, Recovery, Social, Notes, and a Coach and Assistant layer that reads across all of them. The app is built in SwiftUI for iOS 26 with a shared LifeOSKit package, and is currently shipping to testers through TestFlight.",
+
+  objective:
+    "The goal was to design a personal system rather than another single-purpose app. Each module had to be useful on its own while feeding a shared picture of the day, so that the Coach and Assistant surfaces could reason about money, health, and plans together. Onboarding needed to stay short enough that a person could connect a bank account, sync health data, and see a meaningful Today screen within the first session.",
+
+  process:
+    "The project started with an engineering handbook that fixed the architecture, naming, and release process before the first screen was built, and that handbook now ships alongside the code. Features were built as isolated modules on top of LifeOSKit, with Supabase handling auth and sync. Connecting real bank accounts required Plaid Link, and because large US banks use OAuth, a small companion site on almanac.shivvyas.com was added to serve the Apple App Site Association file so the OAuth redirect lands back inside the app as a universal link. Release work followed a documented TestFlight checklist so builds could be cut repeatedly without surprises.",
+
+  impact:
+    "Life OS turns a dozen daily check-ins into one. Money, health, and plans live side by side, which makes patterns visible that separate apps hide, and the Coach layer can act on them. The module structure means new areas of life can be added without touching the rest of the app, and the documented handbook and release process make the project easy to return to and extend. It is the most complete expression so far of the idea that personal software should behave like an operating system, not a collection of tabs."
+  },
+  {
+    // For Post
+    title: "Astra",
+    slug: "astra",
+    category: ["Next.js", "iOS Development", "Claude AI", "Supabase"],
+    img: "/images/Astra.png",
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "August 26, 2026",
+    services: "Full-Stack Development, iOS Development, AI Integration, Branding",
+    duration: "5 Weeks",
+    budget: "Personal Project",
+    live: "https://astra.shivvyas.com",
+
+    // Scroll
+    overview:
+    "Astra is an astrology product with a simple promise: computed, never guessed. Where most astrology apps serve generic sun-sign copy, Astra calculates a person's real birth chart from their birth date, time, and place, then uses Claude to write a reading grounded in those exact positions. It ships as a Next.js web app at astra.shivvyas.com and as a native iOS app that signs in with Apple and shares the same Supabase backend.",
+
+  objective:
+    "The objective was to make a reading feel personal and defensible at the same time. That meant doing the astronomy properly, handling time zones and historical locations correctly, and giving the language model only verified chart data to work from so the prose never invents a placement. Signup had to be as fast as possible on iOS, ideally two taps and a birthday, and the brand needed to feel cosmic without tipping into cliché.",
+
+  process:
+    "Chart calculation runs on Swiss Ephemeris compiled to WebAssembly, with time zone lookup resolving the birth location to the correct historical offset. Claude receives the computed chart as structured input and returns the interpretation, which is rendered as Markdown and can be exported to PDF. Supabase handles auth and storage, with email OTP on the web and native Sign in with Apple on iOS using a per-attempt nonce so tokens cannot be replayed. Push alerts, model cost tracking, and deployment are documented in the repo so the app can be operated, not just demoed. The landing page uses a full-bleed planetary hero and restrained typography to set the tone before a person ever enters their details.",
+
+  impact:
+    "Astra shows what an AI product looks like when the model is the writer rather than the source of truth. Every reading is traceable to a real chart, which gives people a reason to trust it and gives the product a defensible edge over template-based competitors. The shared backend between web and iOS meant the native app could launch without rebuilding any of the core logic, and the documented setup makes it straightforward to add new surfaces like a Mac or watch app later."
+  },
+  {
+    // For Post
+    title: "WhyKnot",
+    slug: "whyknot",
+    category: ["Next.js", "Supabase", "Data Visualization", "Fintech API"],
+    img: "/images/WhyKnot.png",
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "August 7, 2026",
+    services: "Full-Stack Development, Data Visualization, API Integration",
+    duration: "Hackathon Build",
+    budget: "Hackathon Project",
+    live: "https://whyknot.vercel.app",
+
+    // Scroll
+    overview:
+    "Restaurants choose new locations on instinct and a rented demographics report. The data that would actually answer where people are already ordering food sits inside consumers' own delivery accounts. WhyKnot is a two-sided platform built on Knot's Transaction Link that turns that data into a map. Diners connect DoorDash and Uber Eats in exchange for rewards, and restaurant owners see aggregate demand by neighborhood instead of guessing.",
+
+  objective:
+    "The goal was to prove that consented transaction data could replace scraped or purchased datasets for location decisions. That required two experiences that each had to stand on their own: a consumer portal where connecting an account felt safe and rewarding, and a business dashboard where demand showed up as a heatmap with scouting and per-area analytics rather than a spreadsheet. Everything that touched Knot had to be real, not mocked, so the demo would hold up to scrutiny.",
+
+  process:
+    "The app was built on Next.js 14 with the App Router, TypeScript, Supabase for Postgres and auth, Tailwind, and Leaflet for the map. All Knot integration lives in one module: a client-side Link flow, a server-side API client, session creation, per-merchant transaction sync, and webhook handlers for transaction and connection events. Two details cost real debugging time and are documented for the next person: Knot pins sync cursors to a stable external user id, and the merchant filter is development-only. A separate restaurant-stats backend powers the demand heatmap, and the hosted demo runs in a no-login demo mode so anyone can explore it.",
+
+  impact:
+    "WhyKnot reframes location intelligence as an exchange rather than a purchase: the diner gets rewards and better deals, the operator gets ground truth, and no one's data is bought or scraped. The working demo, along with a recorded walkthrough submitted for the hackathon, showed both sides of the marketplace functioning against a live financial data API. The clean separation of the Knot layer means the same foundation can extend to more merchants and more categories of local business."
+  },
+  {
+    // For Post
+    title: "Luna",
+    slug: "luna",
+    category: ["AI Agents", "Python", "LangGraph", "iOS Development"],
+    img: "/images/Luna.png",
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "July 22, 2026",
+    services: "AI Agent Development, Backend Engineering, iOS Development, Web Design",
+    duration: "8 Months",
+    budget: "Startup Project",
+    live: "https://contextual-intel.vercel.app",
+
+    // Scroll
+    overview:
+    "Luna is a contextual intelligence agent that lives in iMessage. A person tells it what they love, who they want to see, and when they are free, and Luna quietly turns that into real plans: a dinner reservation, tickets, an introduction to someone worth meeting, a ride. Partner venues in New York receive the people they most want to reach. Behind the conversation is a FastAPI and LangGraph service on Google Gemini, with a marketing site, a Clerk-authenticated API, and a customized SwiftUI chat interface.",
+
+  objective:
+    "The aim was an assistant that acts rather than answers. Luna had to hold long-lived context about a person, decide when to reach out proactively, and complete tasks end to end through real integrations, all inside a messaging channel with no app to install. Consent had to be explicit at every step, especially for introductions between people, and the system had to gate access during launch, meter usage, and run safely with a staging instance beside production.",
+
+  process:
+    "Inbound iMessage webhooks are routed through deterministic handlers for access gating, consent flows, and RSVPs before falling through to a LangGraph agent with tools for reservations, events, people matching, personal apps, orders, and rides. Redis holds cache, coordination, and conversation checkpoints; Firestore stores users, RSVPs, and match embeddings. A Composio sidecar gives each person Google Calendar and Gmail access on their own terms. Background workers handle morning briefings, proactive plan suggestions, approval notifications, and profile embeddings. Resy credentials are stored in an encrypted vault for booking. The stack deploys as two systemd instances on one box, with an evals suite and test suite guarding agent behavior.",
+
+  impact:
+    "Luna demonstrates a full agent product rather than a chat demo: gated beta access, billing, proactive outreach with consent, and real bookings at real venues. Meeting people inside the messaging app they already use removes the biggest adoption barrier for a personal AI. For partner venues it is a direct channel to the customers who fit them best. The modular agent design, with capabilities unlocked progressively per person, provides a template for how consumer agents can grow in scope without overwhelming the people using them."
+  },
+  {
+    // For Post
+    title: "Trashee",
+    slug: "trashee",
+    category: ["React Native", "Next.js", "IoT", "Supabase"],
+    img: "/images/Trashee.png",
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "July 15, 2026",
+    services: "Mobile Development, Admin Dashboard, Web Design, Product Strategy",
+    duration: "Ongoing",
+    budget: "Startup Project",
+    live: "https://trashee-website.shivvyas.com",
+
+    // Scroll
+    overview:
+    "Trashee is a waste management platform for India built around a simple loop: trash it, earn it. Smart bins placed where people already are detect a deposit with onboard sensors, points land in the person's app before they walk away, and those points unlock coupons at nearby stores. Three apps serve the ecosystem, one each for citizens, partner businesses, and collectors, with an admin dashboard tying together users, partners, coupons, payouts, and statements.",
+
+  objective:
+    "The objective was to make recycling rewarding enough to become a habit, without the friction that kills most sustainability apps: no sorting quizzes, no photo uploads, no manual claims. Each stakeholder needed a purpose-built experience, and the business side had to be operable from day one, including partner onboarding, coupon management, payout approvals, and exportable financial statements, so the platform could launch commercially rather than as a pilot.",
+
+  process:
+    "The mobile apps are built in React Native with Expo and file-based routing, with Clerk handling authentication, QR and barcode scanning for deposits, a wallet for points and rewards, and a waste category guide. The admin dashboard is a Next.js App Router application on Supabase with role-gated access, KPI charts in Recharts, and CSV export for ledgers and partner payments. The marketing site uses Next.js, Framer Motion, and Three.js to present live impact numbers and explain the bin-to-reward flow. Work was organized in sprints from auth and navigation through scanning, rewards, and partner tooling, with RazorpayX and subscription billing planned for the India launch.",
+
+  impact:
+    "Trashee turns a civic chore into a rewards program and gives local businesses a new way to reach customers who share their values. Verified deposits from IoT bins remove fraud and paperwork from the reward loop, and the carbon rating in the app lets people see their own impact grow. The complete operator tooling means the company can onboard partners, approve payouts, and reconcile statements without engineering help, which is what turns a good idea into a business."
+  },
+  {
+    // For Post
+    title: "SATistics",
+    slug: "satistics",
+    category: ["Next.js", "Three.js", "FastAPI", "Claude AI"],
+    img: "/images/SATistics.png",
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "November 20, 2025",
+    services: "Game Development, Full-Stack Development, AI Integration",
+    duration: "2 Days",
+    budget: "Hackathon Project",
+    live: "https://www.satistic.tech",
+
+    // Scroll
+    overview:
+    "SATistics makes SAT practice something students actually want to open. Built at NYU Hacks, it wraps real SAT questions inside seven arcade games: an endless runner, a Squid Game inspired red light green light, a platformer, Pac-Man, whack-a-mole, a first-person zombie shooter, and a carnival balloon pop. Answer correctly to keep playing. Behind the games, an AI agent watches performance and adapts the questions to each student.",
+
+  objective:
+    "The goal was to hold attention long enough for practice to work. The games had to be genuinely fun, not quizzes with a skin, and the questions had to feel relevant rather than random. That meant tracking scores and accuracy per topic, identifying where a student struggles, and generating new questions targeted at those gaps, all wrapped in an account and statistics dashboard so progress was visible.",
+
+  process:
+    "The frontend is Next.js 14 with TypeScript and Tailwind, with Three.js powering the 3D games. A FastAPI backend on Supabase handles auth, score tracking, and the learning agent. The agent reviews a student's game history, flags topics under sixty percent accuracy, and uses Claude Haiku to generate personalized questions with a mix of sixty percent weak topics, thirty percent mixed review, and ten percent challenge. Real SAT questions are sourced through search to seed the pool. The whole system runs locally with a single start script and is deployed at satistic.tech.",
+
+  impact:
+    "SATistics shows that adaptive learning and play are not in tension. Students get immediate feedback inside a game loop they want to repeat, and the agent quietly steers practice toward what each person needs most. The project came together in a weekend and has continued to grow, demonstrating how quickly a focused team can pair modern 3D web tooling with an LLM to build something that feels like a product rather than a demo."
+  },
+  {
+    // For Post
     title: "Inhale",
     slug: "inhale",
     category: [ "React Development","iOS Development", "Android Development","Clerk"],
@@ -110,34 +278,6 @@ export const projects = [
 
   impact:
     "Futeur AI’s final design speaks directly to a tech-savvy yet time-constrained audience, clearly communicating the brand’s dedication to real-time, predictive insights. The cohesive brand identity—across platform dashboards, website materials, and marketing assets—reinforces trust and authority in the AI-driven solutions space. By aligning the platform’s functionality with a forward-focused visual design, Futeur AI successfully positions itself as the go-to partner for small businesses seeking sustainable growth and operational resilience, ultimately bridging the gap between cutting-edge innovation and everyday business needs."
-  },
-  {
-    // For Post
-    title: "Ghor Kalyug",
-    slug: "ghor-kalyug",
-    category: ["Node.js", "React Development", "Backend Development", "Google Cloud Platform"],
-    img: "/images/project2_1.jpeg",
-
-    // Sticky
-    owner: "Shiv Vyas",
-    date: "Dec 12, 2024",
-    services: "Backend Development, Frontend Development, Google Cloud Platform",
-    duration: "20 Days",
-    budget: "Class Project",
-    live: "https://frontend-dot-gen-lang-client-0403310649.ue.r.appspot.com/home",
-
-    //Scroll
-    overview:
-    "In today’s digital-first learning environment, students often need flexible, personalized study tools that go beyond traditional methods. Our quiz system was designed to empower students to learn any topic by uploading their own content and data. By selecting the topic, difficulty level, and number of questions, learners can generate quizzes tailored to their unique needs. This self-directed approach maximizes engagement and helps each student focus on the areas that matter most to them.",
-
-  objective:
-    "The primary goal was to create an intuitive quiz-building platform where students can effortlessly turn their study materials into interactive quizzes. Students needed the freedom to pick which subject or chapter they’d focus on, as well as fine-tune quiz difficulty and length. Another crucial objective was to enable immediate feedback through answer review, allowing students to learn from their mistakes and reinforce their knowledge. From the branding perspective, we wanted to establish a modern, student-friendly identity that emphasizes personalization, simplicity, and an encouraging learning atmosphere.",
-
-  process:
-    "We began by conducting user research with students across different grade levels and academic disciplines to identify pain points in existing quiz tools. Prototyping focused on a clean, uncluttered interface where uploading materials, selecting topics, and configuring quiz settings could be done with minimal steps. Multiple rounds of usability testing helped us refine the quiz-generation workflow, ensuring it remained straightforward yet flexible for advanced customization. We developed a cohesive brand identity—complete with a fresh color palette, friendly typography, and playful iconography—to communicate accessibility and motivation. Throughout the design phase, we iterated on the user experience for both the quiz creation and completion processes, emphasizing clear feedback and insightful result reviews that guide students toward deeper understanding.",
-
-  impact:
-    "The launch of the quiz system made it simpler for students to study on their own terms. By giving them control over which topics to focus on and how challenging the questions should be, it encourages personalized, self-paced learning. The integrated review feature offers immediate feedback, which has proven to boost retention and confidence. As a result, adoption has grown steadily, with students reporting higher engagement and improved test scores. From a branding standpoint, the system’s approachable design and positive tone have resonated, creating an active community of learners who appreciate the platform’s flexibility and effectiveness."
   },
   {
     // For Post
