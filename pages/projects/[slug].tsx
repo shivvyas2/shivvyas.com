@@ -4,6 +4,7 @@ import { projects, Project } from '@/data/projectsData';
 import styles from './ProjectPage.module.scss';
 import Button from '@/components/Button';
 import BookCallSection from '@/components/HomePage/BookCallSection';
+import MacbookMockup from '@/components/MacbookMockup';
 import Head from 'next/head';
 import { gsap } from '@/libs/gsap';
 import { useEffect, useRef } from 'react';
@@ -88,6 +89,17 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
                     </div>
                 </div>
             </header>
+
+            {/*========= Video Showcase ==========*/}
+            {project.video && (
+                <section className={styles.showcase}>
+                    <MacbookMockup
+                        src={project.video.src}
+                        poster={project.video.poster}
+                        title={`${project.title} walkthrough`}
+                    />
+                </section>
+            )}
 
             {/*========= Content ==========*/}
             <section className={styles.projectContent}>

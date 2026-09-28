@@ -109,6 +109,14 @@
     }
 }
 
+/* ========== Video Showcase ========== */
+.showcase {
+    @include section;
+    @include mT4;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+}
+
 /* ========== Gallery ========== */
 .gallery {
     @include section;
