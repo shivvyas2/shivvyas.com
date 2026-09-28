@@ -2,11 +2,17 @@ const fs = require('fs');
 const path = require('path');
 const prettier = require('prettier');
 
-// Read and parse the projects data directly from the TypeScript file
+// Pull the project slugs straight out of the TypeScript data file. Matching
+// slugs (rather than eval-ing the whole array) keeps this working when the
+// file gains type annotations or nested arrays.
 const projectsFilePath = path.join(process.cwd(), 'data', 'projectsData.ts');
 const projectsFileContent = fs.readFileSync(projectsFilePath, 'utf8');
-const projectsMatch = projectsFileContent.match(/export const projects = (\[[\s\S]*?\]);/);
-const projects = eval(projectsMatch[1]);
+const projects = [...projectsFileContent.matchAll(/^\s*slug:\s*["'`]([^"'`]+)["'`]/gm)].map(
+  (match) => ({ slug: match[1] })
+);
+if (projects.length === 0) {
+  throw new Error('generate-sitemap: no project slugs found in data/projectsData.ts');
+}
 
 const BASE_URL = 'https://shivvyas.com';
 
