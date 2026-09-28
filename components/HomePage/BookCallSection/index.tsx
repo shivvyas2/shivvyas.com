@@ -60,7 +60,7 @@ export default function BookCallSection() {
                         {splitText("Let's discuss how we can bring your ideas to life. Book a quick call with me.")}
                     </p>
                     <div className={styles.btnSpace} ref={btnWrapperRef}>
-                        <Button text="Book a call" href="https://calendly.com/shiv-futeur/30min" targetBlank={true} />
+                        <Button text="Book a call" href="https://calendly.com/shivvyas0209/30min" targetBlank={true} />
                     </div>
                 </div>
             </section>

@@ -1,0 +1,137 @@
+%----------------------------------------------------------------------------------------------------
+%  Shiv Vyas: master resume (general purpose, not tailored to one job posting).
+%
+%  This is the source of truth for the PDF served at /resume/ShivVyas_Resume.pdf
+%  and linked from the About page. Edit this file, then run:
+%
+%      npm run build:resume
+%
+%  which compiles it with tectonic (XeTeX engine, system fonts) into public/resume/.
+%  Tailored variants for individual applications live outside the repo; keep the
+%  numbers here in sync with the most recent audited variant when you update them.
+%
+%  Template: Jitin Nair's autoCV (MIT License, 2021), trimmed.
+%----------------------------------------------------------------------------------------------------
+
+\documentclass[a4paper,9.5pt]{article}
+
+% Compile with XeLaTeX. ATS FIX: Ligatures=NoCommon stops fi/fl ligatures so
+% "profiling", "workflow", "first" extract as plain ASCII. Verified with pdftotext.
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}[Ligatures=NoCommon]}
+  {\setmainfont{Liberation Serif}[Ligatures=NoCommon]}
+\IfFontExistsTF{Courier New}
+  {\setmonofont{Courier New}[Ligatures=NoCommon]}
+  {\setmonofont{Liberation Mono}[Ligatures=NoCommon]}
+
+\usepackage{url}
+\usepackage{parskip}
+\setlength{\parskip}{0pt}\linespread{0.94}
+
+\RequirePackage{color}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[scale=0.97, top=0.12in, bottom=0.12in]{geometry}
+
+\usepackage{tabularx}
+\usepackage{enumitem}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+\usepackage{titlesec}
+\titleformat{\section}{\large\scshape\raggedright}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{3pt}{2pt}
+
+\usepackage[unicode, draft=false]{hyperref}
+\definecolor{linkcolour}{rgb}{0,0,0}
+\hypersetup{colorlinks,breaklinks,urlcolor=linkcolour,linkcolor=linkcolour}
+
+\newenvironment{joblong}[2]
+    {
+    \begin{tabularx}{\linewidth}{@{}l X r@{}}
+    \textbf{#1} & \hfill & #2 \\[0pt]
+    \end{tabularx}
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt,label=\textbullet]
+    }
+    {
+    \end{itemize}
+    \end{minipage}
+    }
+
+\begin{document}
+\hyphenpenalty=10000\exhyphenpenalty=10000
+
+\pagestyle{empty}
+
+\begin{tabularx}{\linewidth}{@{} C @{}}
+\LARGE{Shiv Vyas} \\[2pt]
+\normalsize{Software Engineer \ $|$ \ Full Stack, iOS, React Native, Applied AI \ $|$ \ TypeScript, Swift, Python, SQL} \\[2pt]
+Jersey City, NJ \ $|$ \
+551-342-5622 \ $|$ \
+\href{mailto:shivvyas0209@gmail.com}{shivvyas0209@gmail.com} \ $|$ \
+\href{https://www.linkedin.com/in/shivvyas/}{linkedin.com/in/shivvyas} \ $|$ \
+\href{https://github.com/shivvyas2}{github.com/shivvyas2} \ $|$ \
+\href{https://shivvyas.com}{shivvyas.com} \\
+\end{tabularx}
+
+\vspace{2pt}
+
+\section{Summary}
+Software engineer with an \textbf{M.S. in Computer Science} who has \textbf{designed, built, tested, shipped, and maintained} products across the full stack: web (\textbf{TypeScript, React, Next.js}), back end (\textbf{Node.js, Python, PostgreSQL}), and mobile (\textbf{Swift, React Native}) for \textbf{20,000+ users}. Founding engineer twice over, comfortable owning a product from an empty repository to an App Store release, and increasingly building with \textbf{LLMs in the loop}, on device where possible and in the cloud where necessary.
+
+\section{Experience}
+
+\begin{joblong}{Software Engineer, Contextual Intelligence \normalfont{(consumer social platform, formerly Luna Social)}}{December 2024 -- Present}
+\item \textbf{Design, develop, test, deploy, and maintain} the product across web (\textbf{React, Next.js, TypeScript}) and native \textbf{iOS} (Swift) for \textbf{20,000+ users}; largest of 15 contributors on the mobile codebase (\textbf{474 of 2,117 commits}) and author of \textbf{141 of 145 API route handlers} (payments, signup, SMS verification, onboarding, events)
+\item Built a \textbf{distributed serverless back end} for correctness under concurrency: atomic \textbf{database transactions} for recommendation and connection writes, Stripe \textbf{webhooks idempotent under retries} keyed by event id, and a scheduled health job that probes every dependency and \textbf{alerts on degradation}
+\item Applied \textbf{data structures} to performance: a \textbf{500 MB LRU disk cache} keyed by \textbf{SHA-256} with coalesced downloads so ten requests for one asset make one network call, plus a bounded preloader, so the video feed stays responsive on cellular
+\item \textbf{Improved engineering velocity and quality}: \textbf{1,218 unit tests} across 109 Vitest suites, XCTest and XCUITest gates in \textbf{CI/CD}, \textbf{secret scanning} in GitHub Actions, code review on every pull request, and \textbf{accessible} UI (ARIA on web, VoiceOver and Dynamic Type on iOS)
+\end{joblong}
+
+\begin{joblong}{Founding Software Engineer, Futeur AI \normalfont{(fintech: business credit, payments, funding)}}{August 2024 -- May 2026}
+\item \textbf{Designed, built, and released} FuteurCredx solo to the \textbf{App Store and Google Play} (React Native, TypeScript), growing downloads \textbf{84\% within 30 days} of launch; managed priorities and deadlines from 1.0 through 1.2.2
+\item Integrated three credit-bureau feeds, \textbf{Plaid}, and \textbf{Stripe}, with per-source cache windows and \textbf{polling only while an application is in flight} to cut redundant network traffic; offline persistence and \textbf{124 Jest tests across 16 suites}
+\item Delivered white-label apps for \textbf{Chase, Wells Fargo, Citibank, and Santander} from one shared codebase, so each brand was a theme rather than a fork, coordinating each release with the partner's engineering team
+\end{joblong}
+
+\begin{joblong}{Lab Coordinator, Seidenberg School of CSIS, Pace University}{April 2024 -- September 2024}
+\item Replaced a manual request process with a \textbf{self-serve GPU compute platform} for \textbf{400+ students}, then administered the shared servers, triaging compute, environment, and system health issues across two campuses
+\end{joblong}
+
+\begin{joblong}{Software Developer Intern, Ordex Technology}{February 2023 -- July 2023}
+\item Cut rendering times \textbf{60\%} on the Citizex mobile app by profiling and refactoring the render path, and optimized authentication flows, lifting sign-up \textbf{5\%} and engagement \textbf{20\%}
+\end{joblong}
+
+\section{Projects}
+
+\begin{joblong}{\href{https://github.com/shivvyas2/astra}{Sanchara: AI Astrology Platform, Web and iOS} \normalfont{(Next.js, TypeScript, PostgreSQL, Swift, Claude API)}}{2026}
+\item Built one \textbf{API shared by a web app and a native iOS app}: a pure computation engine (Swiss Ephemeris via \textbf{WebAssembly}) derives charts, time periods, and transits, and an \textbf{LLM} only interprets computed values, streamed to the client; \textbf{209 unit tests} across 25 Vitest files
+\item Applied \textbf{natural language processing} to extract life events from users' own chat history with the quote each came from; scheduled jobs send push notifications on each user's local clock; \textbf{row-level security} in PostgreSQL
+\end{joblong}
+
+\begin{joblong}{\href{https://github.com/shivvyas2/Sony-Alpha-A6400-Cinema-Monitor}{CinemaHUD: Networked Camera Monitor for Mac, iPhone, and iPad} \normalfont{(Swift, Python, Metal)}}{2026}
+\item \textbf{Networking}: a Mac server advertised over \textbf{Bonjour} streams live video, server-sent state, and remote-control commands to iPhone and iPad clients; drives the camera over \textbf{USB (PTP)} and Wi-Fi with automatic reconnect and newest-frame-wins buffering
+\item \textbf{Algorithms and parallelism}: \textbf{ring buffer} audio capture and \textbf{normalized cross-correlation} to sync separately recorded audio to video; a GPU pipeline that cut CPU load from \textbf{72\% to about 14\%}; \textbf{166 tests} and a Python camera simulator
+\end{joblong}
+
+\begin{joblong}{Life OS: iOS App over a TypeScript and PostgreSQL Back End \normalfont{(Swift, TypeScript, SQL)}}{2026}
+\item \textbf{13 PostgreSQL migrations}, 13 serverless functions, lease-based \textbf{concurrency control}, and crash-safe cursor sync; on-device \textbf{machine learning} (Apple Foundation Models) with a cloud fallback; \textbf{1,298 tests across 154 suites}, delivered spec-first with Claude Code
+\end{joblong}
+
+\section{Technical Skills}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+Languages & \normalsize{\textbf{TypeScript}, \textbf{JavaScript}, \textbf{Python}, \textbf{Swift}, \textbf{SQL}, Kotlin, HTML, CSS, Bash} \\
+Web \& Back End & \normalsize{\textbf{React}, \textbf{Next.js}, \textbf{Node.js}, FastAPI, \textbf{PostgreSQL}, Firebase, Supabase, REST, server-sent events, webhooks, OAuth 2.0, AWS (S3, CloudFront), Vercel} \\
+Mobile & \normalsize{\textbf{iOS} (SwiftUI, UIKit, Combine, Swift Concurrency), \textbf{React Native} (Expo), Android (Kotlin, Jetpack Compose)} \\
+Systems & \normalsize{\textbf{Unix/Linux shell}, \textbf{networking} (Bonjour, TCP, HTTP), \textbf{concurrency and parallelism}, database transactions, caching, GPU (Metal), security (row-level security, secret scanning)} \\
+AI \& Tools & \normalsize{\textbf{Claude Code}, \textbf{Cursor}, spec-driven development, LLM APIs (Claude, OpenAI, Gemini), streaming, structured output, Git, GitHub Actions, Jest, Vitest, XCTest, Playwright} \\
+\end{tabularx}
+
+\section{Education}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+May 2025 & \textbf{Master of Science in Computer Science}, Pace University, New York \hfill (GPA: 3.74/4.0) \\
+ & \small{Coursework: Data Structures and Algorithms, Parallel Programming, Database Management Systems, Human-Computer Interaction} \\
+June 2023 & \textbf{Bachelor of Engineering in Computer Engineering}, Gujarat Technological University \hfill (GPA: 3.70/4.0) \\
+\end{tabularx}
+
+\end{document}
