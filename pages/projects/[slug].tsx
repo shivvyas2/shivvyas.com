@@ -1,6 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Image from 'next/image';
-import { projects } from '@/data/projectsData'; // Import the data from the new file
+import { projects, Project } from '@/data/projectsData';
 import styles from './ProjectPage.module.scss';
 import Button from '@/components/Button';
 import BookCallSection from '@/components/HomePage/BookCallSection';
@@ -35,21 +35,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 type ProjectPageProps = {
-    project: {
-        title: string;
-        category: string[];
-        img: string;
-        owner: string;
-        date: string;
-        services: string;
-        duration: string;
-        budget: string;
-        live: string;
-        overview: string;
-        objective: string;
-        process: string;
-        impact: string;
-    };
+    project: Project;
 };
 
 const ProjectPage = ({ project }: ProjectPageProps) => {
@@ -69,7 +55,7 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
                 <title>{`${project?.title || 'Untitled Project'} | Shiv`}</title>
             </Head>
             {/*========= Header ==========*/}
-            <header className={styles.ProjectSinglePage}>
+            <header className={`${styles.ProjectSinglePage} ${project.textColor === 'black' ? styles.blackText : ''}`}>
                 <div ref={imageRef} className={styles.imageWrapper}>
                     <Image
                         src={project.img}
@@ -82,7 +68,19 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
 
                 {/* Project Details */}
                 <div className={styles.projectDetails}>
-                    <h1>{project.title}</h1>
+                    <div className={styles.titleRow}>
+                        {project.logo && (
+                            <Image
+                                className={styles.logo}
+                                src={project.logo}
+                                alt={`${project.title} logo`}
+                                width={96}
+                                height={96}
+                                unoptimized
+                            />
+                        )}
+                        <h1>{project.title}</h1>
+                    </div>
                     <div className={styles.category}>
                         {project.category.map((cat, idx) => (
                             <h5 key={idx}>{cat}</h5>
@@ -115,7 +113,7 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
                         </div>
                         <div>
                             <h3>Budget</h3>
-                            <h4>{project.budget}</h4>
+                            <h4>{project.budget ?? "—"}</h4>
                         </div>
                     </div>
                     <Button text="Launch Project" targetBlank={true} href={project.live} />
@@ -141,6 +139,23 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
                     </div>
                 </div>
             </section>
+
+            {/*========= Gallery ==========*/}
+            {project.gallery && project.gallery.length > 0 && (
+                <section className={styles.gallery}>
+                    {project.gallery.map((src, idx) => (
+                        <div key={src} className={styles.galleryItem}>
+                            <Image
+                                src={src}
+                                alt={`${project.title} screen ${idx + 1}`}
+                                width={1800}
+                                height={1200}
+                                unoptimized
+                            />
+                        </div>
+                    ))}
+                </section>
+            )}
 
             {/*========= Book Call Section ==========*/}
             <BookCallSection />

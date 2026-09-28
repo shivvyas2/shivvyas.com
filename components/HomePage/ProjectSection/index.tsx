@@ -86,7 +86,7 @@ export default function ProjectSection() {
             {/* projects wrapper */}
             <div className={styles.wrapper}>
                 {projects.map((project) => (
-                    <Link key={project.slug} href={`/projects/${project.slug}`} ref={addToRefs} className={styles.projectCard}>
+                    <Link key={project.slug} href={`/projects/${project.slug}`} ref={addToRefs} className={`${styles.projectCard} ${project.textColor === 'black' ? styles.blackText : ''}`}>
                         <Image src={project.img} width={700} height={700} alt={project.title} unoptimized />
                         <div className={styles.projectDetails}>
                             <div className={styles.title}>

@@ -103,6 +103,15 @@
                 }
             }
 
+            // Dark text for covers with light backgrounds (set per project in projectsData)
+            &.blackText {
+                color: $textDark;
+
+                .projectDetails .category h5 {
+                    background: #ffffff8c;
+                }
+            }
+
             &:hover {
                 img {
                     transform: scale(1.1);

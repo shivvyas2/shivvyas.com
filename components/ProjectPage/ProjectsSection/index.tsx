@@ -30,7 +30,7 @@ export default function ProjectsSection() {
         <section className={styles.ProjectsSection}>
             <div className={styles.wrapper}>
                 {projects.map((project) => (
-                    <Link key={project.slug} href={`/projects/${project.slug}`} className={styles.projectCard} ref={addToRefs}>
+                    <Link key={project.slug} href={`/projects/${project.slug}`} className={`${styles.projectCard} ${project.textColor === 'black' ? styles.blackText : ''}`} ref={addToRefs}>
                         <Image
                             src={project.img}
                             alt={project.title}

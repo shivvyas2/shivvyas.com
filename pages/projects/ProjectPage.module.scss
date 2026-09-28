@@ -2,9 +2,33 @@
 
 /* ========== Header ========== */
 .ProjectSinglePage {
+    position: relative;
     width: 100%;
     height: 100vh;
     overflow: hidden;
+
+    // Soft scrim behind the title on small screens, where the cover's subject
+    // often sits right under the text. Colour follows the text colour.
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 45%;
+        pointer-events: none;
+        z-index: 1;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+        opacity: 0;
+
+        @media (max-width: 840px) {
+            opacity: 1;
+        }
+    }
+
+    &.blackText::after {
+        background: linear-gradient(to top, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0));
+    }
 
     .imageWrapper {
         width: 100%;
@@ -26,6 +50,26 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
+
+        .titleRow {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 22%;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+            @media (max-width: 600px) {
+                width: 3.5rem;
+                height: 3.5rem;
+            }
+        }
 
         h1 {
             @include font-4_5;
@@ -52,6 +96,52 @@
             flex-direction: column;
             align-items: flex-start;
             gap: 1rem;
+        }
+    }
+
+    // Dark text for covers with light backgrounds (set per project in projectsData)
+    &.blackText {
+        color: $textDark;
+
+        .projectDetails .category h5 {
+            background: #ffffff8c;
+        }
+    }
+}
+
+/* ========== Gallery ========== */
+.gallery {
+    @include section;
+    @include mT4;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+
+    .galleryItem {
+        border-radius: 15px;
+        overflow: hidden;
+        aspect-ratio: 3 / 2;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        // Odd count: let the last image span the full row
+        &:last-child:nth-child(odd) {
+            grid-column: 1 / -1;
+            aspect-ratio: 21 / 9;
+        }
+    }
+
+    @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+
+        .galleryItem:last-child:nth-child(odd) {
+            grid-column: auto;
+            aspect-ratio: 3 / 2;
         }
     }
 }

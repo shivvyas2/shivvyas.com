@@ -1,10 +1,48 @@
-export const projects = [
+export type TextColor = "white" | "black";
+
+export type Project = {
+  title: string;
+  slug: string;
+  category: string[];
+  img: string;
+  /** Colour of the title/tags overlaid on the cover image. Pick based on the image background. */
+  textColor: TextColor;
+  logo?: string;
+  gallery?: string[];
+  owner: string;
+  date: string;
+  services: string;
+  duration: string;
+  budget?: string;
+  live: string;
+  overview: string;
+  objective: string;
+  process: string;
+  impact: string;
+};
+
+export const projects: Project[] = [
   {
     // For Post
     title: "Life OS",
     slug: "life-os",
     category: ["Swift", "iOS Development", "Supabase", "Plaid"],
-    img: "/images/LifeOS.png",
+    img: "/images/lifeos/v01-front.jpg",
+    textColor: "white",
+    logo: "/images/lifeos/logo.png",
+    gallery: [
+      "/images/lifeos/v02-front.jpg",
+      "/images/lifeos/profile.jpg",
+      "/images/lifeos/profile-2.jpg",
+      "/images/lifeos/profile-3.jpg",
+      "/images/lifeos/v03-perspective.jpg",
+      "/images/lifeos/v04-notes.jpg",
+      "/images/lifeos/v05-pinch.jpg",
+      "/images/lifeos/v06-pinch.jpg",
+      "/images/lifeos/v07-thumb.jpg",
+      "/images/lifeos/v08-check.jpg",
+      "/images/lifeos/v04-perspective.jpg",
+    ],
 
     // Sticky
     owner: "Shiv Vyas",
@@ -33,6 +71,7 @@ export const projects = [
     slug: "astra",
     category: ["Next.js", "iOS Development", "Claude AI", "Supabase"],
     img: "/images/Astra.png",
+    textColor: "white",
 
     // Sticky
     owner: "Shiv Vyas",
@@ -61,6 +100,7 @@ export const projects = [
     slug: "whyknot",
     category: ["Next.js", "Supabase", "Data Visualization", "Fintech API"],
     img: "/images/WhyKnot.png",
+    textColor: "black",
 
     // Sticky
     owner: "Shiv Vyas",
@@ -89,6 +129,7 @@ export const projects = [
     slug: "luna",
     category: ["AI Agents", "Python", "LangGraph", "iOS Development"],
     img: "/images/Luna.png",
+    textColor: "black",
 
     // Sticky
     owner: "Shiv Vyas",
@@ -117,6 +158,7 @@ export const projects = [
     slug: "trashee",
     category: ["React Native", "Next.js", "IoT", "Supabase"],
     img: "/images/Trashee.png",
+    textColor: "white",
 
     // Sticky
     owner: "Shiv Vyas",
@@ -145,6 +187,7 @@ export const projects = [
     slug: "satistics",
     category: ["Next.js", "Three.js", "FastAPI", "Claude AI"],
     img: "/images/SATistics.png",
+    textColor: "black",
 
     // Sticky
     owner: "Shiv Vyas",
@@ -173,6 +216,7 @@ export const projects = [
     slug: "inhale",
     category: [ "React Development","iOS Development", "Android Development","Clerk"],
     img: "/images/Inhale.png",
+    textColor: "black",
 
     // Sticky
     owner: "Shiv Vyas",
@@ -201,6 +245,7 @@ export const projects = [
     slug: "aura-max",
     category: [ "React Development","iOS Development", "Android Development","Clerk"],
     img: "/images/AuraMaxS3.png",
+    textColor: "black",
 
     // Sticky
     owner: "Shiv Vyas",
@@ -229,6 +274,7 @@ export const projects = [
     slug: "ghor-kalyug",
     category: ["Node.js", "React Development", "Backend Development", "Google Cloud Platform"],
     img: "/images/project2_1.jpeg",
+    textColor: "white",
 
     // Sticky
     owner: "Shiv Vyas",
@@ -257,6 +303,7 @@ export const projects = [
     slug: "futeur-ai",
     category: [ "React Development","UIUX Design", "Branding",],
     img: "/images/project1_1.jpeg",
+    textColor: "white",
 
     // Sticky
     owner: "Futeur AI",
@@ -285,6 +332,7 @@ export const projects = [
     slug: "futeur-cred",
     category: ["React-Native", "Swift", "Android"],
     img: "/images/project3_1.png",
+    textColor: "black",
 
     // Sticky
     owner: "Futeur AI",
@@ -313,6 +361,7 @@ export const projects = [
     slug: "calmpulse",
     category: ["Android", "UIUX Design", "Firebase"],
     img: "/images/project4_1.png",
+    textColor: "black",
 
     // Sticky
     owner: "Shiv Vyas",
@@ -342,6 +391,7 @@ export const projects = [
     slug: "finance-tracker",
     category: ["Swift", "iOS Development", "Firebase"],
     img: "/images/project5_1.jpeg",
+    textColor: "black",
 
     // Sticky
     owner: "Shiv Vyas",
