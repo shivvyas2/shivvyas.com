@@ -22,5 +22,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/HomePage/ImageTrail/index.jsx", "components/SmoothScrolling/index.tsx", "components/HomePage/GallerySection/index.tsx", "utils/textUtils.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "ideas"]
 }
