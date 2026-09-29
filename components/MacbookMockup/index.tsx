@@ -11,13 +11,22 @@ type MacbookMockupProps = {
     title: string;
 };
 
-// Key counts per keyboard row, top to bottom. The last row is drawn separately
-// so the space bar can be wide.
-const KEY_ROWS = [13, 14, 14, 13, 12];
+// Relative key widths per row, top to bottom, matching the 14-inch MacBook Pro
+// layout: a full-height function row, then the five main rows. 1 is a standard
+// key; wider keys use their approximate multiple of that width.
+const KEY_ROWS: number[][] = [
+    [1.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],            // esc, F1 to F12, Touch ID
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5],            // numbers, delete
+    [1.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],            // tab, QWERTY, backslash
+    [1.85, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.85],           // caps, ASDF, return
+    [2.4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2.4],                // shift, ZXCV, shift
+];
 
 /**
- * A CSS-drawn MacBook Pro, seen straight on with the lid open, playing a
- * looping muted video on its display. The video only plays while visible.
+ * A CSS-drawn 14-inch MacBook Pro (2021 and later body), seen straight on with
+ * the lid open, playing a looping muted video on its display. Proportions come
+ * from the real device: 31.26 x 22.12 cm footprint, 3024 x 1964 display with a
+ * notch, full-height function row, 12.9 x 8.1 cm trackpad.
  */
 export default function MacbookMockup({ src, poster, title }: MacbookMockupProps) {
     const laptopRef = useRef<HTMLDivElement | null>(null);
@@ -68,8 +77,10 @@ export default function MacbookMockup({ src, poster, title }: MacbookMockupProps
                 {/* Lid: aluminium rim, black bezel, display */}
                 <div className={styles.lid}>
                     <div className={styles.bezel}>
-                        <span className={styles.camera} aria-hidden="true" />
                         <div className={styles.display}>
+                            <span className={styles.notch} aria-hidden="true">
+                                <span className={styles.camera} />
+                            </span>
                             <video
                                 ref={videoRef}
                                 src={src}
@@ -81,7 +92,6 @@ export default function MacbookMockup({ src, poster, title }: MacbookMockupProps
                                 preload="metadata"
                             />
                         </div>
-                        <span className={styles.brand} aria-hidden="true">MacBook Pro</span>
                     </div>
                 </div>
 
@@ -92,23 +102,23 @@ export default function MacbookMockup({ src, poster, title }: MacbookMockupProps
                 <div className={styles.deckStage} aria-hidden="true">
                     <div className={styles.deck}>
                         <div className={styles.keyboard}>
-                            <div className={styles.fnRow} />
-                            {KEY_ROWS.map((count, r) => (
+                            {KEY_ROWS.map((row, r) => (
                                 <div key={r} className={styles.keyRow}>
-                                    {Array.from({ length: count }).map((_, k) => (
-                                        <span key={k} className={styles.key} />
+                                    {row.map((width, k) => (
+                                        <span key={k} className={styles.key} style={{ flex: width }} />
                                     ))}
                                 </div>
                             ))}
-                            <div className={`${styles.keyRow} ${styles.bottomRow}`}>
-                                <span className={styles.key} />
-                                <span className={styles.key} />
-                                <span className={styles.key} />
-                                <span className={`${styles.key} ${styles.wide}`} />
-                                <span className={`${styles.key} ${styles.space}`} />
-                                <span className={`${styles.key} ${styles.wide}`} />
-                                <span className={styles.key} />
-                                <span className={styles.arrows} />
+                            {/* fn, control, option, command, space, command, option, arrows */}
+                            <div className={styles.keyRow}>
+                                <span className={styles.key} style={{ flex: 1 }} />
+                                <span className={styles.key} style={{ flex: 1 }} />
+                                <span className={styles.key} style={{ flex: 1 }} />
+                                <span className={styles.key} style={{ flex: 1.3 }} />
+                                <span className={styles.key} style={{ flex: 5.6 }} />
+                                <span className={styles.key} style={{ flex: 1.3 }} />
+                                <span className={styles.key} style={{ flex: 1 }} />
+                                <span className={styles.arrows} style={{ flex: 3 }} />
                             </div>
                         </div>
                         <div className={styles.trackpad} />
