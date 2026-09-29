@@ -112,9 +112,12 @@
 /* ========== Video Showcase ========== */
 .showcase {
     @include section;
-    @include mT4;
-    padding-top: 1rem;
-    padding-bottom: 2rem;
+    // The mockup pins to the viewport while its lid opens, so it needs no extra
+    // vertical spacing on desktop; small screens get the usual rhythm.
+    @media (max-width: 840px), (prefers-reduced-motion: reduce) {
+        @include mT4;
+        padding-bottom: 2rem;
+    }
 }
 
 /* ========== Gallery ========== */

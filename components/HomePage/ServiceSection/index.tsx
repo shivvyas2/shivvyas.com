@@ -46,6 +46,7 @@ export default function ServiceSection() {
     const btnWrapperRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
+        const ctx = gsap.context(() => {
         // Heading animation timeline
         const headingTimeline = gsap.timeline({
             scrollTrigger: {
@@ -89,6 +90,7 @@ export default function ServiceSection() {
                         start: 'top top',
                         end: () => `+=${window.innerHeight}`,
                         scrub: 1,
+                        invalidateOnRefresh: true,
                     },
                 });
 
@@ -132,20 +134,21 @@ export default function ServiceSection() {
             }
         });
 
-        // Pin section during scroll
+        // Pin section during scroll. anticipatePin applies the pin a frame early so
+        // a fast scroll can't push the section past the top before it locks.
         ScrollTrigger.create({
             trigger: container.current,
             start: 'top top',
             end: () => `+=${totalScrollHeight}`,
             pin: true,
             pinSpacing: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+        });
         });
 
-        // Cleanup on unmount
-        return () => {
-            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-            cardTriggers.forEach(trigger => trigger?.kill()); // Clean up only specific triggers
-        };
+        // Cleanup on unmount: only this section's tweens and triggers
+        return () => ctx.revert();
     }, []);
 
     return (

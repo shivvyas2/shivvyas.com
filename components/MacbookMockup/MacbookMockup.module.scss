@@ -1,43 +1,79 @@
 @import "@/styles/variables.scss";
 
-// A 14-inch MacBook Pro seen straight on. All proportions are relative to the laptop
-// width so the mockup scales from phone to desktop without breakpoints.
+// A space black MacBook Pro seen straight on. Every dimension is a percentage of
+// the laptop width so the drawing scales from phone to desktop without breakpoints.
 
-$alu-light: #e3e4e7;
-$alu: #c9cbd0;
-$alu-dark: #9a9da4;
-$key: #2a2b2f;
-$well: #17181b;
+$black-rim: #262628;
+$black-rim-light: #3a3a3d;
+$black-body: #17171a;
+$black-body-dark: #09090a;
 
 .stage {
     width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width: 840px), (prefers-reduced-motion: reduce) {
+        min-height: 0;
+    }
+}
+
+.scene {
+    width: 100%;
     display: flex;
     justify-content: center;
+    perspective: 2400px;
+    perspective-origin: 50% 50%;
 }
 
 .laptop {
     position: relative;
-    width: 100%;
-    max-width: 1000px;
+    // Keep the whole machine inside the pinned viewport, base included
+    width: min(100%, 1000px, 112vh);
+    transform-style: preserve-3d;
+    transform-origin: 50% 100%;
 }
 
 /* ---- Lid ---- */
 .lid {
     position: relative;
-    padding: 0.5%;
-    border-radius: 2.2% / 3.1%;
-    background: linear-gradient(180deg, $alu-light 0%, $alu 60%, $alu-dark 100%);
+    padding: 0.55%;
+    border-radius: 2.4% / 3.4%;
+    background: linear-gradient(180deg, $black-rim-light 0%, $black-rim 45%, #1c1c1e 100%);
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.7),
-        0 24px 50px rgba(0, 0, 0, 0.55);
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.6),
+        0 30px 70px rgba(0, 0, 0, 0.6);
+    transform-origin: 50% 100%;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
 }
 
 .bezel {
     position: relative;
-    padding: 1.15% 1.15% 2.9%;
-    border-radius: 1.8% / 2.5%;
-    background: #0a0a0b;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    // Thin side and top bezels, a deeper chin below the panel
+    padding: 1.2% 1.2% 3.4%;
+    border-radius: 2% / 2.9%;
+    background: #000;
+}
+
+.display {
+    position: relative;
+    width: 100%;
+    // 14-inch panel (3024 x 1964). A 16:9 recording letterboxes on it, as on the real machine.
+    aspect-ratio: 3024 / 1964;
+    border-radius: 1.4% 1.4% 0.5% 0.5% / 2.1% 2.1% 0.8% 0.8%;
+    overflow: hidden;
+    background: #000;
+
+    video {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
 }
 
 // Notch: about 11.5% of the panel width and 4.8% of its height on the 14-inch
@@ -48,9 +84,9 @@ $well: #17181b;
     width: 11.5%;
     aspect-ratio: 348 / 94;
     transform: translateX(-50%);
-    background: #0a0a0b;
+    background: #000;
     border-radius: 0 0 14% 14% / 0 0 50% 50%;
-    z-index: 2;
+    z-index: 3;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -60,166 +96,69 @@ $well: #17181b;
     width: 6%;
     aspect-ratio: 1;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #3c4a5a, #07090c 70%);
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07);
+    background: radial-gradient(circle at 35% 35%, #34404d, #06080b 70%);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
-.display {
-    position: relative;
-    width: 100%;
-    // 14-inch panel (3024 x 1964). A 16:9 recording letterboxes on it, as on the real machine.
-    aspect-ratio: 3024 / 1964;
-    border-radius: 0.4% / 0.7%;
-    overflow: hidden;
+// Darkens the panel while the lid is closed; faded out by the scroll timeline
+.dim {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
     background: #000;
-
-    video {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-
-    // Faint glass reflection across the panel
-    &::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background: linear-gradient(
-            115deg,
-            rgba(255, 255, 255, 0.06) 0%,
-            rgba(255, 255, 255, 0.015) 30%,
-            rgba(255, 255, 255, 0) 55%
-        );
-    }
+    opacity: 0;
+    pointer-events: none;
 }
 
-
-/* ---- Hinge ---- */
-.hinge {
+/* ---- Base: front edge only ---- */
+.base {
     position: relative;
     z-index: 2;
-    width: 98.8%;
-    margin: 0 auto;
+    width: 122%;
+    margin-left: -11%;
     height: 0;
-    padding-bottom: 0.8%;
-    background: linear-gradient(180deg, #55575d, #2c2d31 55%, $alu-dark);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+    padding-bottom: 5.2%;
+    border-radius: 1.2% 1.2% 3.2% 3.2% / 18% 18% 48% 48%;
+    background: linear-gradient(180deg, $black-body 0%, #121214 40%, $black-body-dark 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.8),
+        0 22px 50px rgba(0, 0, 0, 0.65);
+    transform-style: preserve-3d;
 }
 
-/* ---- Deck (keyboard + trackpad), foreshortened toward the viewer ---- */
-.deckStage {
-    position: relative;
-    width: 100%;
-    // Visual height of the tilted deck plus the front edge
-    height: 0;
-    padding-bottom: 26%;
-}
-
+// Sliver of the top deck, visible while the laptop is viewed from slightly above
 .deck {
     position: absolute;
-    left: 50%;
     top: 0;
-    width: 100%;
-    // Real footprint 31.26 x 22.12 cm; rotateX squashes the depth to about 24% of
-    // the width. The long perspective keeps the near edge only a little wider than the lid.
-    aspect-ratio: 3126 / 2212;
-    transform: translateX(-50%) perspective(7000px) rotateX(70deg);
-    transform-origin: 50% 0%;
-    border-radius: 0 0 1.5% 1.5%;
-    background: linear-gradient(180deg, $alu 0%, $alu-light 35%, #d3d5d9 100%);
-    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.5);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2.2%;
-    padding: 2.2% 6% 0;
-    box-sizing: border-box;
+    left: 1.5%;
+    right: 1.5%;
+    height: 22%;
+    border-radius: 999px 999px 0 0 / 100% 100% 0 0;
+    background: linear-gradient(180deg, #303034, #1b1b1e);
 }
 
-.keyboard {
-    width: 100%;
-    aspect-ratio: 2760 / 1100;
-    padding: 0.7%;
-    border-radius: 1%;
-    background: $well;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
-    display: flex;
-    flex-direction: column;
-    gap: 0.9%;
-    box-sizing: border-box;
-}
-
-
-.keyRow {
-    flex: 1;
-    display: flex;
-    gap: 1%;
-}
-
-.key {
-    border-radius: 12%;
-    background: linear-gradient(180deg, #34363b, $key 60%);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        0 1px 0 rgba(0, 0, 0, 0.5);
-}
-
-.arrows {
-    border-radius: 10%;
-    background:
-        linear-gradient(180deg, transparent 50%, rgba(255, 255, 255, 0.05) 50%),
-        linear-gradient(180deg, #303236, $key);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-}
-
-.trackpad {
-    width: 41.5%;
-    aspect-ratio: 1296 / 813;
-    border-radius: 3% / 4.5%;
-    background: linear-gradient(180deg, #cfd1d5, #dadce0);
-    box-shadow:
-        inset 0 0 0 1px rgba(0, 0, 0, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-/* Front edge of the base, seen face-on under the tilted deck */
-.frontEdge {
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    width: 100%;
-    height: 0;
-    padding-bottom: 2.2%;
-    transform: translateX(-50%);
-    border-radius: 0 0 2.5% 2.5% / 0 0 60% 60%;
-    background: linear-gradient(180deg, #d9dadd 0%, #b3b5ba 55%, #83858b 100%);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.55),
-        0 14px 30px rgba(0, 0, 0, 0.5);
-}
-
+// Finger recess under the trackpad edge
 .lip {
     position: absolute;
     top: 0;
     left: 50%;
-    width: 12%;
-    height: 45%;
+    width: 17%;
+    height: 34%;
     transform: translateX(-50%);
     border-radius: 0 0 999px 999px;
-    background: linear-gradient(180deg, #8c8e93, #a9abb0);
-    box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.35);
+    background: linear-gradient(180deg, #050506, #131315);
+    box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.05);
 }
 
 /* ---- Ground shadow ---- */
 .shadow {
     position: absolute;
-    left: 3%;
-    right: 3%;
-    bottom: -3%;
-    height: 10%;
-    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0) 70%);
-    filter: blur(10px);
-    z-index: -1;
+    left: -6%;
+    right: -6%;
+    bottom: -4%;
+    height: 12%;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0) 70%);
+    filter: blur(14px);
+    z-index: 0;
 }

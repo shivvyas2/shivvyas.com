@@ -11,124 +11,139 @@ type MacbookMockupProps = {
     title: string;
 };
 
-// Relative key widths per row, top to bottom, matching the 14-inch MacBook Pro
-// layout: a full-height function row, then the five main rows. 1 is a standard
-// key; wider keys use their approximate multiple of that width.
-const KEY_ROWS: number[][] = [
-    [1.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],            // esc, F1 to F12, Touch ID
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5],            // numbers, delete
-    [1.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],            // tab, QWERTY, backslash
-    [1.85, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.85],           // caps, ASDF, return
-    [2.4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2.4],                // shift, ZXCV, shift
-];
+// Lid angle, in degrees from fully open, at the start of the scroll sequence.
+const CLOSED_ANGLE = 86;
+// The whole laptop is viewed from slightly above while the lid is closed, then
+// settles to a straight-on view as it opens.
+const CLOSED_TILT = 12;
+// Scroll progress at which the display lights up and the video starts.
+const WAKE_AT = 0.45;
 
 /**
- * A CSS-drawn 14-inch MacBook Pro (2021 and later body), seen straight on with
- * the lid open, playing a looping muted video on its display. Proportions come
- * from the real device: 31.26 x 22.12 cm footprint, 3024 x 1964 display with a
- * notch, full-height function row, 12.9 x 8.1 cm trackpad.
+ * A space black MacBook Pro seen straight on, drawn in CSS, with a video on its
+ * display. On desktop the section pins and the lid opens as the visitor scrolls,
+ * in the style of Apple's product pages. On small screens, or when the visitor
+ * prefers reduced motion, the laptop is simply shown open.
  */
 export default function MacbookMockup({ src, poster, title }: MacbookMockupProps) {
+    const stageRef = useRef<HTMLDivElement | null>(null);
     const laptopRef = useRef<HTMLDivElement | null>(null);
+    const lidRef = useRef<HTMLDivElement | null>(null);
+    const dimRef = useRef<HTMLDivElement | null>(null);
     const videoRef = useRef<HTMLVideoElement | null>(null);
 
     useEffect(() => {
+        const stage = stageRef.current;
         const laptop = laptopRef.current;
+        const lid = lidRef.current;
+        const dim = dimRef.current;
         const video = videoRef.current;
-        if (!laptop || !video) return;
+        if (!stage || !laptop || !lid || !dim || !video) return;
 
-        // Play only while visible so the loop doesn't burn battery off-screen
+        // The video runs only while the laptop is on screen and its lid is open
+        // enough for the display to be lit.
+        let inView = false;
+        let awake = true;
+        const syncPlayback = () => {
+            if (inView && awake) {
+                video.play().catch(() => {
+                    /* autoplay blocked; the poster stays visible */
+                });
+            } else {
+                video.pause();
+            }
+        };
+
         const observer = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting) {
-                    video.play().catch(() => {
-                        /* autoplay blocked; the poster stays visible */
-                    });
-                } else {
-                    video.pause();
-                }
+                inView = entry.isIntersecting;
+                syncPlayback();
             },
-            { threshold: 0.25 }
+            { threshold: 0.2 }
         );
         observer.observe(laptop);
 
-        // Rise-and-settle reveal as the laptop scrolls into view
-        const reveal = gsap.from(laptop, {
-            y: 80,
-            opacity: 0,
-            duration: 1.4,
-            ease: 'power3.out',
-            scrollTrigger: {
-                trigger: laptop,
-                start: 'top 85%',
-            },
+        const mm = gsap.matchMedia();
+
+        mm.add('(min-width: 841px) and (prefers-reduced-motion: no-preference)', () => {
+            awake = false;
+
+            const tl = gsap.timeline({
+                defaults: { ease: 'none' },
+                scrollTrigger: {
+                    trigger: stage,
+                    start: 'top top',
+                    end: '+=140%',
+                    pin: true,
+                    scrub: 0.6,
+                    anticipatePin: 1,
+                    invalidateOnRefresh: true,
+                    onUpdate: (self) => {
+                        const next = self.progress >= WAKE_AT;
+                        if (next !== awake) {
+                            awake = next;
+                            syncPlayback();
+                        }
+                    },
+                },
+            });
+
+            tl.fromTo(lid, { rotateX: CLOSED_ANGLE }, { rotateX: 0, duration: 1 }, 0)
+                .fromTo(
+                    laptop,
+                    { rotateX: CLOSED_TILT, scale: 0.9, yPercent: 6 },
+                    { rotateX: 0, scale: 1, yPercent: 0, duration: 1, ease: 'power1.out' },
+                    0
+                )
+                // Screen stays dark until the lid is most of the way open
+                .fromTo(dim, { opacity: 1 }, { opacity: 0, duration: 0.35 }, WAKE_AT - 0.1);
+
+            return () => {
+                awake = true;
+                syncPlayback();
+            };
         });
 
         return () => {
             observer.disconnect();
-            (reveal.scrollTrigger as ScrollTrigger | undefined)?.kill();
-            reveal.kill();
+            mm.revert();
         };
     }, []);
 
     return (
-        <div className={styles.stage}>
-            <div ref={laptopRef} className={styles.laptop}>
-                {/* Lid: aluminium rim, black bezel, display */}
-                <div className={styles.lid}>
-                    <div className={styles.bezel}>
-                        <div className={styles.display}>
-                            <span className={styles.notch} aria-hidden="true">
-                                <span className={styles.camera} />
-                            </span>
-                            <video
-                                ref={videoRef}
-                                src={src}
-                                poster={poster}
-                                title={title}
-                                muted
-                                loop
-                                playsInline
-                                preload="metadata"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Hinge line between lid and deck */}
-                <div className={styles.hinge} aria-hidden="true" />
-
-                {/* Deck: keyboard and trackpad, foreshortened toward the viewer */}
-                <div className={styles.deckStage} aria-hidden="true">
-                    <div className={styles.deck}>
-                        <div className={styles.keyboard}>
-                            {KEY_ROWS.map((row, r) => (
-                                <div key={r} className={styles.keyRow}>
-                                    {row.map((width, k) => (
-                                        <span key={k} className={styles.key} style={{ flex: width }} />
-                                    ))}
-                                </div>
-                            ))}
-                            {/* fn, control, option, command, space, command, option, arrows */}
-                            <div className={styles.keyRow}>
-                                <span className={styles.key} style={{ flex: 1 }} />
-                                <span className={styles.key} style={{ flex: 1 }} />
-                                <span className={styles.key} style={{ flex: 1 }} />
-                                <span className={styles.key} style={{ flex: 1.3 }} />
-                                <span className={styles.key} style={{ flex: 5.6 }} />
-                                <span className={styles.key} style={{ flex: 1.3 }} />
-                                <span className={styles.key} style={{ flex: 1 }} />
-                                <span className={styles.arrows} style={{ flex: 3 }} />
+        <div ref={stageRef} className={styles.stage}>
+            <div className={styles.scene}>
+                <div ref={laptopRef} className={styles.laptop}>
+                    {/* Lid: space black rim, black bezel, display with notch */}
+                    <div ref={lidRef} className={styles.lid}>
+                        <div className={styles.bezel}>
+                            <div className={styles.display}>
+                                <span className={styles.notch} aria-hidden="true">
+                                    <span className={styles.camera} />
+                                </span>
+                                <video
+                                    ref={videoRef}
+                                    src={src}
+                                    poster={poster}
+                                    title={title}
+                                    muted
+                                    loop
+                                    playsInline
+                                    preload="metadata"
+                                />
+                                <div ref={dimRef} className={styles.dim} aria-hidden="true" />
                             </div>
                         </div>
-                        <div className={styles.trackpad} />
                     </div>
-                    <div className={styles.frontEdge}>
+
+                    {/* Base: only the front edge is visible from straight on */}
+                    <div className={styles.base} aria-hidden="true">
+                        <span className={styles.deck} />
                         <span className={styles.lip} />
                     </div>
-                </div>
 
-                <div className={styles.shadow} aria-hidden="true" />
+                    <div className={styles.shadow} aria-hidden="true" />
+                </div>
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import { gsap } from "@/libs/gsap";
+import { gsap, ScrollTrigger } from "@/libs/gsap";
 
 export default function Loader() {
     const percentageRef = useRef<HTMLSpanElement>(null);
@@ -28,6 +28,8 @@ export default function Loader() {
                         ease: "power4.inOut",
                         onComplete: () => {
                             document.querySelector(".intro")?.classList.add("hidden");
+                            // Layout may have settled while the loader was up
+                            ScrollTrigger.refresh();
                         },
                     }, "-=0.5")
             },
