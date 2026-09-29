@@ -1,44 +1,55 @@
 @import "@/styles/variables.scss";
 
-// Proportions are relative to the laptop width so the mockup scales cleanly
-// from phone to desktop without any breakpoints.
+// A MacBook Pro seen straight on. All proportions are relative to the laptop
+// width so the mockup scales from phone to desktop without breakpoints.
+
+$alu-light: #e3e4e7;
+$alu: #c9cbd0;
+$alu-dark: #9a9da4;
+$key: #2a2b2f;
+$well: #17181b;
 
 .stage {
     width: 100%;
     display: flex;
     justify-content: center;
-    perspective: 1600px;
 }
 
 .laptop {
     position: relative;
     width: 100%;
-    max-width: 1100px;
-    transform-style: preserve-3d;
+    max-width: 1000px;
 }
 
-/* ---- Lid (screen) ---- */
+/* ---- Lid ---- */
 .lid {
     position: relative;
-    background: linear-gradient(180deg, #2a2a2c 0%, #151516 100%);
-    border-radius: 2.2% / 3.5%;
-    padding: 2.6% 2.6% 3.2%;
+    padding: 0.7%;
+    border-radius: 2.4% / 3.4%;
+    background: linear-gradient(180deg, $alu-light 0%, $alu 60%, $alu-dark 100%);
     box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.08),
-        inset 0 0 0 3px #0b0b0c,
-        0 30px 60px rgba(0, 0, 0, 0.55);
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        0 24px 50px rgba(0, 0, 0, 0.55);
+}
+
+.bezel {
+    position: relative;
+    padding: 2.4% 1.8% 3.6%;
+    border-radius: 1.9% / 2.8%;
+    background: #0a0a0b;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 .camera {
     position: absolute;
-    top: 1.1%;
+    top: 0.9%;
     left: 50%;
-    width: 0.6%;
+    width: 0.65%;
     aspect-ratio: 1;
     transform: translateX(-50%);
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #3d4b5c, #0a0d12 70%);
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+    background: radial-gradient(circle at 35% 35%, #3c4a5a, #07090c 70%);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07);
 }
 
 .display {
@@ -46,7 +57,7 @@
     width: 100%;
     // Match the recording's aspect ratio so nothing is cropped
     aspect-ratio: 2552 / 1432;
-    border-radius: 0.6% / 1%;
+    border-radius: 0.4% / 0.7%;
     overflow: hidden;
     background: #000;
 
@@ -65,44 +76,152 @@
         pointer-events: none;
         background: linear-gradient(
             115deg,
-            rgba(255, 255, 255, 0.07) 0%,
-            rgba(255, 255, 255, 0.02) 30%,
+            rgba(255, 255, 255, 0.06) 0%,
+            rgba(255, 255, 255, 0.015) 30%,
             rgba(255, 255, 255, 0) 55%
         );
     }
 }
 
-/* ---- Base (keyboard deck edge) ---- */
-.base {
-    position: relative;
-    width: 112%;
-    margin-left: -6%;
-    height: 0;
-    padding-bottom: 1.6%;
-    background: linear-gradient(180deg, #d9dadd 0%, #b3b5ba 55%, #8d8f95 100%);
-    border-radius: 0 0 4% 4% / 0 0 100% 100%;
-    box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.45) inset,
-        0 12px 30px rgba(0, 0, 0, 0.5);
+.brand {
+    position: absolute;
+    left: 50%;
+    bottom: 0.9%;
+    transform: translateX(-50%);
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-size: clamp(5px, 0.85vw, 9px);
+    letter-spacing: 0.02em;
+    color: #6b6d73;
+    line-height: 1;
+    white-space: nowrap;
+}
 
-    // Thin dark seam where the lid meets the deck
-    &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 5%;
-        right: 5%;
-        height: 18%;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0));
+/* ---- Hinge ---- */
+.hinge {
+    position: relative;
+    z-index: 2;
+    width: 98.6%;
+    margin: 0 auto;
+    height: 0;
+    padding-bottom: 0.9%;
+    background: linear-gradient(180deg, #55575d, #2c2d31 55%, $alu-dark);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* ---- Deck (keyboard + trackpad), foreshortened toward the viewer ---- */
+.deckStage {
+    position: relative;
+    width: 100%;
+    // Visual height of the tilted deck plus the front edge
+    height: 0;
+    padding-bottom: 26.4%;
+}
+
+.deck {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 100%;
+    // Untilted depth; rotateX below squashes it to roughly 24% of the width.
+    // The long perspective keeps the near edge only slightly wider than the lid.
+    aspect-ratio: 1000 / 620;
+    transform: translateX(-50%) perspective(7000px) rotateX(67deg);
+    transform-origin: 50% 0%;
+    border-radius: 0 0 1.5% 1.5%;
+    background: linear-gradient(180deg, $alu 0%, $alu-light 35%, #d3d5d9 100%);
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4.5%;
+    padding: 3% 12% 0;
+    box-sizing: border-box;
+}
+
+.keyboard {
+    width: 100%;
+    aspect-ratio: 1000 / 265;
+    padding: 0.9%;
+    border-radius: 1.2%;
+    background: $well;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    gap: 1.6%;
+    box-sizing: border-box;
+}
+
+.fnRow {
+    flex: 0 0 7%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #202226, #2b2e33 30%, #1e2024 60%, #2a2c31);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.keyRow {
+    flex: 1;
+    display: flex;
+    gap: 1%;
+}
+
+.key {
+    flex: 1;
+    border-radius: 12%;
+    background: linear-gradient(180deg, #34363b, $key 60%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 1px 0 rgba(0, 0, 0, 0.5);
+
+    &.wide {
+        flex: 1.6;
     }
+
+    &.space {
+        flex: 6.2;
+    }
+}
+
+.arrows {
+    flex: 3.1;
+    border-radius: 10%;
+    background:
+        linear-gradient(180deg, transparent 50%, rgba(255, 255, 255, 0.05) 50%),
+        linear-gradient(180deg, #303236, $key);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.trackpad {
+    width: 40%;
+    aspect-ratio: 1000 / 620;
+    border-radius: 3% / 4.5%;
+    background: linear-gradient(180deg, #cfd1d5, #dadce0);
+    box-shadow:
+        inset 0 0 0 1px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Front edge of the base, seen face-on under the tilted deck */
+.frontEdge {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 100%;
+    height: 0;
+    padding-bottom: 2.2%;
+    transform: translateX(-50%);
+    border-radius: 0 0 2.5% 2.5% / 0 0 60% 60%;
+    background: linear-gradient(180deg, #d9dadd 0%, #b3b5ba 55%, #83858b 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        0 14px 30px rgba(0, 0, 0, 0.5);
 }
 
 .lip {
     position: absolute;
     top: 0;
     left: 50%;
-    width: 13%;
-    height: 42%;
+    width: 12%;
+    height: 45%;
     transform: translateX(-50%);
     border-radius: 0 0 999px 999px;
     background: linear-gradient(180deg, #8c8e93, #a9abb0);
@@ -112,11 +231,11 @@
 /* ---- Ground shadow ---- */
 .shadow {
     position: absolute;
-    left: 5%;
-    right: 5%;
-    bottom: -2%;
-    height: 8%;
-    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 70%);
-    filter: blur(8px);
+    left: 3%;
+    right: 3%;
+    bottom: -3%;
+    height: 10%;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0) 70%);
+    filter: blur(10px);
     z-index: -1;
 }

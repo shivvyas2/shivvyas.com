@@ -29,7 +29,7 @@ export const projects: Project[] = [
     title: "ELXR Creative",
     slug: "elxr",
     category: ["Next.js", "Three.js", "GSAP", "3D Web"],
-    img: "/images/elxr/cover.jpg",
+    img: "/images/elxr/hero-city.jpg",
     textColor: "white",
     video: {
       src: "/videos/elxr-demo.mp4",
