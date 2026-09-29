@@ -40,8 +40,9 @@ $black-body-dark: #09090a;
     position: relative;
     // Keep the whole machine inside the pinned viewport, base included
     width: min(100%, 960px, 104vh);
-    // Room below the hinge for the projected base
-    margin-bottom: 9%;
+    // The box holds only the lid; the base projects below it. Nudging the box
+    // down centres lid and base together in the pinned viewport.
+    margin-top: 2%;
     transform-style: preserve-3d;
     transform-origin: 50% 100%;
 }

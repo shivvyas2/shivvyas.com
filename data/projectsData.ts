@@ -42,7 +42,7 @@ export const projects: Project[] = [
     services: "Web Design, 3D Development, Frontend Engineering",
     duration: "1 Month",
     budget: "Client Project",
-    live: "https://github.com/parzival69420/elxr-website",
+    live: "https://www.elxrnetwork.com",
 
     // Scroll
     overview:
