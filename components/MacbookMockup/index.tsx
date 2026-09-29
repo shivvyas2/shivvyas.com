@@ -11,11 +11,12 @@ type MacbookMockupProps = {
     title: string;
 };
 
-// Lid angle, in degrees from fully open, at the start of the scroll sequence.
-const CLOSED_ANGLE = 86;
-// The whole laptop is viewed from slightly above while the lid is closed, then
-// settles to a straight-on view as it opens.
-const CLOSED_TILT = 12;
+// Lid angle at the start of the scroll sequence. Negative rotateX brings the top
+// of the lid toward the viewer, so -88deg is a lid lying almost flat on the deck.
+const CLOSED_ANGLE = -88;
+// The whole laptop is viewed from above while the lid is closed (so the back of
+// the lid is what you see), then settles to a straight-on view as it opens.
+const CLOSED_TILT = -30;
 // Scroll progress at which the display lights up and the video starts.
 const WAKE_AT = 0.45;
 
@@ -91,7 +92,7 @@ export default function MacbookMockup({ src, poster, title }: MacbookMockupProps
             tl.fromTo(lid, { rotateX: CLOSED_ANGLE }, { rotateX: 0, duration: 1 }, 0)
                 .fromTo(
                     laptop,
-                    { rotateX: CLOSED_TILT, scale: 0.9, yPercent: 6 },
+                    { rotateX: CLOSED_TILT, scale: 0.9, yPercent: -62 },
                     { rotateX: 0, scale: 1, yPercent: 0, duration: 1, ease: 'power1.out' },
                     0
                 )
@@ -114,8 +115,9 @@ export default function MacbookMockup({ src, poster, title }: MacbookMockupProps
         <div ref={stageRef} className={styles.stage}>
             <div className={styles.scene}>
                 <div ref={laptopRef} className={styles.laptop}>
-                    {/* Lid: space black rim, black bezel, display with notch */}
+                    {/* Lid: space black rim, black bezel, display with notch, aluminium back */}
                     <div ref={lidRef} className={styles.lid}>
+                        <div className={styles.lidBack} aria-hidden="true" />
                         <div className={styles.bezel}>
                             <div className={styles.display}>
                                 <span className={styles.notch} aria-hidden="true">
@@ -136,13 +138,17 @@ export default function MacbookMockup({ src, poster, title }: MacbookMockupProps
                         </div>
                     </div>
 
-                    {/* Base: only the front edge is visible from straight on */}
-                    <div className={styles.base} aria-hidden="true">
-                        <span className={styles.deck} />
-                        <span className={styles.lip} />
+                    {/* Base: a deck lying flat toward the viewer, with the front edge
+                        hanging off its far side. Straight on, only that edge shows. */}
+                    <div className={styles.body} aria-hidden="true">
+                        <div className={styles.deck}>
+                            <span className={styles.trackpad} />
+                            <div className={styles.front}>
+                                <span className={styles.lip} />
+                                <span className={styles.shadow} />
+                            </div>
+                        </div>
                     </div>
-
-                    <div className={styles.shadow} aria-hidden="true" />
                 </div>
             </div>
         </div>

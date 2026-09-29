@@ -1,7 +1,12 @@
 @import "@/styles/variables.scss";
 
-// A space black MacBook Pro seen straight on. Every dimension is a percentage of
-// the laptop width so the drawing scales from phone to desktop without breakpoints.
+// A space black MacBook Pro built as a small 3D model: the lid hinges at its
+// bottom edge, the deck lies flat toward the viewer from that hinge, and the
+// front edge of the base hangs off the far side of the deck. Seen straight on
+// with the lid open, only the lid and that front edge are visible; viewed from
+// above with the lid closed, you see the back of the lid resting on the deck.
+// Every dimension is a percentage of the laptop width so it scales without
+// breakpoints.
 
 $black-rim: #262628;
 $black-rim-light: #3a3a3d;
@@ -24,14 +29,19 @@ $black-body-dark: #09090a;
     width: 100%;
     display: flex;
     justify-content: center;
-    perspective: 2400px;
-    perspective-origin: 50% 50%;
+    // A long lens: the front edge sits about a lid-height closer to the camera
+    // and should project only slightly wider than the lid, as in Apple's shots.
+    perspective: 4800px;
+    // Camera at hinge height: the deck is edge-on once the laptop is straight on
+    perspective-origin: 50% 92%;
 }
 
 .laptop {
     position: relative;
     // Keep the whole machine inside the pinned viewport, base included
-    width: min(100%, 1000px, 112vh);
+    width: min(100%, 960px, 104vh);
+    // Room below the hinge for the projected base
+    margin-bottom: 9%;
     transform-style: preserve-3d;
     transform-origin: 50% 100%;
 }
@@ -44,11 +54,24 @@ $black-body-dark: #09090a;
     background: linear-gradient(180deg, $black-rim-light 0%, $black-rim 45%, #1c1c1e 100%);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.16),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.6),
-        0 30px 70px rgba(0, 0, 0, 0.6);
+        inset 0 -1px 0 rgba(0, 0, 0, 0.6);
     transform-origin: 50% 100%;
     transform-style: preserve-3d;
+}
+
+// Aluminium back of the lid, seen while the laptop is closed
+.lidBack {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    transform: rotateY(180deg) translateZ(1px);
     backface-visibility: hidden;
+    background:
+        radial-gradient(120% 90% at 50% 10%, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 60%),
+        linear-gradient(180deg, #3a3a3e 0%, #27272a 55%, #1c1c1f 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.7);
 }
 
 .bezel {
@@ -57,6 +80,8 @@ $black-body-dark: #09090a;
     padding: 1.2% 1.2% 3.4%;
     border-radius: 2% / 2.9%;
     background: #000;
+    transform: translateZ(1px);
+    backface-visibility: hidden;
 }
 
 .display {
@@ -110,32 +135,57 @@ $black-body-dark: #09090a;
     pointer-events: none;
 }
 
-/* ---- Base: front edge only ---- */
-.base {
-    position: relative;
-    z-index: 2;
-    width: 122%;
-    margin-left: -11%;
-    height: 0;
-    padding-bottom: 5.2%;
-    border-radius: 1.2% 1.2% 3.2% 3.2% / 18% 18% 48% 48%;
-    background: linear-gradient(180deg, $black-body 0%, #121214 40%, $black-body-dark 100%);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.12),
-        inset 0 -2px 4px rgba(0, 0, 0, 0.8),
-        0 22px 50px rgba(0, 0, 0, 0.65);
+/* ---- Base ---- */
+.body {
+    position: absolute;
+    top: 100%;
+    left: -1%;
+    width: 102%;
     transform-style: preserve-3d;
 }
 
-// Sliver of the top deck, visible while the laptop is viewed from slightly above
+// Top of the base, rotated to lie flat and extend toward the viewer.
+// Real footprint 31.26 x 22.12 cm.
 .deck {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3126 / 2212;
+    transform-origin: 50% 0;
+    transform: rotateX(90deg);
+    transform-style: preserve-3d;
+    border-radius: 0 0 2% 2%;
+    background: linear-gradient(180deg, #111113 0%, #1a1a1d 60%, #1f1f22 100%);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.trackpad {
     position: absolute;
-    top: 0;
-    left: 1.5%;
-    right: 1.5%;
-    height: 22%;
-    border-radius: 999px 999px 0 0 / 100% 100% 0 0;
-    background: linear-gradient(180deg, #303034, #1b1b1e);
+    left: 50%;
+    bottom: 6%;
+    width: 41.5%;
+    aspect-ratio: 1296 / 813;
+    transform: translateX(-50%);
+    border-radius: 3% / 4.5%;
+    background: #141416;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+// Front edge of the base, hanging down from the far edge of the deck so it
+// faces the viewer. This is the only part of the base visible straight on.
+.front {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 0;
+    padding-bottom: 5.2%;
+    transform-origin: 50% 0;
+    transform: rotateX(-90deg);
+    border-radius: 0 0 3.2% 3.2% / 0 0 48% 48%;
+    background: linear-gradient(180deg, #2a2a2d 0%, $black-body 18%, #121214 50%, $black-body-dark 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.8);
 }
 
 // Finger recess under the trackpad edge
@@ -151,14 +201,15 @@ $black-body-dark: #09090a;
     box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.05);
 }
 
-/* ---- Ground shadow ---- */
+/* ---- Ground shadow, hanging just below the front edge ---- */
 .shadow {
     position: absolute;
-    left: -6%;
-    right: -6%;
-    bottom: -4%;
-    height: 12%;
-    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0) 70%);
+    top: 60%;
+    left: -4%;
+    right: -4%;
+    height: 220%;
+    background: radial-gradient(ellipse at 50% 20%, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0) 65%);
     filter: blur(14px);
-    z-index: 0;
+    z-index: -1;
+    pointer-events: none;
 }
