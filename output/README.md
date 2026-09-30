@@ -11,6 +11,7 @@ The selected identity and reusable logo files are in [branding](../branding/READ
 - Restore the orange glowing buttons and four-column Indian heritage collage.
 - Show all 14 projects on the homepage and retain the SEO improvements.
 - Restore the original orange loading screen while the 3D scene, fonts, and page images prepare; see [the loader restoration notes](site-review/loader-restoration.md).
+- Use a real 3D reconstruction of Shiv's dual-monitor studio desk in the hero; see [the model review](site-review/studio-desk/README.md).
 
 ## Contents
 
