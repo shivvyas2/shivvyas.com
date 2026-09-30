@@ -1,6 +1,6 @@
 # Shiv Vyas: website review and improvements
 
-**Design direction update:** Shiv requested the original header, hero, navigation and About presentation back. Those sections have now been restored, including the pre-existing mobile refinements, while SEO and accessibility improvements remain. The redesigned versions pictured in the initial review below are superseded. See [the current restoration notes and screenshots](restored-design/README.md).
+**Design direction update:** Shiv requested the original header, hero, navigation and About presentation back. Those sections have now been restored, including the pre-existing mobile refinements, while SEO and accessibility improvements remain. The redesigned versions described in the initial review below are superseded. See [the restoration notes](restored-design/README.md). Browser screenshots are kept locally and excluded from Git.
 
 Reviewed September 30, 2026. The live site was reviewed alongside the local Next.js project. This report preserves the initial review; the final changes have since been pushed to `main` and deployed. See [the archive index](../README.md) for the final direction, including all 14 homepage projects and restored heritage gallery.
 
@@ -10,41 +10,21 @@ The existing black-and-orange palette, oversized typography, project imagery, an
 
 The desktop opening had a clear role and location, but only “Shiv” in the headline and no direct project action. On mobile, the header hid the name and contact link, while the workstation dominated the screen. The source also imposed a six-second counter before its exit animation.
 
-![Original desktop opening](01-live-desktop.png)
-
-![Original mobile opening](02-live-mobile.png)
-
 **Implemented:** full-name headline, a concise description, direct project and contact links, a glass header with visible identity, a comfortably sized menu button, and immediate content without the artificial loader. The 3D scene is loaded separately and uses lower rendering resolution on phones. The reduced-motion setting omits that decorative scene.
-
-![Improved desktop opening](07-improved-desktop.png)
-
-![Improved mobile opening](05-improved-mobile.png)
 
 ## 2. Read the introduction and discover work
 
 The original introduction was a long uppercase paragraph with a letter-by-letter scroll reveal. The next section repeated all 14 projects. The mobile capture shows the large spacing before the project section. Browser accessibility output also exposed many headings as separate letters.
 
-![Original mobile content transition](03-live-mobile-content.png)
-
 **Implemented:** a shorter introduction that connects engineering, music, and photography; six recent projects on the homepage; a link to the complete 14-project archive; normal card flow on phones; complete accessible text for animated headings; and scoped desktop animations that clean up when screen size changes. Existing local fixes for visible touch labels and full project covers were retained.
 
-![Improved mobile project archive](08-improved-projects.png)
-
 Project detail covers now use their own image area on phones, with the title underneath, instead of cropping a landscape cover into a viewport-height portrait.
-
-![Improved mobile project detail](09-improved-project-detail.png)
 
 ## 3. Navigate and get in touch
 
 The original menu trigger was a clickable div rather than a keyboard button. The live footer displayed Shiv’s email but linked to a different address; the existing local correction was preserved. Contact links were closely packed, and the mobile headline reached the screen edge.
 
-![Original mobile contact page](04-live-mobile-contact.png)
-
 **Implemented:** a native modal navigation dialog, Escape dismissal and focus restoration, current-page indication, visible keyboard focus, a skip link, larger touch targets, and contact links that remain visible without animation. The updated mobile menu keeps the background inert while open.
-
-![Improved mobile navigation](06-improved-menu.png)
-
-![Improved contact page](10-improved-contact.png)
 
 ## Search identity
 

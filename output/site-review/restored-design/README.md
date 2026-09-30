@@ -1,6 +1,6 @@
 # Original design restored
 
-Archive note: these screenshots precede the selected logo rollout. The restored design and subsequent branding have since been pushed to `main` and deployed. See [the archive index](../../README.md) for the final direction.
+Archive note: this review precedes the selected logo rollout. The restored design and subsequent branding have since been pushed to `main` and deployed. See [the archive index](../../README.md) for the final direction. Browser screenshots are kept locally and excluded from Git.
 
 The original pre-edit component snapshots were recovered from this task's earlier file reads, preserving the mobile work that existed before the redesign.
 
@@ -15,30 +15,4 @@ Small-screen refinements remain limited to existing stable viewport sizing, text
 
 Validation: production build and TypeScript passed; reviewed the desktop at 1440 px and phones at 390 px and 320 px. The tested page widths did not overflow horizontally. Verified menu opening, Escape and focus return, About-page navigation and the desktop About reveal. No errors appeared in the captured browser log.
 
-## Desktop home
-
-![Restored desktop home](desktop-home.png)
-
-## Mobile home
-
-![Restored mobile home](mobile-home.png)
-
-## Desktop menu
-
-![Restored desktop menu](desktop-menu.png)
-
-## Mobile menu
-
-![Restored mobile menu](mobile-menu.png)
-
-## Desktop About
-
-![Restored desktop About](desktop-about.png)
-
-## Mobile About
-
-![Restored mobile About](mobile-about.png)
-
-## About page on mobile
-
-![Restored About page on mobile](mobile-about-page.png)
+Local evidence covers the desktop and mobile home, navigation menu, homepage About section, and mobile About page.

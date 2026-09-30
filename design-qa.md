@@ -2,6 +2,8 @@
 
 final result: passed
 
+Browser screenshots referenced in this report are kept locally and excluded from Git. Logo concepts and reusable branding assets remain tracked.
+
 ## Latest header enhancement
 
 The user subsequently requested an HDR-style pulsing navbar logo. The current header now uses the selected orange 3D mark with brighter highlights and a gentle 3.8-second glow/scale pulse. The earlier monochrome header comparisons below describe the original rollout; this later treatment intentionally supersedes them. Layout and typography are preserved. Normal blending keeps the logo orange over page imagery.

@@ -1,5 +1,7 @@
 # Precision Fold header pulse
 
+Browser screenshots referenced below are local evidence and are excluded from Git.
+
 The header and open-menu logo use the existing transparent orange 3D asset. The 36px image keeps the existing layout and the mobile home link retains its 44 × 44px tap target.
 
 The visual treatment uses brighter highlights, a small edge glow, and a blurred duplicate of the actual logo for the warm bloom. A 3.8-second CSS animation scales the image from 1 to 1.055 and the glow from 0.96 to 1.1, with glow opacity from 0.22 to 0.62. Only transform and opacity animate; the filters stay constant. No new bitmap or animation dependency was added.

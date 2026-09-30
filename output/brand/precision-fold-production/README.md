@@ -2,6 +2,8 @@
 
 Archive note: this records the initial monochrome-header rollout. The subsequent [orange header pulse](../header-pulse/README.md) supersedes that header treatment. See [the current branding guide](../../../branding/README.md) for current usage.
 
+Browser screenshots are kept locally and excluded from Git.
+
 Selected direction: `../isometric-signal-refinements/precision-fold.png`.
 
 The site keeps its original header, centered menu, hero, typography, and About layout. Branding adds a small home link mark and a footer mark without changing those compositions.

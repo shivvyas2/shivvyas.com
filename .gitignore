@@ -129,3 +129,8 @@ dist
 .yarn/install-state.gz
 .pnp.*
 .vercel
+
+# Local browser screenshots; keep generated logo assets tracked.
+/output/site-review/**/*.png
+/output/brand/header-pulse/*.png
+/output/brand/precision-fold-production/*.png
