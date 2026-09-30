@@ -1,0 +1,9 @@
+{
+  "generator": "Built-in ImageGen",
+  "final_files": {
+    "precision-fold.png": "exec-011f4154-ef53-4625-b0ac-fdbc65b34630.png",
+    "quiet-signal.png": "exec-422c7769-abf1-4d56-9c52-566e12ba7e99.png",
+    "folded-signal.png": "exec-2d0bc68f-74d3-4bc3-a594-561285744657.png"
+  },
+  "note": "Use titles to identify final directions. The first Precision Fold and Folded Signal renders were superseded by the cleanup passes."
+}

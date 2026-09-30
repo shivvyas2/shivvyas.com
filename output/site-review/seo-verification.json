@@ -1,0 +1,74 @@
+[
+  {
+    "route": "about",
+    "title": "About Shiv Vyas | Engineer, Music Maker &amp; Photographer"
+  },
+  {
+    "route": "contact",
+    "title": "Contact Shiv Vyas | Projects &amp; Collaborations"
+  },
+  {
+    "route": "/",
+    "title": "Shiv Vyas | Software Engineer &amp; Creative Developer"
+  },
+  {
+    "route": "projects",
+    "title": "Projects by Shiv Vyas | Web, iOS &amp; AI Applications"
+  },
+  {
+    "route": "projects/astra",
+    "title": "Astra | A Project by Shiv Vyas"
+  },
+  {
+    "route": "projects/aura-max",
+    "title": "AuraMax | A Project by Shiv Vyas"
+  },
+  {
+    "route": "projects/calmpulse",
+    "title": "CalmPulse | A Project by Shiv Vyas"
+  },
+  {
+    "route": "projects/elxr",
+    "title": "ELXR Creative | A Project by Shiv Vyas"
+  },
+  {
+    "route": "projects/finance-tracker",
+    "title": "Finance Tracker | A Project by Shiv Vyas"
+  },
+  {
+    "route": "projects/futeur-ai",
+    "title": "Futeur AI | A Project by Shiv Vyas"
+  },
+  {
+    "route": "projects/futeur-cred",
+    "title": "FuteurCred | A Project by Shiv Vyas"
+  },
+  {
+    "route": "projects/ghor-kalyug",
+    "title": "Ghor Kalyug | A Project by Shiv Vyas"
+  },
+  {
+    "route": "projects/inhale",
+    "title": "Inhale | A Project by Shiv Vyas"
+  },
+  {
+    "route": "projects/life-os",
+    "title": "Life OS | A Project by Shiv Vyas"
+  },
+  {
+    "route": "projects/luna",
+    "title": "Luna | A Project by Shiv Vyas"
+  },
+  {
+    "route": "projects/satistics",
+    "title": "SATistics | A Project by Shiv Vyas"
+  },
+  {
+    "route": "projects/trashee",
+    "title": "Trashee | A Project by Shiv Vyas"
+  },
+  {
+    "route": "projects/whyknot",
+    "title": "WhyKnot | A Project by Shiv Vyas"
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "generator": "Built-in ImageGen",
+  "display_order_files": {
+    "01-glass-current.png": "exec-6b8230d3-fbc2-48ae-a597-9d6b6b41fd10.png",
+    "02-swiss-ligature.png": "exec-50702726-6345-4b20-a606-0d9dd259ba99.png",
+    "03-isometric-fold.png": "exec-6e5e154a-427e-4ae8-b25c-95eb364db6fd.png",
+    "04-signal-signature.png": "exec-62c77ca6-f706-43a8-b514-baa229257a36.png",
+    "05-aperture-v.png": "exec-56d16061-7a73-4ac9-b3d1-77886bd8ac5b.png",
+    "06-bracket-cut.png": "exec-2a40b6fe-cd89-4204-8c5e-368674110ab4.png",
+    "07-pixel-rhythm.png": "exec-51b7b277-ebde-499f-88e3-3c171f2ee492.png",
+    "08-editorial-sv.png": "exec-32089a71-f1e0-4c75-ac6c-a53175c27300.png",
+    "09-chrome-resonance.png": "exec-fa66bd27-2277-421a-9a09-c001e780d321.png",
+    "10-studio-stamp.png": "exec-834eb5d6-0160-40a0-8510-8f806fdfd56e.png"
+  }
+}
