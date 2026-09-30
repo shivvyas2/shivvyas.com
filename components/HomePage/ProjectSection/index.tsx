@@ -89,7 +89,7 @@ export default function ProjectSection() {
         </div>
         <div className={styles.headingWrapper}>
           <h2 id="projects-heading" ref={headingRef}>
-            {splitText("Selected work")}
+            {splitText("A look into my latest projects")}
           </h2>
           <div ref={btnWrapperRef}>
             <Button text="All Projects" href="/projects" />
@@ -99,7 +99,7 @@ export default function ProjectSection() {
 
       {/* projects wrapper */}
       <div className={styles.wrapper}>
-        {projects.slice(0, 6).map((project) => (
+        {projects.map((project) => (
           <Link
             key={project.slug}
             href={`/projects/${project.slug}`}
@@ -126,12 +126,6 @@ export default function ProjectSection() {
             </div>
           </Link>
         ))}
-      </div>
-      <div className={styles.allProjects}>
-        <Button
-          text={`Explore all ${projects.length} projects`}
-          href="/projects"
-        />
       </div>
     </section>
   );

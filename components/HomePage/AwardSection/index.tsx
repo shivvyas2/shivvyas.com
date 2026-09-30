@@ -19,7 +19,7 @@ export default function AwardSection() {
   useEffect(() => {
     const media = gsap.matchMedia();
     media.add(
-      "(min-width: 841px) and (prefers-reduced-motion: no-preference)",
+      "(prefers-reduced-motion: no-preference)",
       () => {
         if (!containerRef.current || !headingRef.current || !logosRef.current)
           return; // Prevent running if not in page

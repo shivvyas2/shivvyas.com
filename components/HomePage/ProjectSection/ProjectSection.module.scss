@@ -234,11 +234,6 @@
 }
 
 .projects {
-  .allProjects {
-    display: flex;
-    justify-content: center;
-    margin-top: 2.5rem;
-  }
   @media (max-width: 840px), (prefers-reduced-motion: reduce) {
     .wrapper {
       gap: 1.5rem;
