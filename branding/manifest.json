@@ -1,0 +1,96 @@
+{
+  "selectedIdentity": "Precision Fold",
+  "generator": "OpenAI ImageGen; website-sized exports generated with next/og",
+  "assets": [
+    {
+      "path": "precision-fold/presentation.png",
+      "bytes": 820984,
+      "sha256": "b65e045d61bb08bbc7304fabe7c610a8c1e1e5936ec949fc0517d9bc746a120c"
+    },
+    {
+      "path": "precision-fold/masters/precision-fold-3d.png",
+      "bytes": 956920,
+      "sha256": "e0585d1194f8f53d585db16166858e01ff7fc7d3f0f60fc3c5e5f128d6a617d4"
+    },
+    {
+      "path": "precision-fold/masters/precision-fold-mono.png",
+      "bytes": 534198,
+      "sha256": "2c5e1d9c2fd097a6a8ae32e3dfc90d48b769c869e290a61737c59ab13badc171"
+    },
+    {
+      "path": "precision-fold/precision-fold-3d.png",
+      "bytes": 200571,
+      "sha256": "0d66d0ce788991b2edd27b80757e84ee0c851eaf7f49cc954e494c9f57575b89"
+    },
+    {
+      "path": "precision-fold/precision-fold-mono.png",
+      "bytes": 11899,
+      "sha256": "a6e3f3e0b876eb0463433bf50550c2ef76fdca7c9d762b5ba819e222995f1a14"
+    },
+    {
+      "path": "selected-directions/isometric-fold.png",
+      "bytes": 773178,
+      "sha256": "8ebd0205c4ca0d54c0073ad83e4a4c091aba00cf7ddca2c13ef1161ce44c83ca"
+    },
+    {
+      "path": "selected-directions/signal-signature.png",
+      "bytes": 583548,
+      "sha256": "fcd49d257e1db6f207f25d86b30db15e9ddf482ea2c5ad3a2ad4d08b81b728d7"
+    },
+    {
+      "path": "selected-directions/quiet-signal.png",
+      "bytes": 648842,
+      "sha256": "969575adcf581f5a9959cbdb37ca4fa1c8a0f8c258224857ee69b8f0a12450eb"
+    },
+    {
+      "path": "selected-directions/folded-signal.png",
+      "bytes": 745459,
+      "sha256": "96833d9c238999bb707fbf4140fec877c8ce5219c960e2a626eac7be7eba6aa1"
+    },
+    {
+      "path": "icons/favicon.ico",
+      "bytes": 3130,
+      "sha256": "36cad7b80a395f453b2999a0e5b786ffbb5d161254ac782dd9b6552b35eb217d"
+    },
+    {
+      "path": "icons/favicon-96x96.png",
+      "bytes": 6077,
+      "sha256": "4e46e3fcd3b7fbf25fb0312c107c660003bfd168d5377a447655a124e3c9d70f"
+    },
+    {
+      "path": "icons/apple-touch-icon.png",
+      "bytes": 19762,
+      "sha256": "9079caae878a27c00642beed6c0cfa53f077cbbddc7c49788bb8761984fa551d"
+    },
+    {
+      "path": "icons/icon-16.png",
+      "bytes": 299,
+      "sha256": "96e46fdb8c5ff5421e94bdbc52685354676b1439fb0d01ef2238ae354b025c78"
+    },
+    {
+      "path": "icons/icon-32.png",
+      "bytes": 905,
+      "sha256": "68ff2354e24a59781a40b2893940a7e2c2446b7729c9ca1acd1f5055720957a4"
+    },
+    {
+      "path": "icons/icon-48.png",
+      "bytes": 1872,
+      "sha256": "8d9797d9a153147c16bbd94746309578ee12d61f5c69e0d500ecc4c9bbcfb06b"
+    },
+    {
+      "path": "icons/icon-192.png",
+      "bytes": 21645,
+      "sha256": "c37e3cc5fde68f4121ce3a7bd675ac5a3b5e823d2ee1d080459bcec31075318f"
+    },
+    {
+      "path": "icons/icon-512.png",
+      "bytes": 140197,
+      "sha256": "b7accbf3c5554dffe901dfa1557aed756c132edc9e184de8bc8c36909a450f6f"
+    },
+    {
+      "path": "social/shiv-vyas-social.png",
+      "bytes": 93672,
+      "sha256": "8c928b58d34523b65dfe08daf27b8f4b590a95c9bee666f7e8da106cadd9f686"
+    }
+  ]
+}
