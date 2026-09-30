@@ -1,7 +1,20 @@
-
 import React, { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Preload, useGLTF, Environment } from "@react-three/drei";
+import {
+  OrbitControls,
+  Preload,
+  useGLTF,
+  Environment,
+  useProgress,
+} from "@react-three/drei";
+
+function SceneReady({ onReady }) {
+  useEffect(() => {
+    const frame = requestAnimationFrame(onReady);
+    return () => cancelAnimationFrame(frame);
+  }, [onReady]);
+  return null;
+}
 
 const Computers = ({ isMobile }) => {
   const { scene } = useGLTF("/desktop_pc/scene.gltf");
@@ -28,8 +41,13 @@ const Computers = ({ isMobile }) => {
   );
 };
 
-const ComputersCanvas = () => {
+const ComputersCanvas = ({ onReady, onProgress }) => {
   const [isMobile, setIsMobile] = useState(false);
+  const progress = useProgress((state) => state.progress);
+
+  useEffect(() => {
+    onProgress(progress);
+  }, [progress, onProgress]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 600px)");
@@ -53,21 +71,19 @@ const ComputersCanvas = () => {
       camera={{ position: [20, 3, 5], fov: 25 }}
       gl={{ powerPreference: isMobile ? "low-power" : "high-performance" }}
     >
-     
-        <OrbitControls
-          enableZoom={false}
-          maxPolarAngle={Math.PI / 2}
-          minPolarAngle={Math.PI / 2}
-        />
-        <Suspense fallback={null}>
+      <OrbitControls
+        enableZoom={false}
+        maxPolarAngle={Math.PI / 2}
+        minPolarAngle={Math.PI / 2}
+      />
+      <Suspense fallback={null}>
         <Environment preset="city" /> {/* Adds an environment map */}
         <Computers isMobile={isMobile} />
-        </Suspense>
-  
-      <Preload all />
+        <Preload all />
+        <SceneReady onReady={onReady} />
+      </Suspense>
     </Canvas>
   );
 };
 
 export default ComputersCanvas;
-

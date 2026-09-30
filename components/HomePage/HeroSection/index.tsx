@@ -3,6 +3,8 @@ import dynamic from "next/dynamic";
 import { motion, useReducedMotion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import styles from "./HeroSection.module.scss";
+import { useSceneLoading } from "@/components/Loader/LoadingContext";
+import SceneBoundary from "@/components/Loader/SceneBoundary";
 
 const ComputersCanvas = dynamic(() => import("@/components/canvas/Computer"), {
   ssr: false,
@@ -11,14 +13,18 @@ const ComputersCanvas = dynamic(() => import("@/components/canvas/Computer"), {
 export default function HeroSection() {
   const [showScene, setShowScene] = useState(false);
   const reducedMotion = useReducedMotion();
+  const { finishScene, updateSceneProgress } = useSceneLoading();
 
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setShowScene(!query.matches);
+    const update = () => {
+      setShowScene(!query.matches);
+      if (query.matches) finishScene();
+    };
     update();
     query.addEventListener("change", update);
     return () => query.removeEventListener("change", update);
-  }, []);
+  }, [finishScene]);
 
   return (
     <section className={styles.hero} aria-labelledby="hero-title">
@@ -32,7 +38,11 @@ export default function HeroSection() {
         </p>
       </div>
       <div className={styles.background} aria-hidden="true">
-        {showScene && <ComputersCanvas />}
+        {showScene && (
+          <SceneBoundary onError={finishScene}>
+            <ComputersCanvas onReady={finishScene} onProgress={updateSceneProgress} />
+          </SceneBoundary>
+        )}
       </div>
       <button
         type="button"

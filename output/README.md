@@ -10,6 +10,7 @@ The selected identity and reusable logo files are in [branding](../branding/READ
 - Use the selected orange Precision Fold logo with the HDR-style header pulse and reduced-motion support.
 - Restore the orange glowing buttons and four-column Indian heritage collage.
 - Show all 14 projects on the homepage and retain the SEO improvements.
+- Restore the original orange loading screen while the 3D scene, fonts, and page images prepare; see [the loader restoration notes](site-review/loader-restoration.md).
 
 ## Contents
 

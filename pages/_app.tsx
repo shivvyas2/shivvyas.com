@@ -5,6 +5,8 @@ import "@/styles/globals.scss";
 import type { AppProps } from "next/app";
 import { MotionConfig } from "framer-motion";
 import Head from "next/head";
+import { LoadingProvider } from "@/components/Loader/LoadingContext";
+import Loader from "@/components/Loader";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -32,16 +34,24 @@ export default function App({ Component, pageProps }: AppProps) {
         />
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
-      <a href="#main-content" className="skip-link">
-        Skip to content
-      </a>
-      <SmoothScrolling>
-        <Nav />
-        <main id="main-content" tabIndex={-1}>
-          <Component {...pageProps} />
-        </main>
-        <Footer />
-      </SmoothScrolling>
+      <noscript>
+        <style>{`.intro { display: none !important; }`}</style>
+      </noscript>
+      <LoadingProvider>
+        <SmoothScrolling>
+          <Loader />
+          <div id="site-content">
+            <a href="#main-content" className="skip-link">
+              Skip to content
+            </a>
+            <Nav />
+            <main id="main-content" tabIndex={-1}>
+              <Component {...pageProps} />
+            </main>
+            <Footer />
+          </div>
+        </SmoothScrolling>
+      </LoadingProvider>
     </MotionConfig>
   );
 }
