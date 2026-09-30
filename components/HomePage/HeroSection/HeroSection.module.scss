@@ -41,11 +41,15 @@
     @media (max-width: 600px) {
       top: 32%;
       height: 58%;
-      pointer-events: none;
+      pointer-events: auto;
     }
 
     @media (pointer: coarse) {
-      pointer-events: none;
+      pointer-events: auto;
+    }
+
+    canvas {
+      touch-action: manipulation;
     }
 
     @media (pointer: fine) {
@@ -57,6 +61,249 @@
         cursor: grabbing;
       }
     }
+  }
+
+  .deskHelp {
+    position: absolute;
+    z-index: 4;
+    left: 50%;
+    bottom: 6.5rem;
+    transform: translateX(-50%);
+    max-width: min(32rem, calc(100% - 2.5rem));
+    padding: 0.55rem 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    background: rgba(16, 10, 8, 0.55);
+    color: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(12px);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    text-align: center;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+
+    @media (max-width: 600px) {
+      bottom: 5.9rem;
+      font-size: 0.69rem;
+      max-width: calc(100% - 2rem);
+    }
+  }
+
+  .deskClose {
+    position: absolute;
+    z-index: 5;
+    top: 1.4rem;
+    right: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 999px;
+    padding: 0.55rem 0.9rem;
+    background: rgba(20, 13, 10, 0.7);
+    color: white;
+    font: inherit;
+    font-size: 0.75rem;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease;
+
+    &:hover,
+    &:focus-visible {
+      background: $primary;
+      border-color: $primary;
+      outline: none;
+    }
+
+    @media (max-width: 600px) {
+      top: 1rem;
+      right: 1rem;
+    }
+  }
+
+  .diaryBackdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: grid;
+    place-items: center;
+    padding: 1.25rem;
+    background: rgba(8, 5, 4, 0.72);
+    backdrop-filter: blur(12px);
+  }
+
+  .diary {
+    position: relative;
+    width: min(42rem, 100%);
+    min-height: 24rem;
+    padding: clamp(1.8rem, 5vw, 3.5rem);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 0.5rem 1.5rem 0.75rem 0.35rem;
+    background: linear-gradient(
+        rgba(255, 249, 225, 0.88),
+        rgba(255, 246, 218, 0.93)
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent 0,
+        transparent 1.75rem,
+        rgba(78, 104, 140, 0.2) 1.8rem,
+        transparent 1.85rem
+      );
+    color: #27201a;
+    box-shadow:
+      1.5rem 1.8rem 0 rgba(244, 78, 0, 0.22),
+      0 1.8rem 5rem rgba(0, 0, 0, 0.45);
+    transform: rotate(-1.1deg);
+    font-family: "Comic Sans MS", "Bradley Hand", cursive;
+
+    &::before {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        circle at 12% 20%,
+        rgba(244, 78, 0, 0.14),
+        transparent 30%
+      );
+      content: "";
+      pointer-events: none;
+    }
+
+    h2 {
+      position: relative;
+      margin: 0.2rem 0 0.7rem;
+      font-size: clamp(2rem, 6vw, 3.25rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    p {
+      position: relative;
+      max-width: 31rem;
+      margin: 0.5rem 0;
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+  }
+
+  .diaryKicker {
+    color: $primary;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .diaryIntro {
+    max-width: 27rem !important;
+    font-size: 1.12rem !important;
+  }
+
+  .diaryClose {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.9rem;
+    z-index: 2;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid rgba(39, 32, 26, 0.35);
+    border-radius: 50%;
+    background: transparent;
+    color: #27201a;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      background: rgba(244, 78, 0, 0.18);
+      outline: none;
+    }
+  }
+
+  .diaryPaperclip {
+    position: absolute;
+    top: -0.7rem;
+    left: 14%;
+    width: 1.1rem;
+    height: 4.1rem;
+    border: 3px solid #5c5b58;
+    border-bottom: 0;
+    border-radius: 0.8rem 0.8rem 0 0;
+    transform: rotate(8deg);
+  }
+
+  .diaryGrid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 1.2rem;
+    align-items: center;
+    margin-top: 1.3rem;
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .diarySketch {
+    width: 100%;
+    max-width: 12rem;
+    justify-self: end;
+    overflow: visible;
+    transform: rotate(3deg);
+
+    path,
+    circle,
+    rect {
+      fill: none;
+      stroke: #2d2923;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2.2;
+    }
+
+    text {
+      fill: #2d2923;
+      font-family: "Comic Sans MS", "Bradley Hand", cursive;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      justify-self: start;
+      max-width: 13rem;
+    }
+  }
+
+  .diaryProjects {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 1.25rem;
+
+    span {
+      border: 1px dashed rgba(39, 32, 26, 0.45);
+      border-radius: 999px;
+      padding: 0.3rem 0.55rem;
+      font-size: 0.78rem;
+      transform: rotate(-1deg);
+
+      &:nth-child(2) {
+        transform: rotate(1.5deg);
+      }
+
+      &:nth-child(3) {
+        transform: rotate(-2deg);
+      }
+    }
+  }
+
+  .diarySignoff {
+    position: relative;
+    margin-top: 1.2rem !important;
+    color: $primary;
+    font-size: 1.35rem !important;
+    text-align: right;
   }
 
   /* Text Container for Top-Right Placement */
