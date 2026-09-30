@@ -17,7 +17,7 @@ A personal portfolio website built with Next.js, React, TypeScript, and SCSS Mod
 
 ## About
 
-This is the personal portfolio website for Shivvyas Yadav. It showcases projects, skills, and contact information using modern web technologies.
+This is the personal portfolio website for Shiv Vyas. It showcases projects, skills, and contact information using modern web technologies.
 
 ## Tech Stack
 

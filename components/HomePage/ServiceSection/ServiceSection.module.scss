@@ -18,7 +18,7 @@
             flex-wrap: wrap;
             gap: 2rem;
 
-            h1 {
+            h2 {
                 @include font-4_5;
                 max-width: 60rem;
                 width: 100%;
@@ -79,4 +79,8 @@
             }
         }
     }
+}
+@media (prefers-reduced-motion: reduce) {
+    .services .wrapper { display: none; }
+    .services .mobileWrapper { display: grid; }
 }

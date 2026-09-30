@@ -8,6 +8,7 @@
     background-size: cover;
     min-height: 100vh;
     height: fit-content;
+    scroll-margin-top: 4rem;
 
     @media (max-width: 840px) {
         height: auto;
@@ -47,10 +48,18 @@
             max-width: 68rem;
             width: 100%;
             line-height: 1.1;
+
+            @media (max-width: 600px) {
+                font-size: clamp(1.4rem, 6.5vw, 2.2rem);
+                line-height: 1.25;
+                margin-top: 0;
+            }
         }
 
         .btnSpace {
             @include mT3;
+
+            @media (max-width: 600px) { display: none; }
         }
     }
 }

@@ -1,112 +1,232 @@
 @import "@/styles/variables.scss";
 
 .nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 1.4rem 2rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1.4rem 2rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  z-index: 20;
+  mix-blend-mode: normal;
+
+  .link,
+  .logo {
+    @include font-1;
+    font-family: PPmedium;
+    transition: color $transition;
+
+    &:hover {
+      color: $primary;
+    }
+
+    @media (max-width: 600px) {
+      display: none;
+    }
+  }
+
+  .menu_Toggle {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    z-index: 20;
-    mix-blend-mode: difference;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+    cursor: pointer;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    -webkit-tap-highlight-color: transparent;
+    background: none;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    min-height: 44px;
+    padding: 0;
 
-
-    .link,
-    .logo {
-        @include font-1;
-        font-family: PPmedium;
-        transition: color $transition;
-
-        &:hover {
-            color: $primary;
-        }
-
-        @media (max-width: 600px) {
-            display: none;
-        }
+    @media (max-width: 600px) {
+      padding: 0.5rem 1rem;
+      margin-top: -0.5rem;
     }
 
-    .menu_Toggle {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.7rem;
-        cursor: pointer;
+    .bar {
+      width: 140px;
+      height: 5px;
+      border-radius: 100px;
+      background: $white;
+      transition: width $transition;
+    }
+
+    span {
+      font-size: 0.6rem;
+      letter-spacing: 0.07rem;
+    }
+
+    &:hover {
+      .bar {
+        width: 160px;
+      }
+    }
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-top: -0.5rem;
+    min-height: 36px;
+
+    .brandGlow {
+      position: relative;
+      display: block;
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      isolation: isolate;
+
+      &::before {
+        content: "";
         position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-
-        .bar {
-            width: 140px;
-            height: 5px;
-            border-radius: 100px;
-            background: $white;
-            transition: width $transition;
-        }
-
-        span {
-            font-size: 0.6rem;
-            letter-spacing: 0.07rem;
-        }
-
-        &:hover {
-            .bar {
-                width: 160px;
-            }
-        }
+        inset: 0;
+        background: url("/brand/precision-fold-3d.png") center / contain
+          no-repeat;
+        filter: blur(5px) saturate(1.35);
+        opacity: 0.32;
+        pointer-events: none;
+      }
     }
+
+    .brandMark {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      filter: brightness(1.16) saturate(1.12)
+        drop-shadow(0 0 1px rgba(255, 192, 110, 0.45));
+      transform-origin: center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .brandMark {
+        animation: brandBreathe 3.8s ease-in-out infinite;
+      }
+
+      .brandGlow::before {
+        animation: brandBloom 3.8s ease-in-out infinite;
+      }
+    }
+
+    @media (max-width: 600px) {
+      width: 44px;
+      min-height: 44px;
+      justify-content: center;
+      margin-left: -0.75rem;
+
+      .wordmark {
+        display: none;
+      }
+    }
+  }
+}
+
+@keyframes brandBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.055);
+  }
+}
+
+@keyframes brandBloom {
+  0%,
+  100% {
+    opacity: 0.22;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 0.62;
+    transform: scale(1.1);
+  }
 }
 
 /* Navigation Menu */
 .navigationMenu {
-    position: fixed;
-    z-index: 10;
-    width: calc(100% - 20px);
-    top: 10px;
-    left: 10px;
-    border-radius: 8px;
-    background: $navigationColor;
-    backdrop-filter: blur(50px);
+  position: fixed;
+  z-index: 10;
+  width: calc(100% - 20px);
+  top: 10px;
+  left: 10px;
+  border-radius: 8px;
+  background: $navigationColor;
+  backdrop-filter: blur(50px);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 9rem 0 3rem 0;
+  margin: 0;
+  max-width: none;
+  max-height: calc(100dvh - 20px);
+  border: 0;
+  color: $white;
+  -webkit-backdrop-filter: blur(50px);
+  overscroll-behavior: contain;
+
+  &[open] {
+    display: flex;
+  }
+  &::backdrop {
+    background: transparent;
+  }
+
+  .nav {
+    mix-blend-mode: normal;
+  }
+
+  @media (max-width: 600px) {
+    height: calc(100% - 20px);
+    height: calc(100dvh - 20px);
+    justify-content: center;
+    padding: 6rem 0 3rem 0;
+  }
+
+  ul {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
-    padding: 9rem 0 3rem 0;
-    clip-path: inset(0% 0% 100% 0%);
-    visibility: hidden;
+    gap: 0.8rem;
 
-    ul {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.8rem;
+    li {
+      overflow: hidden;
 
-        li {
-            overflow: hidden;
+      a {
+        @include font-2_75;
+        text-transform: uppercase;
+        line-height: 0.9;
+        display: block;
+        opacity: 1; // Default opacity
+        transition: opacity $transition;
 
-            a {
-                @include font-2_75;
-                text-transform: uppercase;
-                line-height: 0.9;
-                display: block;
-                opacity: 1; // Default opacity
-                transition: opacity $transition;
-            }
-
-            &:hover a {
-                opacity: 1; // Hovered link opacity
-            }
+        @media (max-width: 600px) {
+          font-size: 2.6rem;
+          padding: 0.5rem 1rem;
         }
-    }
+      }
 
-    // Apply hover effect to other links
-    ul:hover li a {
-        opacity: 0.3; // Non-hovered links opacity
-    }
-
-    ul li:hover a {
+      &:hover a {
         opacity: 1; // Hovered link opacity
+      }
     }
+  }
+
+  // Apply hover effect to other links
+  ul:hover li a {
+    opacity: 0.3; // Non-hovered links opacity
+  }
+
+  ul li:hover a {
+    opacity: 1; // Hovered link opacity
+  }
 }

@@ -2,80 +2,51 @@ import { useEffect, useRef } from "react";
 import { gsap } from "@/libs/gsap";
 import styles from "./AboutSection.module.scss";
 
+const aboutText = "I am a Software Developer with 3 years of experience, specializing in creating apps that merge functionality with intuitive design. My expertise lies at the intersection of mobile development, web development, and backend systems, enabling me to craft seamless and innovative digital solutions. With a broad skill set, I approach challenges from diverse perspectives to deliver impactful and user-centric experiences.";
+
 export default function AboutSection() {
-    const aboutTextRef = useRef<HTMLHeadingElement | null>(null);
-    const taglineRef = useRef<HTMLDivElement | null>(null);
-    const btnWrapperRef = useRef<HTMLDivElement | null>(null);
+  const aboutTextRef = useRef<HTMLHeadingElement>(null);
 
-    useEffect(() => {
-        const aboutText = aboutTextRef.current;
-        const tagline = taglineRef.current;
-        const buttonWrapper = btnWrapperRef.current;
+  useEffect(() => {
+    const media = gsap.matchMedia();
+    media.add("(min-width: 841px) and (prefers-reduced-motion: no-preference)", () => {
+      const heading = aboutTextRef.current;
+      if (!heading) return;
+      gsap.fromTo(heading.querySelectorAll(".letter"), { opacity: 0.2 }, {
+        opacity: 1,
+        duration: 0.4,
+        stagger: 0.02,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: heading,
+          start: "top 90%",
+          end: "bottom 60%",
+          scrub: 1,
+        },
+      });
+    });
+    return () => media.revert();
+  }, []);
 
-        // Animate the aboutText (already implemented)
-        if (aboutText) {
-            const text = aboutText.textContent?.trim() || "";
-            const hasProcessed = aboutText.querySelector(".letter");
-
-            if (!hasProcessed) {
-                aboutText.innerHTML = text
-                    .split(" ")
-                    .map(word =>
-                        `<span class="word" style="will-change: opacity; display: inline-block;">${word.split("").map(letter => `<span class="letter" style="will-change: opacity; display: inline-block;">${letter}</span>`).join("")}</span>`
-                    )
-                    .join(" ") + " ";
-
-                const letters = aboutText.querySelectorAll(".letter");
-                gsap.set(letters, { opacity: 0.2 });
-
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger: aboutText,
-                        start: "top 90%",
-                        end: "bottom 60%",
-                        scrub: 1,
-                    },
-                }).to(letters, {
-                    opacity: 1,
-                    duration: 0.4,
-                    stagger: 0.02,
-                    ease: "power2.out",
-                });
-            }
-        }
-
-        // Animate tagline and button using a helper function
-        const animateElement = (element: HTMLElement | null, trigger: HTMLElement | null, start: string, end: string, fromProps: gsap.TweenVars) => {
-            if (element) {
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger,
-                        start,
-                        end,
-                        once: true,
-                    },
-                }).from(element, fromProps);
-            }
-        };
-
-        animateElement(tagline, tagline, "top 90%", "top 50%", { y: 20, opacity: 0, duration: 0.6, ease: "power2.out" });
-        animateElement(buttonWrapper, tagline, "top 50%", "top 30%", { y: 50, opacity: 0, duration: 1, ease: "power2.out" });
-
-    }, []);
-
-    return (
-        <section id="about" className={`${styles.about} relative w-full h-screen mx-auto`}>
-            <div className={styles.container}>
-                <div ref={taglineRef}>
-                  
-                </div>
-                <h2 className={styles.aboutText} ref={aboutTextRef}>
-                I am a <span>Software Developer</span> with 3 years of experience, specializing in creating <span>apps</span> that merge functionality with intuitive design. My expertise lies at the intersection of <span>mobile development</span>, <span>web development</span>, and <span>backend systems</span>, enabling me to craft seamless and innovative digital solutions. With a broad skill set, I approach challenges from diverse perspectives to deliver impactful and user-centric experiences.
-                </h2>
-                <div className={styles.btnSpace} ref={btnWrapperRef}>
-                   
-                </div>
-            </div>
-        </section>
-    );
+  return (
+    <section id="about" className={styles.about} aria-labelledby="about-heading">
+      <div className={styles.container}>
+        <h2 id="about-heading" className={styles.aboutText} ref={aboutTextRef}>
+          <span className="sr-only">{aboutText}</span>
+          <span aria-hidden="true">
+            {aboutText.split(" ").map((word, wordIndex) => (
+              <span key={wordIndex}>
+                <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>
+                  {word.split("").map((letter, letterIndex) => (
+                    <span className="letter" key={letterIndex} style={{ display: "inline-block" }}>{letter}</span>
+                  ))}
+                </span>{" "}
+              </span>
+            ))}
+          </span>
+        </h2>
+        <div className={styles.btnSpace} aria-hidden="true" />
+      </div>
+    </section>
+  );
 }

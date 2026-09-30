@@ -45,7 +45,7 @@
                     display: flex;
                     gap: 0.5rem;
 
-                    h5 {
+                    span {
                         @include font0_7;
                         width: fit-content;
                         padding: 0.8rem 1rem;
@@ -69,12 +69,82 @@
             &.blackText {
                 color: $textDark;
 
-                .projectDetails .category h5 {
+                .projectDetails .category span {
                     background: #ffffff8c;
                 }
             }
 
-            &:hover {
+            // Without a hover, keep the title and tags visible and give them a
+            // soft scrim so they read on any cover image.
+            @media (hover: none), (max-width: 600px) {
+                .projectDetails {
+                    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+
+                    .title h3 {
+                        transform: translateY(0);
+                    }
+
+                    .category span {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                &.blackText .projectDetails {
+                    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
+                }
+            }
+
+            // Covers are landscape screenshots, so on phones show the whole image
+            // in the lower part of the card over a blurred copy of itself instead
+            // of cropping it to a portrait strip.
+            @media (max-width: 600px) {
+                display: flex;
+                flex-direction: column;
+                background: $textDark;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    inset: -10%;
+                    background: var(--cover) center / cover no-repeat;
+                    filter: blur(28px) saturate(1.2) brightness(0.5);
+                    z-index: 0;
+                }
+
+                // Header flows above the image so any number of tag rows fits
+                .projectDetails {
+                    order: -1;
+                    position: relative;
+                    z-index: 2;
+                    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
+                }
+
+                img {
+                    position: relative;
+                    z-index: 1;
+                    flex: 1 1 0;
+                    min-height: 0;
+                    height: auto;
+                    object-fit: contain;
+                    object-position: center bottom;
+                    padding: 0 0.75rem 1rem;
+                }
+
+                &.blackText {
+                    color: $white;
+
+                    .projectDetails {
+                        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
+
+                        .category span {
+                            background: #3030302c;
+                        }
+                    }
+                }
+            }
+
+            &:hover, &:focus-visible {
                 img {
                     transform: scale(1.1);
                 }
@@ -87,7 +157,7 @@
                     }
 
                     .category {
-                        h5 {
+                        span {
                             opacity: 1;
                             transform: translateY(0);
                         }
@@ -109,8 +179,9 @@
 
                 .projectDetails {
                     flex-direction: column;
+
                     .category {
-                        flex-direction: column;
+                        flex-wrap: wrap;
                     }
                 }
             }
@@ -118,8 +189,25 @@
 
         @media (max-width: 600px) {
             grid-template-columns: 1fr;
+
             .projectCard {
-                max-height: 20rem;
+                height: auto;
+                max-height: none;
+                border-radius: 12px;
+
+                img {
+                    flex: none;
+                    width: 100%;
+                    height: auto;
+                }
+
+                .projectDetails {
+                    padding: 1.25rem 1rem 3rem;
+
+                    .category span {
+                        padding: 0.6rem 0.8rem;
+                    }
+                }
             }
         }
     }

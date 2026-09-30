@@ -15,6 +15,17 @@
         span {
             @include gradientText;
         }
+
+        @media (max-width: 600px) {
+            font-size: 27vw;
+            letter-spacing: -0.02em;
+            padding: 0 1rem;
+            line-height: 0.85;
+        }
+    }
+
+    @media (max-width: 600px) {
+        margin-top: 6rem;
     }
 
     /* Wrapper */
@@ -75,6 +86,11 @@
 
         @media (max-width: 600px) {
             flex-direction: column-reverse;
+            gap: 1.5rem;
+
+            .image img {
+                border-radius: 12px;
+            }
         }
     }
 }

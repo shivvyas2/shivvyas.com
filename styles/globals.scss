@@ -13,12 +13,11 @@ html {
 }
 
 body {
-    font-family: PPregular;
+    font-family: PPregular, system-ui, sans-serif;
     overflow-x: clip;
     font-variation-settings: normal;
     font-feature-settings: normal;
     font-display: swap;
-    overscroll-behavior: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: $black;
@@ -26,6 +25,7 @@ body {
     backface-visibility: hidden;
     touch-action: manipulation;
     transition: none !important;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body.loading-styles {
@@ -89,8 +89,8 @@ main {
     }
 
     @media (max-width: 600px) {
-        gap: 6rem;
-        padding-bottom: 6rem;
+        gap: 4rem;
+        padding-bottom: 5rem;
     }
 }
 
@@ -101,7 +101,39 @@ section {
 
 a {
     text-decoration: none;
-    color: var(--text-color);
+    color: inherit;
+}
+
+:focus-visible {
+    outline: 2px solid #ff985f;
+    outline-offset: 5px;
+}
+
+html { scroll-padding-top: 6rem; }
+
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.skip-link {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 100;
+    padding: 1rem;
+    background: #ff854d;
+    color: #111;
+    border-radius: 10px;
+    transform: translateY(-200%);
+    &:focus { transform: translateY(0); }
 }
 
 ul {
@@ -143,6 +175,16 @@ $fonts: (
     @font-face {
         font-family: $name;
         src: url("/fonts/#{$file}.woff2");
+        font-display: swap;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 }
 

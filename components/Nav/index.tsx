@@ -1,113 +1,153 @@
-import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router'; // Import useRouter
-import { gsap } from '@/libs/gsap';
-import styles from './Nav.module.scss';
+import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useLenis } from "@studio-freight/react-lenis";
+import { gsap } from "@/libs/gsap";
+import BrandMark from "@/components/BrandMark";
+import styles from "./Nav.module.scss";
 
-// Define your links and paths
 const links = [
-    { name: 'Home', path: '/' },
-    { name: 'About me', path: '/about' },
-    { name: 'Projects', path: '/projects' },
-    { name: 'Contact', path: '/contact' },
+  { name: "Home", path: "/" },
+  { name: "About me", path: "/about" },
+  { name: "Projects", path: "/projects" },
+  { name: "Contact", path: "/contact" },
 ];
 
 export default function Nav() {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const navigationMenuRef = useRef<HTMLDivElement>(null);
-    const linksRef = useRef<HTMLUListElement>(null);
-    const router = useRouter(); // Get the router instance
+  const [menuOpen, setMenuOpen] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const router = useRouter();
+  const lenis = useLenis();
 
-    // Menu Animation
-    useEffect(() => {
-        const links = linksRef.current?.children;
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (!menuOpen) {
+      if (dialog.open) {
+        dialog.close();
+        toggleRef.current?.focus();
+      }
+      return;
+    }
 
-        // Create a GSAP timeline
-        const timeline = gsap.timeline();
+    dialog.showModal();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const media = gsap.matchMedia();
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap
+        .timeline()
+        .fromTo(
+          dialog,
+          { clipPath: "inset(0% 0% 100% 0%)" },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: 0.8,
+            ease: "power4.inOut",
+          },
+        )
+        .fromTo(
+          dialog.querySelectorAll("li a"),
+          { y: "-100%" },
+          {
+            y: "0%",
+            duration: 0.8,
+            stagger: 0.05,
+            ease: "power4.inOut",
+          },
+          "-=0.3",
+        );
+    });
+    return () => {
+      media.revert();
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [menuOpen]);
 
-        if (menuOpen) {
-            // Open menu animation
-            timeline
-                .to(navigationMenuRef.current, {
-                    clipPath: 'inset(0% 0% 0% 0%)',
-                    duration: 0.8,
-                    ease: 'power4.inOut',
-                    autoAlpha: 1,
-                })
-                .fromTo(
-                    links ? Array.from(links).map(link => link.firstChild) : [], // Safely handle undefined
-                    { y: '-100%' }, // Start from below and invisible
-                    {
-                        y: '0%', // Move to original position
-                        duration: 0.8,
-                        stagger: 0.05,
-                        ease: 'power4.inOut',
-                    },
-                    '-=0.3' // Start the link animation 0.5 seconds earlier
-                );
-        } else {
-            // Close menu animation
-            timeline
-                .to(
-                    links ? Array.from(links).map(link => link.firstChild) : [], // Safely handle undefined
-                    {
-                        y: '-100%', // Move up
-                        duration: 0.8,
-                        stagger: 0.05,
-                        ease: 'power4.inOut',
-                    }
-                )
-                .to(navigationMenuRef.current, {
-                    clipPath: 'inset(0% 0% 100% 0%)', // Hide menu
-                    duration: 0.8,
-                    ease: 'power4.inOut',
-                }, '-=0.3'); // Start the menu hiding 0.5 seconds after link animation starts
-        }
+  useEffect(() => {
+    if (!menuOpen) return;
+    lenis?.stop();
+    return () => {
+      lenis?.start();
+    };
+  }, [menuOpen, lenis]);
 
-        // Cleanup function to kill the timeline on unmount
-        return () => {
-            timeline.kill();
-        };
-    }, [menuOpen]);
+  useEffect(() => {
+    const close = () => setMenuOpen(false);
+    router.events.on("routeChangeStart", close);
+    return () => router.events.off("routeChangeStart", close);
+  }, [router.events]);
 
-    // Close menu on route change
-    useEffect(() => {
-        const handleRouteChange = () => {
-            setMenuOpen(false); // Close the menu when navigating to a new page
-        };
+  const header = (isDialog: boolean) => (
+    <nav
+      className={styles.nav}
+      aria-label={isDialog ? "Menu controls" : "Primary navigation"}
+      style={!isDialog && menuOpen ? { visibility: "hidden" } : undefined}
+    >
+      <Link
+        href="/"
+        className={styles.logo}
+        aria-label="Shiv Vyas — home"
+        onClick={() => setMenuOpen(false)}
+      >
+        <span className={styles.brandGlow} aria-hidden="true">
+          <BrandMark variant="isometric" className={styles.brandMark} />
+        </span>
+        <span className={styles.wordmark}>Shiv Vyas</span>
+      </Link>
+      <button
+        type="button"
+        ref={isDialog ? undefined : toggleRef}
+        className={styles.menu_Toggle}
+        aria-label={isDialog ? "Close menu" : "Open menu"}
+        aria-expanded={menuOpen}
+        aria-controls="site-menu"
+        autoFocus={isDialog}
+        onClick={() => setMenuOpen(!isDialog)}
+      >
+        <span className={styles.bar} aria-hidden="true" />
+        <span>{isDialog ? "CLOSE" : "MENU"}</span>
+      </button>
+      <Link
+        href="/contact"
+        className={styles.link}
+        onClick={() => setMenuOpen(false)}
+      >
+        <span>Contact</span>
+      </Link>
+    </nav>
+  );
 
-        // Listen for route changes
-        router.events.on('routeChangeStart', handleRouteChange);
-
-        // Cleanup the event listener on unmount
-        return () => {
-            router.events.off('routeChangeStart', handleRouteChange);
-        };
-    }, [router.events]);
-
-    return (
-        <>
-            <nav className={styles.nav}>
-                <Link href='/' className={styles.logo}>
-                    <span>Shiv Vyas</span>
-                </Link>
-                <div className={styles.menu_Toggle} onClick={() => setMenuOpen(prev => !prev)}>
-                    <div className={styles.bar}></div>
-                    <span>{menuOpen ? 'CLOSE' : 'MENU'}</span>
-                </div>
-                <Link href='/contact' className={styles.link}>
-                    <span>Contact</span>
-                </Link>
-            </nav>
-            <div ref={navigationMenuRef} className={styles.navigationMenu}>
-                <ul ref={linksRef}>
-                    {links.map(({ name, path }) => (
-                        <li key={name}>
-                            <Link href={path}>{name}</Link>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        </>
-    );
+  return (
+    <>
+      {header(false)}
+      <dialog
+        id="site-menu"
+        ref={dialogRef}
+        className={styles.navigationMenu}
+        aria-label="Site navigation"
+        onCancel={() => setMenuOpen(false)}
+        onClose={() => setMenuOpen(false)}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) setMenuOpen(false);
+        }}
+      >
+        {header(true)}
+        <ul>
+          {links.map(({ name, path }) => (
+            <li key={path}>
+              <Link
+                href={path}
+                aria-current={router.pathname === path ? "page" : undefined}
+                onClick={() => setMenuOpen(false)}
+              >
+                {name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </dialog>
+    </>
+  );
 }

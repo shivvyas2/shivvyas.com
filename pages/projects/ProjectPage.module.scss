@@ -107,6 +107,32 @@
             background: #ffffff8c;
         }
     }
+
+    @media (max-width: 600px) {
+        height: auto;
+        padding: 6rem 1rem 0;
+        &::after { display: none; }
+
+        .imageWrapper {
+            height: auto;
+            aspect-ratio: 16 / 11;
+            border-radius: 18px;
+            overflow: hidden;
+            background: #151515;
+
+            img { object-fit: contain; }
+        }
+
+        .projectDetails {
+            position: relative;
+            padding: 1.5rem 0.25rem 0;
+            .titleRow { gap: 1rem; }
+            .category h5 { background: #ffffff12; }
+        }
+
+        &.blackText { color: $white; }
+        &.blackText .projectDetails .category h5 { background: #ffffff12; }
+    }
 }
 
 /* ========== Video Showcase ========== */
@@ -173,6 +199,7 @@
 
         .wrapper {
             background: linear-gradient(to bottom, $primary, #fa7300);
+            color: #17100c;
             border-radius: 10px;
             @include paddingArround;
             margin-bottom: 1rem;

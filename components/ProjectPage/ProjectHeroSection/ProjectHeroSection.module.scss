@@ -15,5 +15,16 @@
         span {
             @include gradientText;
         }
+
+        @media (max-width: 600px) {
+            font-size: 18vw;
+            letter-spacing: -0.02em;
+            padding: 0 1rem;
+            line-height: 0.85;
+        }
+    }
+
+    @media (max-width: 600px) {
+        margin-top: 6rem;
     }
 }

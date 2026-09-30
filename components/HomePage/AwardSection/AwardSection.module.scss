@@ -79,7 +79,7 @@
     }
 
     @media (max-width: 600px) {
-        height: 500px;
+        height: auto;
 
         .text {
             position: relative;
@@ -125,9 +125,21 @@
 
         .container {
             gap: .5rem;
+            max-height: 60vh;
+            overflow: hidden;
+            padding: 0 1rem;
 
             .col {
                 gap: .5rem;
+
+                &:nth-child(1) {
+                    margin-top: -12vw;
+                }
+
+                &:nth-child(3),
+                &:nth-child(4) {
+                    display: none;
+                }
             }
         }
     }

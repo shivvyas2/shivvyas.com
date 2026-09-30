@@ -8,13 +8,17 @@
 
 | File | Purpose |
 | --- | --- |
-| [Orange 3D mark](precision-fold/precision-fold-3d.png) | 512 × 512 PNG with transparency; footer, covers, and larger brand placements |
-| [White monochrome mark](precision-fold/precision-fold-mono.png) | 128 × 128 PNG on black; small navigation and icon use |
+| [Orange 3D mark](precision-fold/precision-fold-3d.png) | 512 × 512 PNG with transparency; header, footer, covers, and larger brand placements |
+| [White monochrome mark](precision-fold/precision-fold-mono.png) | 128 × 128 PNG on black; small icons and static monochrome uses |
 | [Orange master](precision-fold/masters/precision-fold-3d.png) | Original high-resolution production image |
 | [Monochrome master](precision-fold/masters/precision-fold-mono.png) | Original high-resolution white-on-black production image |
 | [Presentation](precision-fold/presentation.png) | Selected concept with dimensional and monochrome treatments |
 
-The monochrome PNG has a black background. The website uses its luminance as a mask when the mark needs to sit over another background. The orange production PNG has transparency. Keep the aspect ratio and clear space around either version.
+The monochrome PNG has a black background; use its luminance as a mask when it needs to sit over another background. The orange production PNG has transparency. Keep the aspect ratio and clear space around either version.
+
+### Header treatment
+
+The navbar uses the orange 3D mark with brighter highlights and a soft orange bloom. A 3.8-second pulse gently increases the mark's size by up to 5.5% while the glow brightens. Users who prefer reduced motion see the static illuminated version. This is an HDR-style visual effect made with CSS; the original PNG is a standard image, not HDR-encoded media.
 
 ## Browser and mobile icons
 

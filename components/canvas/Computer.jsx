@@ -20,8 +20,8 @@ const Computers = ({ isMobile }) => {
       <pointLight intensity={1.2} position={[10, 10, 10]} />
       <primitive
         object={scene}
-        scale={isMobile ? 0.7 : 0.65}
-        position={isMobile ? [0, -3, -2.2] : [0, -3.25, -1.5]}
+        scale={isMobile ? 0.55 : 0.65}
+        position={isMobile ? [0, -2.9, -1.4] : [0, -3.25, -1.5]}
         rotation={[-0.01, -0.2, -0.1]}
       />
     </mesh>
@@ -32,7 +32,7 @@ const ComputersCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 500px)");
+    const mediaQuery = window.matchMedia("(max-width: 600px)");
     setIsMobile(mediaQuery.matches);
 
     const handleMediaQueryChange = (event) => {
@@ -49,9 +49,9 @@ const ComputersCanvas = () => {
     <Canvas
       frameloop="demand"
       shadows
-      dpr={[1, 2]}
+      dpr={isMobile ? 1 : [1, 1.5]}
       camera={{ position: [20, 3, 5], fov: 25 }}
-      gl={{ preserveDrawingBuffer: true }}
+      gl={{ powerPreference: isMobile ? "low-power" : "high-performance" }}
     >
      
         <OrbitControls
@@ -59,8 +59,10 @@ const ComputersCanvas = () => {
           maxPolarAngle={Math.PI / 2}
           minPolarAngle={Math.PI / 2}
         />
+        <Suspense fallback={null}>
         <Environment preset="city" /> {/* Adds an environment map */}
         <Computers isMobile={isMobile} />
+        </Suspense>
   
       <Preload all />
     </Canvas>

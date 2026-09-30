@@ -3,6 +3,7 @@
 .hero {
   @include paddingArround;
   height: 100vh;
+  height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -14,7 +15,7 @@
   background-size: cover; // Ensure the image covers the section
 
   @media (max-width: 600px) {
-    height: 90vh;
+    padding: 1.25rem;
   }
 
   /* Background Canvas */
@@ -34,8 +35,18 @@
       pointer-events: none; // Ensure the canvas doesn't capture clicks
       transform: scale(1.1); // Scale up the canvas content
     }
-    @media (max-width: 768px) {
-      object-fit: contain;  
+
+    // On phones the canvas is portrait, so let the model fill the width instead
+    // of scaling it past the edges, and keep it clear of the intro text.
+    @media (max-width: 600px) {
+      top: 14%;
+      height: 70%;
+
+      canvas {
+        width: 100%;
+        height: 100%;
+        transform: none;
+      }
     }
   }
 
@@ -44,12 +55,20 @@
     position: absolute;
     top: 10rem; // Distance from the top
     left: 5rem; // Distance from the right
+    right: 5rem;
     z-index: 3; // Place above the background canvas
     text-align: left; // Align text to the right
 
     @media (max-width: 768px) {
       top: 5rem;
       left: 2rem;
+      right: 2rem;
+    }
+
+    @media (max-width: 600px) {
+      top: 5.5rem;
+      left: 1.25rem;
+      right: 1.25rem;
     }
 
     .cta {
@@ -120,11 +139,53 @@
 
       @media (max-width: 768px) {
         font-size: 20px;
+        line-height: 1.5;
       }
 
       @media (max-width: 600px) {
-        font-size: 16px;
+        font-size: 17px;
+        max-width: 22rem;
       }
+    }
+  }
+
+  /* Scroll-down button */
+  .scrollDown {
+    position: relative;
+    z-index: 3;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    color: $white;
+    -webkit-tap-highlight-color: transparent;
+
+    .scrollDownRing {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 3.25rem;
+      height: 3.25rem;
+      border-radius: 50%;
+      border: 2px solid $primary;
+      background: rgba(244, 78, 0, 0.35);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 20px rgba(244, 78, 0, 0.35);
+      transition: background $transition, transform $transition;
+    }
+
+    .scrollDownIcon {
+      display: flex;
+
+      svg {
+        width: 1.6rem;
+        height: 1.6rem;
+      }
+    }
+
+    &:hover .scrollDownRing {
+      background: rgba(244, 78, 0, 0.6);
+      transform: scale(1.08);
     }
   }
  
@@ -171,4 +232,3 @@
     }
   }
 }
-

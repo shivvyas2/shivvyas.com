@@ -16,6 +16,17 @@
         span {
             @include gradientText;
         }
+
+        @media (max-width: 600px) {
+            font-size: 19vw;
+            letter-spacing: -0.02em;
+            padding: 0 1rem;
+            line-height: 0.85;
+        }
+    }
+
+    @media (max-width: 600px) {
+        margin-top: 6rem;
     }
 }
 
@@ -37,7 +48,11 @@
             width: fit-content;
             @include font-4_5;
             transition: all $transition;
-            opacity: 0;
+            opacity: 1;
+
+            @media (max-width: 600px) {
+                padding: 0.35rem 0;
+            }
 
             &:hover {
                 color: $primary;

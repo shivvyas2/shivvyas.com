@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node ./scripts/generate-sitemap.js",
+    "build": "node ./scripts/generate-sitemap.js && next build",
     "start": "next start",
     "lint": "next lint",
     "generate-sitemap": "node ./scripts/generate-sitemap.js",
+    "generate-brand": "node ./scripts/generate-brand-assets.js && node ./scripts/generate-social-image.js",
     "build:resume": "tectonic resume/ShivVyas_Resume.tex -o public/resume"
   },
   "dependencies": {

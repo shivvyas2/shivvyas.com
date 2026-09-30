@@ -1,138 +1,269 @@
 @import "@/styles/variables.scss";
 
 .projects {
-    @include section;
+  @include section;
 
-    .heading {
-        border-bottom: 1px solid $borderColor;
-        padding-bottom: 2rem;
+  .heading {
+    border-bottom: 1px solid $borderColor;
+    padding-bottom: 2rem;
 
-        .headingWrapper {
-            @include mT2;
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: flex-end;
-            flex-wrap: wrap;
-            gap: 2rem;
+    .headingWrapper {
+      @include mT2;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 2rem;
 
-            h1 {
-                @include font-4_5;
-                max-width: 50rem;
-                width: 100%;
-            }
-        }
+      h2 {
+        @include font-4_5;
+        max-width: 50rem;
+        width: 100%;
+      }
     }
+  }
 
-    .wrapper {
-        @include mT4;
+  .wrapper {
+    @include mT4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .projectCard {
+      position: sticky;
+      top: 10vh;
+      width: 65vw;
+      height: calc(100vh - 20vh);
+      border-radius: 15px;
+      overflow: hidden;
+
+      @media (max-width: 840px) {
+        width: 100%;
+      }
+
+      @media (max-width: 600px) {
+        top: 12svh;
+        height: 56svh;
+        border-radius: 12px;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform $transition;
+      }
+
+      .projectDetails {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        @include paddingArround;
+
+        .title {
+          overflow: hidden;
+
+          h3 {
+            @include font-1_8;
+            transform: translateY(-100%);
+            transition: transform $transition;
+          }
+        }
+
+        .category {
+          display: flex;
+          gap: 0.5rem;
+
+          span {
+            @include font0_7;
+            width: fit-content;
+            padding: 0.8rem 1rem;
+            background: #3030302c;
+            backdrop-filter: blur(10px);
+            border-radius: 5px;
+            display: inline-block;
+            overflow: hidden;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: all $transition;
+
+            &:nth-child(2) {
+              transition-delay: 0.1s;
+            }
+          }
+        }
+
+        @media (max-width: 600px) {
+          flex-direction: column;
+          gap: 1rem;
+          padding: 1.25rem 1rem 3rem;
+
+          .category {
+            flex-wrap: wrap;
+            gap: 0.5rem;
+
+            span {
+              padding: 0.6rem 0.8rem;
+            }
+          }
+        }
+      }
+
+      // Dark text for covers with light backgrounds (set per project in projectsData)
+      &.blackText {
+        color: $textDark;
+
+        .projectDetails .category span {
+          background: #ffffff8c;
+        }
+      }
+
+      // Without a hover, keep the title and tags visible and give them a
+      // soft scrim so they read on any cover image.
+      @media (hover: none), (max-width: 600px) {
+        .projectDetails {
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.6),
+            rgba(0, 0, 0, 0)
+          );
+
+          .title h3 {
+            transform: translateY(0);
+          }
+
+          .category span {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        &.blackText .projectDetails {
+          background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.75),
+            rgba(255, 255, 255, 0)
+          );
+        }
+      }
+
+      // Covers are landscape screenshots, so on phones show the whole image
+      // in the lower part of the card over a blurred copy of itself instead
+      // of cropping it to a portrait strip.
+      @media (max-width: 600px) {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        background: $textDark;
 
-        .projectCard {
-            position: sticky;
-            top: 10vh;
-            width: 65vw;
-            height: calc(100vh - 20vh);
-            border-radius: 15px;
-            overflow: hidden;
-
-            @media (max-width: 840px) {
-                width: 100%;
-            }
-
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                transition: transform $transition;
-            }
-
-            .projectDetails {
-                position: absolute;
-                top: 0;
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                @include paddingArround;
-
-                .title {
-                    overflow: hidden;
-
-                    h3 {
-                        @include font-1_8;
-                        transform: translateY(-100%);
-                        transition: transform $transition;
-                    }
-                }
-
-                .category {
-                    display: flex;
-                    gap: 0.5rem;
-
-                    h5 {
-                        @include font0_7;
-                        width: fit-content;
-                        padding: 0.8rem 1rem;
-                        background: #3030302c;
-                        backdrop-filter: blur(10px);
-                        border-radius: 5px;
-                        display: inline-block;
-                        overflow: hidden;
-                        transform: translateY(-50%);
-                        opacity: 0;
-                        transition: all $transition;
-
-                        &:nth-child(2) {
-                            transition-delay: 0.1s;
-                        }
-                    }
-                }
-
-                @media (max-width: 600px) {
-                    flex-direction: column;
-                    gap: 1.5rem;
-                    padding: 2rem 1rem;
-
-                    .category {
-                        flex-direction: column;
-                        gap: 0.5rem;
-                    }
-                }
-            }
-
-            // Dark text for covers with light backgrounds (set per project in projectsData)
-            &.blackText {
-                color: $textDark;
-
-                .projectDetails .category h5 {
-                    background: #ffffff8c;
-                }
-            }
-
-            &:hover {
-                img {
-                    transform: scale(1.1);
-                }
-
-                .projectDetails {
-                    .title {
-                        h3 {
-                            transform: translateY(0);
-                        }
-                    }
-
-                    .category {
-                        h5 {
-                            opacity: 1;
-                            transform: translateY(0);
-                        }
-                    }
-                }
-            }
+        &::before {
+          content: "";
+          position: absolute;
+          inset: -10%;
+          background: var(--cover) center / cover no-repeat;
+          filter: blur(28px) saturate(1.2) brightness(0.5);
+          z-index: 0;
         }
+
+        // Header flows above the image so any number of tag rows fits
+        .projectDetails {
+          order: -1;
+          position: relative;
+          z-index: 2;
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.55),
+            rgba(0, 0, 0, 0)
+          );
+        }
+
+        img {
+          position: relative;
+          z-index: 1;
+          flex: 1 1 0;
+          min-height: 0;
+          height: auto;
+          object-fit: contain;
+          object-position: center bottom;
+          padding: 0 0.75rem 1rem;
+        }
+
+        &.blackText {
+          color: $white;
+
+          .projectDetails {
+            background: linear-gradient(
+              to bottom,
+              rgba(0, 0, 0, 0.55),
+              rgba(0, 0, 0, 0)
+            );
+
+            .category span {
+              background: #3030302c;
+            }
+          }
+        }
+      }
+
+      &:hover,
+      &:focus-visible {
+        img {
+          transform: scale(1.1);
+        }
+
+        .projectDetails {
+          .title {
+            h3 {
+              transform: translateY(0);
+            }
+          }
+
+          .category {
+            span {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        }
+      }
     }
+  }
 }
 
+.projects {
+  .allProjects {
+    display: flex;
+    justify-content: center;
+    margin-top: 2.5rem;
+  }
+  @media (max-width: 840px), (prefers-reduced-motion: reduce) {
+    .wrapper {
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .wrapper .projectCard {
+      position: relative;
+      top: auto;
+    }
+  }
+  @media (max-width: 600px) {
+    .wrapper .projectCard {
+      height: auto;
+      min-height: 0;
+    }
+    .wrapper .projectCard .projectDetails {
+      padding: 1.25rem;
+    }
+    .wrapper .projectCard img {
+      flex: none;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 10;
+      object-fit: contain;
+      padding: 0 0.75rem 0.75rem;
+    }
+  }
+}

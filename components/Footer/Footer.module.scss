@@ -1,126 +1,155 @@
 @import "@/styles/variables.scss";
 
 .footer {
-    width: 100%;
-    background-position: center;
-    object-fit: cover;
-    background-size: cover;
-    overflow: hidden;
+  width: 100%;
+  background-position: center;
+  object-fit: cover;
+  background-size: cover;
+  overflow: hidden;
 
-    .container {
-        @include section;
+  .container {
+    @include section;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-bottom: 8em;
+
+    /* Footer top */
+    .wrapper {
+      display: flex;
+      align-items: flex-start;
+
+      .col {
+        flex: 1;
+
+        p {
+          @include font-1;
+          line-height: 1.2;
+        }
+
+        a {
+          @include font0_7;
+          @include mT1;
+          display: block;
+          width: fit-content;
+          transition: color $transition;
+
+          &:hover {
+            color: $primary;
+          }
+        }
+
+        .brand {
+          display: inline-flex;
+          margin: 0 0 1rem;
+          line-height: 0;
+        }
+      }
+
+      .linksCol {
+        flex: 1;
         display: flex;
         flex-direction: column;
-        gap: 2rem;
-        padding-bottom: 8em;
+        align-items: flex-start;
+        gap: 1rem;
 
-        /* Footer top */
-        .wrapper {
-            display: flex;
-            align-items: flex-start;
+        a {
+          @include font-2_75;
+          transition: color $transition;
 
-            .col {
-                flex: 1;
-
-                p {
-                    @include font-1;
-                    line-height: 1.2;
-                }
-
-                a {
-                    @include font0_7;
-                    @include mT1;
-                    display: block;
-                    width: fit-content;
-                    transition: color $transition;
-
-                    &:hover {
-                        color: $primary;
-                    }
-                }
-            }
-
-            .linksCol {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-
-                a {
-                    @include font-2_75;
-                    transition: color $transition;
-
-                    &:hover {
-                        color: $primary;
-                    }
-                }
-            }
+          &:hover {
+            color: $primary;
+          }
         }
-
-        .border {
-            height: 1px;
-            width: 100%;
-            background: $borderColor;
-        }
-
-        /* Footer Bottom */
-        .copyrights {
-            display: flex;
-            align-items: flex-start;
-
-            .col {
-                flex: 1;
-
-                p {
-                    @include font0_7;
-                }
-            }
-
-            .linksCol {
-                flex: 1;
-                display: flex;
-                flex-wrap: wrap;
-                gap: 3rem;
-
-                a {
-                    @include font0_7;
-                    transition: color $transition;
-
-                    &:hover {
-                        color: $primary;
-                    }
-                }
-            }
-        }
-
-        @media (max-width: 600px) {
-            padding-bottom: 4rem;
-
-            .wrapper {
-                flex-direction: column;
-                gap: 4rem;
-            }
-
-            .copyrights {
-                flex-direction: column-reverse;
-                gap: 4rem;
-
-                .linksCol {
-                    gap: 1rem;
-                    flex-direction: column;
-                }
-            }
-        }
+      }
     }
 
-    /* Bottom text */
-    .bigText {
-        @include gradientText;
-        font-size: 14.8vw;
-        letter-spacing: -1vw;
-        text-transform: uppercase;
-        line-height: 0.75;
-        font-weight: lighter;
+    .border {
+      height: 1px;
+      width: 100%;
+      background: $borderColor;
     }
+
+    /* Footer Bottom */
+    .copyrights {
+      display: flex;
+      align-items: flex-start;
+
+      .col {
+        flex: 1;
+
+        p {
+          @include font0_7;
+        }
+      }
+
+      .linksCol {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3rem;
+
+        a {
+          @include font0_7;
+          transition: color $transition;
+
+          &:hover {
+            color: $primary;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 600px) {
+      padding-bottom: 4rem;
+
+      .wrapper {
+        flex-direction: column;
+        gap: 4rem;
+      }
+
+      .copyrights {
+        flex-direction: column-reverse;
+        gap: 4rem;
+
+        .linksCol {
+          gap: 1rem;
+          flex-direction: column;
+        }
+      }
+    }
+  }
+
+  /* Bottom text */
+  .bigText {
+    @include gradientText;
+    font-size: 14.8vw;
+    letter-spacing: -1vw;
+    text-transform: uppercase;
+    line-height: 0.75;
+    font-weight: lighter;
+  }
+}
+@media (max-width: 600px) {
+  .footer .container .wrapper .col a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .footer .container .wrapper .linksCol a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .footer .container .copyrights .linksCol {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    gap: 0.4rem 1.5rem;
+  }
+  .footer .container .copyrights .linksCol a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
 }
