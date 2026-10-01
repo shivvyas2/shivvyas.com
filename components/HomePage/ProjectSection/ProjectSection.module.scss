@@ -39,15 +39,6 @@
       border-radius: 15px;
       overflow: hidden;
 
-      @media (max-width: 840px) {
-        width: 100%;
-      }
-
-      @media (max-width: 600px) {
-        top: 12svh;
-        height: 56svh;
-        border-radius: 12px;
-      }
 
       img {
         width: 100%;
@@ -97,20 +88,6 @@
           }
         }
 
-        @media (max-width: 600px) {
-          flex-direction: column;
-          gap: 1rem;
-          padding: 1.25rem 1rem 3rem;
-
-          .category {
-            flex-wrap: wrap;
-            gap: 0.5rem;
-
-            span {
-              padding: 0.6rem 0.8rem;
-            }
-          }
-        }
       }
 
       // Dark text for covers with light backgrounds (set per project in projectsData)
@@ -151,62 +128,6 @@
         }
       }
 
-      // Covers are landscape screenshots, so on phones show the whole image
-      // in the lower part of the card over a blurred copy of itself instead
-      // of cropping it to a portrait strip.
-      @media (max-width: 600px) {
-        display: flex;
-        flex-direction: column;
-        background: $textDark;
-
-        &::before {
-          content: "";
-          position: absolute;
-          inset: -10%;
-          background: var(--cover) center / cover no-repeat;
-          filter: blur(28px) saturate(1.2) brightness(0.5);
-          z-index: 0;
-        }
-
-        // Header flows above the image so any number of tag rows fits
-        .projectDetails {
-          order: -1;
-          position: relative;
-          z-index: 2;
-          background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.55),
-            rgba(0, 0, 0, 0)
-          );
-        }
-
-        img {
-          position: relative;
-          z-index: 1;
-          flex: 1 1 0;
-          min-height: 0;
-          height: auto;
-          object-fit: contain;
-          object-position: center bottom;
-          padding: 0 0.75rem 1rem;
-        }
-
-        &.blackText {
-          color: $white;
-
-          .projectDetails {
-            background: linear-gradient(
-              to bottom,
-              rgba(0, 0, 0, 0.55),
-              rgba(0, 0, 0, 0)
-            );
-
-            .category span {
-              background: #3030302c;
-            }
-          }
-        }
-      }
 
       &:hover,
       &:focus-visible {
@@ -233,32 +154,74 @@
   }
 }
 
+// Phones and small tablets: the same stacked, sticky cards as on desktop,
+// sized for a portrait screen. Covers crop to fill the card; the title and
+// tags sit at the bottom on a dark scrim so they read on any image.
 .projects {
-  @media (max-width: 840px), (prefers-reduced-motion: reduce) {
+  @media (max-width: 840px) {
     .wrapper {
-      gap: 1.5rem;
       margin-top: 2rem;
     }
+
+    .wrapper .projectCard {
+      top: 13svh;
+      width: 100%;
+      height: min(72svh, 128vw);
+      border-radius: 14px;
+      color: $white;
+
+      img {
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .projectDetails,
+      &.blackText .projectDetails {
+        top: auto;
+        bottom: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 4rem 1.25rem 1.25rem;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.82) 0%,
+          rgba(0, 0, 0, 0.5) 55%,
+          rgba(0, 0, 0, 0) 100%
+        );
+
+        .title h3 {
+          transform: none;
+          font-size: clamp(1.65rem, 7.5vw, 2.4rem);
+          line-height: 1.05;
+        }
+
+        .category {
+          flex-wrap: wrap;
+          gap: 0.4rem;
+
+          span {
+            opacity: 1;
+            transform: none;
+            padding: 0.45rem 0.7rem;
+            font-size: 0.72rem;
+            color: $white;
+            background: rgba(255, 255, 255, 0.14);
+          }
+        }
+      }
+    }
+  }
+
+  // Reduced motion: no sticky stacking, just a list.
+  @media (prefers-reduced-motion: reduce) {
+    .wrapper {
+      gap: 1.5rem;
+    }
+
     .wrapper .projectCard {
       position: relative;
       top: auto;
-    }
-  }
-  @media (max-width: 600px) {
-    .wrapper .projectCard {
-      height: auto;
-      min-height: 0;
-    }
-    .wrapper .projectCard .projectDetails {
-      padding: 1.25rem;
-    }
-    .wrapper .projectCard img {
-      flex: none;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 16 / 10;
-      object-fit: contain;
-      padding: 0 0.75rem 0.75rem;
     }
   }
 }

@@ -68,7 +68,8 @@ async function main() {
 
   const icons = [];
   for (const size of [16, 32, 48, 96, 180, 192, 512]) {
-    const data = await render(flat, size, "#000000", Math.round(size * 0.04));
+    // Favicons and app icons use the orange 3D Precision Fold mark.
+    const data = await render(dimensional, size, "#000000", Math.round(size * 0.04));
     const filename =
       size === 96
         ? "favicon-96x96.png"

@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { blurredCoverUrl } from "@/utils/imageUrls";
 import { gsap } from "@/libs/gsap";
 import { splitText } from "@/utils/textUtils";
 import styles from "./ProjectSection.module.scss";
@@ -50,24 +49,26 @@ export default function ProjectSection() {
             0.8,
           );
         }
-
-        // Project Card Animation
-        cardRefs.current.forEach((card, i) => {
-          if (i < cardRefs.current.length - 1) {
-            gsap.to(card, {
-              scale: 0.8,
-              opacity: 0,
-              scrollTrigger: {
-                trigger: cardRefs.current[i + 1],
-                start: "top center",
-                end: "top top",
-                scrub: true,
-              },
-            });
-          }
-        });
       },
     );
+    // The stacked-card animation runs on every screen size (phones included);
+    // only reduced motion opts out.
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      cardRefs.current.forEach((card, i) => {
+        if (i < cardRefs.current.length - 1) {
+          gsap.to(card, {
+            scale: 0.8,
+            opacity: 0,
+            scrollTrigger: {
+              trigger: cardRefs.current[i + 1],
+              start: "top center",
+              end: "top top",
+              scrub: true,
+            },
+          });
+        }
+      });
+    });
     return () => media.revert();
   }, []);
 
@@ -106,7 +107,6 @@ export default function ProjectSection() {
             href={`/projects/${project.slug}`}
             ref={addToRefs}
             className={`${styles.projectCard} ${project.textColor === "black" ? styles.blackText : ""}`}
-            style={{ ["--cover" as string]: blurredCoverUrl(project.img) }}
           >
             <Image
               src={project.img}

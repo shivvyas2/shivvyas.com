@@ -18,21 +18,21 @@ export default function App({ Component, pageProps }: AppProps) {
         <link
           rel="icon"
           type="image/x-icon"
-          href="/favicon.ico"
+          href="/favicon.ico?v=orange"
           sizes="16x16 32x32 48x48"
         />
         <link
           rel="icon"
           type="image/png"
-          href="/favicon-96x96.png"
+          href="/favicon-96x96.png?v=orange"
           sizes="96x96"
         />
         <link
           rel="apple-touch-icon"
-          href="/apple-touch-icon.png"
+          href="/apple-touch-icon.png?v=orange"
           sizes="180x180"
         />
-        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="manifest" href="/site.webmanifest?v=orange" />
       </Head>
       <noscript>
         <style>{`.intro { display: none !important; }`}</style>
