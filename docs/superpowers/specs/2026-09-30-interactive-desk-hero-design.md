@@ -129,3 +129,28 @@ Behavior:
 - New objects beyond keyboard, mouse, mic and diary.
 - CMS for diary content (copy lives in `diaryPages.js`).
 - Changes to non-home pages' animations.
+
+## Implementation notes (2026-09-30)
+
+Measured with Lighthouse (mobile, production build, localhost):
+
+| | Before | After |
+|---|---|---|
+| Performance score | 0.38 | 0.80 |
+| First Contentful Paint | 1.4 s | 0.9 s |
+| Largest Contentful Paint | 85.9 s | 1.8 s |
+| Total Blocking Time | 1,640 ms | 850 ms |
+| Total transfer | 53,200 KiB | 1,590 KiB |
+
+Most of the transfer drop came from outside the 3D scene: the phone project cards' blurred CSS background pointed at full-size originals (~47 MB), award images bypassed the optimizer (~5 MB), and the intro forced every image on the page to load eagerly. The desk model went from ~1.66 MB to a 447 KB meshopt GLB.
+
+Deviations from this spec:
+
+1. Keyboard sound is Shiv's recorded key press (`public/audio/key-press.mp3`, 6 KB, loaded on desk hover); synthesized clicks remain a fallback and the mouse slide sound is synthesized.
+2. Hover highlight is a lift plus warm emissive tint instead of an outline.
+3. Caveat is loaded through `next/font/google` with `preload: false`.
+4. Draw calls rose by ~25 (each interactive node keeps one mesh per material).
+5. Ink-in is a stroke-order mask revealed in the shader (no per-frame texture uploads).
+6. Pressed keys also darken (key travel is invisible from directly above).
+7. The mic arm lowers its head to reach further when dragged outward (fixed-height IK could only move ~0.7 units).
+8. Portrait phones rotate the overhead desk shot 90° so the desk fills the screen.
