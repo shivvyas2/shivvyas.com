@@ -5,11 +5,17 @@ import {
   mergeGeometries,
   mergeVertices,
 } from "three/addons/utils/BufferGeometryUtils.js";
-import { mkdir, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, rm, stat, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { NodeIO } from "@gltf-transform/core";
+import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
+import { dedup, meshopt, prune } from "@gltf-transform/functions";
+import { MeshoptDecoder, MeshoptEncoder } from "meshoptimizer";
 
 // Rebuild the ACTIVE desk asset from Shiv's reference setup. Units are metres
-// scaled for the hero. Exported geometry is merged by material to reduce draws.
+// scaled for the hero. Static geometry is merged by material; interactive groups keep their own nodes.
 const destination = fileURLToPath(
   new URL("../../public/desktop_pc/", import.meta.url),
 );
@@ -121,6 +127,12 @@ function group(name, position, rotation = [0, 0, 0], parent = scene) {
   result.rotation.set(...rotation);
   parent.add(result);
   return result;
+}
+// Interactive groups are exported as their own nodes (merged per material
+// inside), so the runtime can move them. Everything else is batched statically.
+function interactive(object) {
+  object.userData.interactive = true;
+  return object;
 }
 function rod(name, start, end, radius, mat, parent = scene) {
   const a = new THREE.Vector3(...start),
@@ -453,11 +465,9 @@ box(
   0.005,
 );
 
-// Detailed external mechanical keyboard; modeled keycaps and legends.
-const keyboard = group(
-  "Mechanical keyboard",
-  [0.04, 0.073, 1.0],
-  [-0.035, 0, 0],
+// Mechanical keyboard case; keycaps are instanced at runtime (keyboardLayout.mjs).
+const keyboard = interactive(
+  group("Interactive_Keyboard", [0.04, 0.073, 1.0], [-0.035, 0, 0]),
 );
 box(
   "Keyboard aluminum case",
@@ -474,46 +484,6 @@ box(
   mats.graphite,
   keyboard,
   0.018,
-);
-for (let row = 0; row < 5; row++)
-  for (let col = 0; col < 15; col++) {
-    const x = -0.833 + col * 0.119,
-      z = -0.255 + row * 0.119;
-    const keyMaterial =
-      row === 0 || col === 0 || col >= 13 ? mats.key : mats.keyLight;
-    box(
-      "Mechanical key",
-      [0.108, 0.058, 0.102],
-      [x, 0.133, z],
-      row === 0 && col === 0 ? mats.orange : keyMaterial,
-      keyboard,
-      0.013,
-    );
-    if (row !== 4 || col < 3 || col > 10)
-      box(
-        "Keycap glyph",
-        [0.025, 0.002, 0.007],
-        [x - 0.023, 0.163, z - 0.019],
-        mats.legend,
-        keyboard,
-        0.001,
-      );
-  }
-box(
-  "Keyboard spacebar",
-  [0.6, 0.061, 0.103],
-  [-0.065, 0.137, 0.22],
-  mats.key,
-  keyboard,
-  0.012,
-);
-box(
-  "Keyboard orange enter",
-  [0.18, 0.065, 0.1],
-  [0.772, 0.139, -0.018],
-  mats.orange,
-  keyboard,
-  0.013,
 );
 cable("Keyboard cable", [
   [-0.69, 0.1, 0.68],
@@ -540,7 +510,9 @@ box(
   scene,
   0.038,
 );
-const mouse = group("Ergonomic mouse", [1.38, 0.1, 1.02], [0, -0.12, 0]);
+const mouse = interactive(
+  group("Interactive_Mouse", [1.38, 0.1, 1.02], [0, -0.12, 0]),
+);
 const mouseBody = mesh(
   "Mouse curved shell",
   new THREE.SphereGeometry(1, 24, 16),
@@ -680,75 +652,48 @@ cylinder(
   [Math.PI / 2, 0, 0],
 );
 
-// Right-hand articulated recording arm with spring pair, microphone, pop filter.
-const mic = group("Recording microphone", [3.24, 0.018, 0.51]);
-box(
-  "Desk microphone clamp",
-  [0.2, 0.11, 0.32],
-  [0, -0.032, 0],
-  mats.black,
-  mic,
-  0.015,
+// Right-hand articulated recording arm. Pivot groups let the runtime bend it:
+// Base (yaw) > Lower (shoulder pitch) > Upper (elbow pitch) > Head (kept level).
+const ELBOW = [0, 1.09, -0.15];
+const TIP = [-0.11, 2.05, -0.63];
+const from = (origin, point) => point.map((v, i) => v - origin[i]);
+const micBase = interactive(group("Interactive_Mic_Base", [3.24, 0.018, 0.51]));
+const micLower = interactive(group("Interactive_Mic_Lower", [0, 0, 0], [0, 0, 0], micBase));
+const micUpper = interactive(group("Interactive_Mic_Upper", ELBOW, [0, 0, 0], micLower));
+const micHead = interactive(
+  group("Interactive_Mic_Head", from(ELBOW, TIP), [0, 0, 0], micUpper),
 );
-rod("Mic upright", [0, 0, 0], [0, 1.09, -0.15], 0.037, mats.black, mic);
-rod(
-  "Mic arm upper",
-  [0, 1.09, -0.15],
-  [-0.11, 2.05, -0.63],
-  0.037,
-  mats.graphite,
-  mic,
-);
-rod(
-  "Mic arm parallel",
-  [0.105, 0.34, -0.044],
-  [0.105, 1.09, -0.15],
-  0.018,
-  mats.black,
-  mic,
-);
-rod(
-  "Mic upper parallel",
-  [0.105, 1.09, -0.15],
-  [-0.005, 2.05, -0.63],
-  0.018,
-  mats.black,
-  mic,
-);
-for (const p of [
-  [0, 0.15, -0.02],
-  [0, 1.09, -0.15],
-  [-0.11, 2.05, -0.63],
-])
-  cylinder("Microphone arm pivot", 0.063, 0.125, p, mats.graphite, mic, [
-    0,
-    0,
-    Math.PI / 2,
-  ]);
+
+box("Desk microphone clamp", [0.2, 0.11, 0.32], [0, -0.032, 0], mats.black, micBase, 0.015);
+
+rod("Mic upright", [0, 0, 0], ELBOW, 0.037, mats.black, micLower);
+rod("Mic arm parallel", [0.105, 0.34, -0.044], [0.105, 1.09, -0.15], 0.018, mats.black, micLower);
+cylinder("Microphone arm pivot", 0.063, 0.125, [0, 0.15, -0.02], mats.graphite, micLower, [0, 0, Math.PI / 2]);
 for (let i = 0; i < 17; i++)
   mesh(
     "Arm tension spring",
     new THREE.TorusGeometry(0.033, 0.006, 5, 10),
     mats.silver,
     [0.084, 0.27 + i * 0.026, -0.04 - i * 0.0036],
-    mic,
+    micLower,
     [Math.PI / 2, 0, 0],
   );
-const capsule = group(
-  "Microphone capsule",
-  [-0.29, 2.08, -0.65],
-  [0, 0, -0.24],
-  mic,
+cable("Microphone cable lower", [[0, 1.15, -0.17], [0, 0.3, -0.01], [-0.26, 0.1, -0.04]], 0.015, micLower);
+
+rod("Mic arm upper", [0, 0, 0], from(ELBOW, TIP), 0.037, mats.graphite, micUpper);
+rod("Mic upper parallel", [0.105, 0, 0], from(ELBOW, [-0.005, 2.05, -0.63]), 0.018, mats.black, micUpper);
+for (const p of [[0, 0, 0], from(ELBOW, TIP)])
+  cylinder("Microphone arm pivot", 0.063, 0.125, p, mats.graphite, micUpper, [0, 0, Math.PI / 2]);
+cable(
+  "Microphone cable upper",
+  [[-0.29, 0.86, -0.5], [-0.39, 0.54, -0.46], [-0.18, 0.3, -0.27], [0, 0.06, -0.02]],
+  0.015,
+  micUpper,
 );
+
+const capsule = group("Microphone capsule", from(TIP, [-0.29, 2.08, -0.65]), [0, 0, -0.24], micHead);
 cylinder("Microphone barrel", 0.075, 0.22, [0, 0, 0], mats.graphite, capsule);
-cylinder(
-  "Microphone mesh grille",
-  0.079,
-  0.23,
-  [0, 0.217, 0],
-  mats.grille,
-  capsule,
-);
+cylinder("Microphone mesh grille", 0.079, 0.23, [0, 0.217, 0], mats.grille, capsule);
 for (let i = 0; i < 12; i++)
   mesh(
     "Grille horizontal wire",
@@ -766,71 +711,31 @@ mesh(
   capsule,
   [Math.PI / 2, 0, 0],
 );
-rod(
-  "Pop filter stem",
-  [-0.22, 1.76, -0.59],
-  [-0.51, 2.01, -0.49],
-  0.012,
-  mats.black,
-  mic,
-);
-cylinder(
-  "Round pop filter",
-  0.148,
-  0.023,
-  [-0.51, 2.18, -0.47],
-  mats.rubber,
-  mic,
-  [Math.PI / 2, 0, -0.15],
-);
+rod("Pop filter stem", from(TIP, [-0.22, 1.76, -0.59]), from(TIP, [-0.51, 2.01, -0.49]), 0.012, mats.black, micHead);
+cylinder("Round pop filter", 0.148, 0.023, from(TIP, [-0.51, 2.18, -0.47]), mats.rubber, micHead, [Math.PI / 2, 0, -0.15]);
 mesh(
   "Pop filter rim",
   new THREE.TorusGeometry(0.148, 0.011, 8, 24),
   mats.graphite,
-  [-0.51, 2.18, -0.455],
-  mic,
-);
-cable(
-  "Microphone cable",
-  [
-    [-0.29, 1.95, -0.65],
-    [-0.39, 1.63, -0.61],
-    [-0.18, 1.39, -0.42],
-    [0, 1.15, -0.17],
-    [0, 0.3, -0.01],
-    [-0.26, 0.1, -0.04],
-  ],
-  0.015,
-  mic,
+  from(TIP, [-0.51, 2.18, -0.455]),
+  micHead,
 );
 
-// Two books, a phone, and a discreet desk controller keep the personal details.
-const books = group("Books", [-2.75, 0.05, 0.89], [0, -0.16, 0]);
-box("Book paper", [0.6, 0.067, 0.9], [0, 0.033, 0], mats.paper, books, 0.008);
-for (const y of [-0.006, 0.075])
-  box(
-    "Teal book cover",
-    [0.64, 0.013, 0.93],
-    [0, y, 0],
-    mats.teal,
-    books,
-    0.008,
-  );
-box(
-  "Book spine band",
-  [0.023, 0.085, 0.93],
-  [-0.31, 0.035, 0],
-  mats.orange,
-  books,
-  0.003,
-);
+// Shiv's diary: page block and back cover stay put; the front cover hinges on
+// the spine so the runtime can open it. The phone and desk controller follow.
+const diary = interactive(group("Interactive_Diary", [-2.75, 0.05, 0.89], [0, -0.16, 0]));
+box("Book paper", [0.6, 0.067, 0.9], [0, 0.033, 0], mats.paper, diary, 0.008);
+box("Teal book cover", [0.64, 0.013, 0.93], [0, -0.006, 0], mats.teal, diary, 0.008);
+box("Book spine band", [0.023, 0.085, 0.93], [-0.31, 0.035, 0], mats.orange, diary, 0.003);
+const diaryCover = interactive(group("Interactive_Diary_Cover", [-0.31, 0.075, 0], [0, 0, 0], diary));
+box("Teal book cover", [0.64, 0.013, 0.93], [0.31, 0, 0], mats.teal, diaryCover, 0.008);
 for (let i = 0; i < 4; i++)
   box(
     "Book cover lettering",
     [0.27 - i * 0.04, 0.002, 0.012],
-    [0.04, 0.083, -0.22 + i * 0.06],
+    [0.35, 0.008, -0.22 + i * 0.06],
     mats.paper,
-    books,
+    diaryCover,
     0.001,
   );
 const phone = group("Phone", [2.72, 0.058, 0.09], [0, -0.25, 0]);
@@ -878,31 +783,63 @@ box(
   0.003,
 );
 scene.updateMatrixWorld(true);
-const batches = new Map();
+const ownerOf = (object) => {
+  for (let p = object.parent; p; p = p.parent) if (p.userData.interactive) return p;
+  return scene;
+};
+const inverse = new Map();
+const batches = new Map(); // owner -> Map(material -> geometries)
 scene.traverse((object) => {
   if (!object.isMesh) return;
-  const geometry = object.geometry.clone().applyMatrix4(object.matrixWorld);
-  // A uniform attribute set lets static parts share a draw call.
+  const owner = ownerOf(object);
+  if (!inverse.has(owner))
+    inverse.set(owner, owner === scene ? new THREE.Matrix4() : owner.matrixWorld.clone().invert());
+  let geometry = object.geometry
+    .clone()
+    .applyMatrix4(inverse.get(owner).clone().multiply(object.matrixWorld));
+  // A uniform attribute set lets parts share a draw call.
   if (geometry.index) {
     const expanded = geometry.toNonIndexed();
     geometry.dispose();
-    if (!batches.has(object.material)) batches.set(object.material, []);
-    batches.get(object.material).push(expanded);
-  } else {
-    if (!batches.has(object.material)) batches.set(object.material, []);
-    batches.get(object.material).push(geometry);
+    geometry = expanded;
   }
+  if (!batches.has(owner)) batches.set(owner, new Map());
+  const byMaterial = batches.get(owner);
+  if (!byMaterial.has(object.material)) byMaterial.set(object.material, []);
+  byMaterial.get(object.material).push(geometry);
 });
+
 const optimized = new THREE.Scene();
 optimized.name = scene.name;
+const exported = new Map([[scene, optimized]]);
+const exportNode = (owner) => {
+  if (exported.has(owner)) return exported.get(owner);
+  const parentOwner = ownerOf(owner);
+  const node = new THREE.Group();
+  node.name = owner.name;
+  const local =
+    parentOwner === scene
+      ? owner.matrixWorld.clone()
+      : parentOwner.matrixWorld.clone().invert().multiply(owner.matrixWorld);
+  local.decompose(node.position, node.quaternion, node.scale);
+  exportNode(parentOwner).add(node);
+  exported.set(owner, node);
+  return node;
+};
+scene.traverse((object) => {
+  if (object.userData.interactive) exportNode(object);
+});
 let triangles = 0;
-for (const [mat, geometries] of batches) {
-  const combined = mergeVertices(mergeGeometries(geometries, false), 1e-5);
-  triangles += combined.index.count / 3;
-  const part = new THREE.Mesh(combined, mat);
-  part.name = mat.name;
-  optimized.add(part);
+for (const [owner, byMaterial] of batches) {
+  for (const [mat, geometries] of byMaterial) {
+    const combined = mergeVertices(mergeGeometries(geometries, false), 1e-5);
+    triangles += combined.index.count / 3;
+    const part = new THREE.Mesh(combined, mat);
+    part.name = owner === scene ? mat.name : `${owner.name} ${mat.name}`;
+    exportNode(owner).add(part);
+  }
 }
+
 // GLTFExporter uses browser FileReader only to serialize its geometry Blob.
 // Node's native Blob provides the same bytes without a DOM or extra packages.
 globalThis.FileReader = class {
@@ -921,33 +858,45 @@ gltf.asset.extras = {
     "Original geometric reconstruction of Shiv Vyas’s desk reference: dual displays, laptop, mechanical keyboard and music equipment.",
   source: "scripts/model/build-desk.mjs",
 };
-gltf.images = [
-  {
-    uri: "textures/manhattan-dusk.jpg",
-    name: "Generated Manhattan dusk wallpaper",
-  },
-];
-gltf.samplers = [
-  { magFilter: 9729, minFilter: 9987, wrapS: 33071, wrapT: 33071 },
-];
+gltf.images = [{ uri: "textures/manhattan-dusk.jpg", name: "Generated Manhattan dusk wallpaper" }];
+gltf.samplers = [{ magFilter: 9729, minFilter: 9987, wrapS: 33071, wrapT: 33071 }];
 gltf.textures = [{ source: 0, sampler: 0 }];
-gltf.materials.find(
-  (m) => m.name === "Manhattan wallpaper",
-).pbrMetallicRoughness.baseColorTexture = { index: 0 };
-await mkdir(destination, { recursive: true });
-await writeFile(
-  `${destination}scene.gltf`,
-  `${JSON.stringify(gltf, null, 2)}\n`,
+gltf.materials.find((m) => m.name === "Manhattan wallpaper").pbrMetallicRoughness.baseColorTexture = {
+  index: 0,
+};
+
+// Write a plain glTF to a scratch folder, then compress it into one GLB.
+const work = await mkdtemp(join(tmpdir(), "shiv-desk-"));
+await mkdir(join(work, "textures"));
+await copyFile(
+  fileURLToPath(new URL("./assets/manhattan-dusk.jpg", import.meta.url)),
+  join(work, "textures/manhattan-dusk.jpg"),
 );
-await writeFile(`${destination}studio.bin`, buffer);
+await writeFile(join(work, "scene.gltf"), JSON.stringify(gltf));
+await writeFile(join(work, "studio.bin"), buffer);
+
+await Promise.all([MeshoptEncoder.ready, MeshoptDecoder.ready]);
+const io = new NodeIO()
+  .registerExtensions(ALL_EXTENSIONS)
+  .registerDependencies({ "meshopt.encoder": MeshoptEncoder, "meshopt.decoder": MeshoptDecoder });
+const doc = await io.read(join(work, "scene.gltf"));
+await doc.transform(
+  dedup(),
+  prune({ keepLeaves: true }),
+  meshopt({ encoder: MeshoptEncoder, level: "medium" }),
+);
+await mkdir(destination, { recursive: true });
+await io.write(`${destination}scene.glb`, doc);
+await rm(work, { recursive: true, force: true });
+
 console.log(
   JSON.stringify(
     {
-      meshes: gltf.meshes.length,
+      nodes: [...exported.values()].length - 1,
       materials: gltf.materials.length,
       triangles,
-      geometryBytes: buffer.length,
-      bounds: new THREE.Box3().setFromObject(optimized),
+      rawGeometryBytes: buffer.length,
+      glbBytes: (await stat(`${destination}scene.glb`)).size,
     },
     null,
     2,

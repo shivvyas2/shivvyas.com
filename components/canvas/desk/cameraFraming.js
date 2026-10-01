@@ -1,8 +1,8 @@
 import { MathUtils, PerspectiveCamera, Vector3 } from "three";
 
 const DESK_CENTER = new Vector3(0, 0.12, 0.38);
-const DESK_MIN = new Vector3(-3.25, 0, -1.35);
-const DESK_MAX = new Vector3(3.2, 0, 1.5);
+const DESK_MIN = new Vector3(-3.4, 0, -1.35);
+const DESK_MAX = new Vector3(3.75, 0, 1.5);
 const probe = new PerspectiveCamera();
 
 const boxCorners = (min, max) => {

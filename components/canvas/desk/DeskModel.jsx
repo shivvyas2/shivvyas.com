@@ -1,22 +1,15 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
-import { Box3, Object3D } from "three";
+import { Box3 } from "three";
 import CameraDirector from "./CameraDirector";
+import Keycaps from "./Keycaps";
 import { dispatchDesk, useDesk } from "./useDesk";
 import { springStep } from "./lib/deskMath.mjs";
 
-export const MODEL_URL = "/desktop_pc/scene.gltf?v=shiv-studio-1";
+export const MODEL_URL = "/desktop_pc/scene.glb?v=interactive-1";
 const DRIFT = 0.0105; // ±0.6°
 const DRIFT_PERIOD = 8;
-
-// Fallback for the pre-split model: where the teal book sits.
-function makeFallbackDiary() {
-  const anchor = new Object3D();
-  anchor.position.set(-2.75, 0.05, 0.89);
-  anchor.rotation.set(0, -0.16, 0);
-  return anchor;
-}
 
 export default function DeskModel({ isMobile, active, children }) {
   const { scene, nodes } = useGLTF(MODEL_URL);
@@ -39,10 +32,7 @@ export default function DeskModel({ isMobile, active, children }) {
     scene.updateWorldMatrix(true, true);
     return new Box3().setFromObject(scene);
   }, [scene]);
-  const diaryAnchor = useMemo(
-    () => nodes.Interactive_Diary ?? makeFallbackDiary(),
-    [nodes],
-  );
+  const diaryAnchor = nodes.Interactive_Diary;
 
   useFrame((state, delta) => {
     let busy = false;
@@ -79,6 +69,7 @@ export default function DeskModel({ isMobile, active, children }) {
           <planeGeometry args={[6.9, 2.8]} />
           <meshBasicMaterial transparent opacity={0} depthWrite={false} />
         </mesh>
+        {nodes.Interactive_Keyboard && <Keycaps anchor={nodes.Interactive_Keyboard} />}
         {children?.(nodes)}
       </group>
     </>
