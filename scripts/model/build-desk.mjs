@@ -805,43 +805,50 @@ cylinder("Camera control dial", 0.05, 0.035, [-0.06, 0.415, -0.07], mats.graphit
 cylinder("Camera shutter button", 0.035, 0.03, [-0.28, 0.41, 0.2], mats.silver, cameraRig);
 box("Camera LCD bezel", [0.5, 0.31, 0.012], [0.05, 0.19, -0.114], mats.graphite, cameraRig, 0.008);
 box("Camera mount plate", [0.34, 0.34, 0.01], [0.06, 0.2, 0.113], mats.graphite, cameraRig, 0.02);
-// Lens, from the mount forward: silver mount ring, rear barrel, ribbed zoom
-// ring, mid barrel, focus ring, flared front barrel, front glass, round hood.
+// Lens, from the mount forward: a straight Tamron-style barrel with a silver
+// mount and accent rings, a ribbed zoom ring, an index mark, a focus ring and
+// a short round hood (not a flared cone).
 const LENS_X = 0.06;
 const LENS_Y = 0.2;
 const lensPart = (name, radius, length, z, mat) =>
   cylinder(name, radius, length, [LENS_X, LENS_Y, z], mat, cameraRig, [Math.PI / 2, 0, 0]);
 lensPart("Lens mount ring", 0.185, 0.04, 0.135, mats.silver);
-lensPart("Lens rear barrel", 0.19, 0.18, 0.245, mats.lens);
-lensPart("Lens zoom ring", 0.212, 0.3, 0.485, mats.rubber);
-for (let i = 0; i < 8; i++)
-  mesh(
-    "Lens zoom rib",
-    new THREE.TorusGeometry(0.214, 0.005, 3, 24),
-    mats.lens,
-    [LENS_X, LENS_Y, 0.36 + i * 0.035],
+lensPart("Lens rear barrel", 0.19, 0.2, 0.255, mats.lens);
+lensPart("Lens brand ring", 0.192, 0.014, 0.33, mats.silver);
+lensPart("Lens zoom ring", 0.205, 0.28, 0.495, mats.rubber);
+for (let i = 0; i < 9; i++)
+  box(
+    "Lens zoom grip rib",
+    [0.416, 0.008, 0.012],
+    [LENS_X, LENS_Y, 0.38 + i * 0.029],
+    mats.graphite,
     cameraRig,
+    0.002,
   );
-lensPart("Lens mid barrel", 0.205, 0.16, 0.715, mats.lens);
-lensPart("Lens focus ring", 0.22, 0.12, 0.855, mats.rubber);
-mesh(
-  "Lens front barrel",
-  new THREE.CylinderGeometry(0.235, 0.22, 0.14, 32),
-  mats.lens,
-  [LENS_X, LENS_Y, 0.985],
-  cameraRig,
-  [Math.PI / 2, 0, 0],
-);
-lensPart("Lens front element", 0.2, 0.01, 1.04, mats.glass);
-lensPart("Lens brand ring", 0.193, 0.012, 0.33, mats.silver);
+for (let i = 0; i < 9; i++)
+  box(
+    "Lens zoom grip rib",
+    [0.008, 0.416, 0.012],
+    [LENS_X, LENS_Y, 0.38 + i * 0.029],
+    mats.graphite,
+    cameraRig,
+    0.002,
+  );
+lensPart("Lens mid barrel", 0.2, 0.14, 0.705, mats.lens);
+box("Lens index mark", [0.012, 0.006, 0.05], [LENS_X, LENS_Y + 0.2, 0.68], mats.legend, cameraRig, 0.002);
+lensPart("Lens focus ring", 0.208, 0.1, 0.825, mats.rubber);
+lensPart("Lens front barrel", 0.215, 0.12, 0.935, mats.lens);
+lensPart("Lens front accent", 0.217, 0.012, 0.99, mats.silver);
+lensPart("Lens front element", 0.19, 0.01, 0.985, mats.glass);
 mesh(
   "Lens hood",
-  new THREE.CylinderGeometry(0.29, 0.245, 0.33, 40, 1, true),
+  new THREE.CylinderGeometry(0.25, 0.228, 0.2, 40, 1, true),
   mats.lens,
-  [LENS_X, LENS_Y, 1.22],
+  [LENS_X, LENS_Y, 1.095],
   cameraRig,
   [Math.PI / 2, 0, 0],
 );
+lensPart("Lens hood bayonet", 0.232, 0.03, 1.005, mats.graphite);
 
 scene.updateMatrixWorld(true);
 const ownerOf = (object) => {
@@ -944,7 +951,8 @@ const doc = await io.read(join(work, "scene.gltf"));
 
 // Shiv's mint cat bottle, sculpted for the archived alternative desk
 // (ideas/shiv-desk-hero). Keep only its meshes and stand it by the right monitor.
-const BOTTLE = { position: [2.08, 0.035, -0.32], height: 1.45 };
+// Turned to face the viewer (its sculpt faces -Z) and sized to a real ~25 cm bottle.
+const BOTTLE = { position: [2.08, 0.035, -0.32], height: 1.0, yaw: Math.PI };
 const alternative = await io.read(
   fileURLToPath(new URL("../../ideas/shiv-desk-hero/models/shiv-desk.glb", import.meta.url)),
 );
@@ -959,6 +967,7 @@ const merged = mergeDocuments(doc, alternative);
 const bottleRoot = doc
   .createNode("Cat bottle")
   .setTranslation(BOTTLE.position)
+  .setRotation([0, Math.sin(BOTTLE.yaw / 2), 0, Math.cos(BOTTLE.yaw / 2)])
   .setScale([bottleScale, bottleScale, bottleScale]);
 const bottleOffset = doc.createNode("Cat bottle origin").setTranslation([
   -(bottleBounds.min[0] + bottleBounds.max[0]) / 2,

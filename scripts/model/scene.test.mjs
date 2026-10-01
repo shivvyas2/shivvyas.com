@@ -44,6 +44,6 @@ test("scene.glb is small and exposes the interactive hierarchy", async () => {
   assert.ok(doc.getRoot().listMaterials().some((m) => m.getName() === "Bottle • mint silicone"), "cat bottle");
   const bottle = getBounds(nodes["Cat bottle"]);
   assert.ok(bottle.min[1] > -0.01 && bottle.min[1] < 0.1, `bottle stands on the desk (y=${bottle.min[1]})`);
-  assert.ok(bottle.max[1] - bottle.min[1] > 1.3 && bottle.max[1] - bottle.min[1] < 1.6, "bottle height");
+  assert.ok(bottle.max[1] - bottle.min[1] > 0.9 && bottle.max[1] - bottle.min[1] < 1.1, "bottle height");
   assert.deepEqual(nodes.Interactive_Mic_Upper.getTranslation().map((v) => +v.toFixed(3)), [0, 1.09, -0.15]);
 });
