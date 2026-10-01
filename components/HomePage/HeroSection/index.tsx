@@ -1,33 +1,31 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion, useReducedMotion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
+import { useLenis } from "@studio-freight/react-lenis";
 import styles from "./HeroSection.module.scss";
 import { useSceneLoading } from "@/components/Loader/LoadingContext";
 import SceneBoundary from "@/components/Loader/SceneBoundary";
+import { dispatchDesk, useDesk } from "@/components/canvas/desk/useDesk";
 
-const ComputersCanvas = dynamic(() => import("@/components/canvas/Computer"), {
-  ssr: false,
-});
+const DeskCanvas = dynamic(() => import("@/components/canvas/desk/DeskCanvas"), { ssr: false });
+
+const ANNOUNCE: Record<string, string> = {
+  hero: "",
+  desk: "Desk view. Type on your keyboard, drag the mouse or the microphone, or open the diary.",
+  diary: "Diary open.",
+};
 
 export default function HeroSection() {
   const [showScene, setShowScene] = useState(false);
-  const [deskView, setDeskView] = useState(false);
-  const [diaryOpen, setDiaryOpen] = useState(false);
-  const [interactionNote, setInteractionNote] = useState("");
-  const interactionTimeout = useRef<number | null>(null);
+  const [active, setActive] = useState(true);
+  const [explored, setExplored] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
+  const lenis = useLenis();
   const { finishScene, updateSceneProgress } = useSceneLoading();
-
-  const announceInteraction = useCallback((message: string) => {
-    setInteractionNote(message);
-    if (interactionTimeout.current)
-      window.clearTimeout(interactionTimeout.current);
-    interactionTimeout.current = window.setTimeout(
-      () => setInteractionNote(""),
-      1800,
-    );
-  }, []);
+  const mode = useDesk((s: { mode: string }) => s.mode);
+  const inDesk = mode !== "hero";
 
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -40,8 +38,41 @@ export default function HeroSection() {
     return () => query.removeEventListener("change", update);
   }, [finishScene]);
 
+  useEffect(() => () => dispatchDesk({ type: "reset" }), []);
+
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(([entry]) => setActive(entry.isIntersecting));
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inDesk) return;
+    setExplored(true);
+    const root = document.documentElement;
+    const previous = root.style.overflow;
+    lenis?.scrollTo(0, { duration: 0.6, onComplete: () => lenis?.stop() });
+    if (!lenis) window.scrollTo({ top: 0 });
+    root.style.overflow = "hidden";
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") dispatchDesk({ type: "escape" });
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      root.style.overflow = previous;
+      lenis?.start();
+    };
+  }, [inDesk, lenis]);
+
   return (
-    <section className={styles.hero} aria-labelledby="hero-title">
+    <section
+      ref={sectionRef}
+      className={`${styles.hero} ${inDesk ? styles.inDesk : ""}`}
+      aria-labelledby="hero-title"
+    >
       <div className={styles["text-container"]}>
         <h1 id="hero-title" aria-label="Hi, I'm Shiv Vyas">
           Hi, I&apos;m <span>Shiv</span>
@@ -51,112 +82,39 @@ export default function HeroSection() {
           building at <span>Contextual Intelligence</span>.
         </p>
       </div>
-      <div
-        className={`${styles.background} ${deskView ? styles.deskView : ""}`}
-        aria-label="Interactive 3D studio desk"
-      >
+      <div className={styles.background}>
         {showScene && (
           <SceneBoundary onError={finishScene}>
-            <ComputersCanvas
-              onReady={finishScene}
-              onProgress={updateSceneProgress}
-              onDeskViewChange={setDeskView}
-              onOpenDiary={() => setDiaryOpen(true)}
-              onInteraction={announceInteraction}
-            />
+            <DeskCanvas onReady={finishScene} onProgress={updateSceneProgress} active={active} />
           </SceneBoundary>
         )}
       </div>
-      <div className={styles.deskHelp} aria-live="polite">
-        {interactionNote ||
-          (deskView
-            ? "Tap the keyboard, drag the mouse or boom arm, and open the diary."
-            : "Click the desk to explore")}
-      </div>
-      {deskView && (
-        <button
-          type="button"
-          className={styles.deskClose}
-          onClick={() => setDeskView(false)}
-        >
-          Return to hero
+      <div className={styles.vignette} aria-hidden="true" />
+      {showScene && !inDesk && (
+        <button type="button" className={styles.srFocusable} onClick={() => dispatchDesk({ type: "enterDesk" })}>
+          Explore Shiv&apos;s desk
         </button>
       )}
-      {diaryOpen && (
-        <div
-          className={styles.diaryBackdrop}
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setDiaryOpen(false);
-          }}
-        >
-          <article
-            className={styles.diary}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="diary-title"
-          >
-            <button
-              type="button"
-              className={styles.diaryClose}
-              aria-label="Close Shiv's diary"
-              onClick={() => setDiaryOpen(false)}
-            >
-              ×
-            </button>
-            <div className={styles.diaryPaperclip} aria-hidden="true" />
-            <p className={styles.diaryKicker}>field notes / 01</p>
-            <h2 id="diary-title">Shiv&apos;s desk diary</h2>
-            <p className={styles.diaryIntro}>
-              Engineer, musician, photographer. I like the moment a rough idea
-              starts feeling useful.
-            </p>
-            <div className={styles.diaryGrid}>
-              <div>
-                <p>
-                  <strong>Now</strong> — Founding Engineer at Contextual
-                  Intelligence
-                </p>
-                <p>
-                  <strong>Before</strong> — FuteurAI, wrapped May 12
-                </p>
-                <p>
-                  <strong>Always</strong> — make, listen, notice, repeat
-                </p>
-              </div>
-              <svg
-                className={styles.diarySketch}
-                viewBox="0 0 180 110"
-                role="img"
-                aria-label="Hand drawn sketch of an idea becoming a product"
-              >
-                <path d="M12 74 C42 24 63 91 91 45 S137 20 169 32" />
-                <path d="M146 22 l23 10 -19 13" />
-                <circle cx="42" cy="55" r="13" />
-                <rect x="78" y="56" width="28" height="22" rx="3" />
-                <path d="M55 55 h23 M106 67 h36" />
-                <text x="24" y="100">
-                  signal → tool
-                </text>
-              </svg>
-            </div>
-            <div className={styles.diaryProjects}>
-              <span>camera studies</span>
-              <span>small useful tools</span>
-              <span>music between builds</span>
-            </div>
-            <p className={styles.diarySignoff}>— Shiv</p>
-          </article>
-        </div>
+      {showScene && !inDesk && !explored && (
+        <p className={styles.deskHint} aria-hidden="true">click the desk</p>
       )}
+      {inDesk && (
+        <button
+          type="button"
+          className={styles.deskExit}
+          aria-label={mode === "diary" ? "Close the diary" : "Leave the desk"}
+          onClick={() => dispatchDesk({ type: "escape" })}
+        >
+          <X size={18} strokeWidth={2} aria-hidden="true" />
+        </button>
+      )}
+      <p className={styles.srOnly} aria-live="polite">{ANNOUNCE[mode]}</p>
       <button
         type="button"
         aria-label="Scroll to about section"
         className={styles.scrollDown}
         onClick={() => {
-          document.getElementById("about")?.scrollIntoView({
-            behavior: reducedMotion ? "auto" : "smooth",
-          });
+          document.getElementById("about")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" });
         }}
       >
         <motion.span

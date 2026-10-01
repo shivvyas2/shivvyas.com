@@ -12,6 +12,7 @@ const go = (state, mode, extra = {}) => ({ ...state, mode, transitioning: true, 
 export function deskReducer(state, action) {
   if (action.type === "setMobile") return state.mobile === action.mobile ? state : { ...state, mobile: action.mobile };
   if (action.type === "transitionEnd") return state.transitioning ? { ...state, transitioning: false } : state;
+  if (action.type === "reset") return { ...INITIAL_DESK_STATE, mobile: state.mobile };
   if (state.transitioning) return state;
   switch (action.type) {
     case "enterDesk":

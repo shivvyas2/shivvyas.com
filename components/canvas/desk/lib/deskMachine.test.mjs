@@ -58,3 +58,8 @@ test("store notifies subscribers and supports unsubscribe", () => {
   assert.equal(calls, 1);
   assert.equal(store.get().mode, "desk");
 });
+test("reset returns to hero but keeps the mobile flag, even mid-transition", () => {
+  let s = r(r(S0, { type: "setMobile", mobile: true }), { type: "enterDesk" });
+  s = r(s, { type: "reset" });
+  assert.deepEqual(s, { ...S0, mobile: true });
+});
