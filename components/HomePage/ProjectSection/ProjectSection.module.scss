@@ -33,6 +33,9 @@
 
     .projectCard {
       position: sticky;
+      // Own compositor layer: scaling/fading the card doesn't repaint the image.
+      will-change: transform, opacity;
+      backface-visibility: hidden;
       top: 10vh;
       width: 65vw;
       height: calc(100vh - 20vh);

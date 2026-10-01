@@ -54,16 +54,20 @@ export default function ProjectSection() {
     // The stacked-card animation runs on every screen size (phones included);
     // only reduced motion opts out.
     media.add("(prefers-reduced-motion: no-preference)", () => {
+      // Touch scrolling is native and its scroll events are coarse; a short
+      // scrub lag smooths the scale/fade instead of stepping with each event.
+      const touch = window.matchMedia("(pointer: coarse)").matches;
       cardRefs.current.forEach((card, i) => {
         if (i < cardRefs.current.length - 1) {
           gsap.to(card, {
+            force3D: true,
             scale: 0.8,
             opacity: 0,
             scrollTrigger: {
               trigger: cardRefs.current[i + 1],
               start: "top center",
               end: "top top",
-              scrub: true,
+              scrub: touch ? 0.3 : true,
             },
           });
         }
