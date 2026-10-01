@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import ServiceCard from "./card";
 import styles from "./ServiceSection.module.scss";
-import { gsap } from "@/libs/gsap";
+import { gsap, ScrollTrigger } from "@/libs/gsap";
 import Tag from "@/components/Tag";
 import Button from "@/components/Button";
 import { splitText } from "@/utils/textUtils";
@@ -112,6 +112,10 @@ export default function ServiceSection() {
           const positions = [13, 37.7, 62.4, 87];
           const rotations = [-15, -7.5, 7.5, 15];
           const cards = cardRefs.current.filter(Boolean);
+          // GSAP owns the centring. Left to itself it would read the CSS
+          // translate(-50%, -50%) once as fixed pixels (stale after resizes)
+          // and stack the yPercent below on top, lifting cards toward the top.
+          gsap.set(cards, { left: "50%", top: "50%", x: 0, y: 0, xPercent: -50, yPercent: -50 });
           const timeline = gsap.timeline({
             defaults: { ease: "none" },
             scrollTrigger: {
@@ -128,7 +132,7 @@ export default function ServiceSection() {
           cards.forEach((card, index) => {
             timeline.to(
               card,
-              { left: `${positions[index]}%`, top: "50%", yPercent: -50, rotation: rotations[index], duration: 1 },
+              { left: `${positions[index]}%`, rotation: rotations[index], duration: 1 },
               0,
             );
           });
@@ -146,8 +150,17 @@ export default function ServiceSection() {
           timeline.set({}, {}, 3);
         });
 
+        // Images and webfonts above the section change its offset after the
+        // first measurement; re-measure so the pin starts exactly at the top.
+        const refresh = () => ScrollTrigger.refresh();
+        if (document.readyState !== "complete") window.addEventListener("load", refresh, { once: true });
+        document.fonts?.ready.then(refresh);
+
         // Cleanup on unmount: only this section's tweens and triggers
-        return () => ctx.revert();
+        return () => {
+          window.removeEventListener("load", refresh);
+          ctx.revert();
+        };
       },
     );
     return () => media.revert();
