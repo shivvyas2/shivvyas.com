@@ -52,3 +52,9 @@ test("spreadText includes both pages", () => {
   assert.match(text, /Life OS/);
   assert.match(text, /Today/);
 });
+
+test("phones paint diary pages at half resolution (memory)", async () => {
+  const { pageResolution } = await import("./diaryPages.mjs");
+  assert.deepEqual(pageResolution(false), { width: 1366, height: 2048, maskScale: 0.5 });
+  assert.deepEqual(pageResolution(true), { width: 683, height: 1024, maskScale: 0.5 });
+});

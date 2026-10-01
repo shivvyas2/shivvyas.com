@@ -4,6 +4,7 @@ import { CatmullRomCurve3 } from "three";
 import { gsap } from "@/libs/gsap";
 import { dispatchDesk, useDesk } from "./useDesk";
 import { getPose } from "./cameraFraming";
+import { cameraPlan } from "./lib/cameraPlan.mjs";
 
 // Where the hero camera looks; OrbitControls re-mounts with this target.
 export const heroLook = { current: null };
@@ -27,13 +28,13 @@ export default function CameraDirector({ bounds, isMobile, diaryAnchor }) {
       camera.lookAt(center);
       invalidate();
     };
-    const changed = last.current.mode !== mode || last.current.focus !== focus;
+    const plan = cameraPlan({ hasLook: Boolean(look.current), prev: last.current, mode, focus, transitioning });
     last.current = { mode, focus };
 
-    // First frame, or a resize while settled: snap without animating.
-    if (!look.current || (!changed && !transitioning)) {
+    if (plan.kind === "snap") {
       look.current = pose.center.clone();
       apply(pose.position, pose.center, pose.fov, pose.up);
+      if (plan.endTransition) dispatchDesk({ type: "transitionEnd" });
       return;
     }
 
@@ -46,10 +47,9 @@ export default function CameraDirector({ bounds, isMobile, diaryAnchor }) {
     mid.y = Math.max(fromPos.y, pose.position.y) + fromPos.distanceTo(pose.position) * 0.15;
     const curve = new CatmullRomCurve3([fromPos, mid, pose.position]);
     const progress = { t: 0 };
-    const panOnly = last.current.mode === mode && mode === "diary";
     const tween = gsap.to(progress, {
       t: 1,
-      duration: panOnly ? 0.8 : 1.6,
+      duration: plan.duration,
       ease: "power3.inOut",
       onUpdate: () => {
         look.current.lerpVectors(fromLook, pose.center, progress.t);

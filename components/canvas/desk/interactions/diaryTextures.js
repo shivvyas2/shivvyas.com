@@ -1,12 +1,8 @@
-import { CanvasTexture, SRGBColorSpace } from "three";
-import { PAGE_SIZE, sketchItems, wrapLines } from "../lib/diaryPages.mjs";
+import { CanvasTexture, NearestFilter, SRGBColorSpace } from "three";
+import { PAGE_SIZE, pageResolution, sketchItems, wrapLines } from "../lib/diaryPages.mjs";
 
 export const PAPER = "#efe6cf";
 const INK = "#1f2c4c";
-const WIDTH = 1366;
-const HEIGHT = 2048;
-const SCALE = WIDTH / PAGE_SIZE.width;
-const MASK_SCALE = 0.5;
 
 export async function loadDiaryFont(fontFamily) {
   try {
@@ -19,12 +15,14 @@ export async function loadDiaryFont(fontFamily) {
   }
 }
 
-function canvas(scale) {
+function canvas(resolution, scale) {
+  const { width, height } = resolution;
   const element = document.createElement("canvas");
-  element.width = Math.round(WIDTH * scale);
-  element.height = Math.round(HEIGHT * scale);
+  element.width = Math.round(width * scale);
+  element.height = Math.round(height * scale);
   const g = element.getContext("2d");
-  g.scale(SCALE * scale, SCALE * scale);
+  const pageScale = (width / PAGE_SIZE.width) * scale;
+  g.scale(pageScale, pageScale);
   return { element, g };
 }
 
@@ -48,19 +46,28 @@ function paper(g, seed) {
 function texture(element, srgb) {
   const result = new CanvasTexture(element);
   if (srgb) result.colorSpace = SRGBColorSpace;
+  else {
+    // The mask's red channel is a draw-order value, not a colour: filtering
+    // or mipmapping would blend it with empty neighbours.
+    result.minFilter = NearestFilter;
+    result.magFilter = NearestFilter;
+    result.generateMipmaps = false;
+  }
   result.anisotropy = 4;
   return result;
 }
 
-export function drawBlankPage(seed = 99) {
-  const color = canvas(1);
+export function drawBlankPage(compact = false, seed = 99) {
+  const resolution = pageResolution(compact);
+  const color = canvas(resolution, 1);
   paper(color.g, seed);
-  const mask = canvas(MASK_SCALE);
+  const mask = canvas(resolution, resolution.maskScale);
   return { color: texture(color.element, true), mask: texture(mask.element, false) };
 }
 
-export function drawPage(page, index, fontFamily) {
-  const { element, g } = canvas(1);
+export function drawPage(page, index, fontFamily, compact = false) {
+  const resolution = pageResolution(compact);
+  const { element, g } = canvas(resolution, 1);
   paper(g, index + 1);
   g.fillStyle = INK;
   g.strokeStyle = INK;
@@ -94,7 +101,7 @@ export function drawPage(page, index, fontFamily) {
   }
 
   const items = sketchItems(page, index);
-  const mask = canvas(MASK_SCALE);
+  const mask = canvas(resolution, resolution.maskScale);
   const m = mask.g;
   m.lineCap = "round";
   m.lineJoin = "round";

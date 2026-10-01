@@ -26,7 +26,7 @@ const LEAVES = [
 ];
 const restTurns = () => Object.fromEntries(LEAVES.map((leaf, k) => [k, leaf.fixedTurn ?? 0]));
 
-export default function Diary3D({ nodes }) {
+export default function Diary3D({ nodes, isMobile }) {
   const diary = nodes.Interactive_Diary;
   const cover = nodes.Interactive_Diary_Cover;
   const mode = useDesk((s) => s.mode);
@@ -71,8 +71,8 @@ export default function Diary3D({ nodes }) {
     const family = caveat.style.fontFamily;
     loadDiaryFont(family).then(() => {
       if (cancelled) return;
-      const pages = PAGES.map((page, i) => drawPage(page, i, family));
-      const blank = drawBlankPage();
+      const pages = PAGES.map((page, i) => drawPage(page, i, family, isMobile));
+      const blank = drawBlankPage(isMobile);
       setLeaves(
         LEAVES.map((leaf) =>
           makeLeafMaterial(

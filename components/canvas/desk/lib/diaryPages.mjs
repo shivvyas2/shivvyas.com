@@ -239,3 +239,8 @@ const pageText = (page) =>
     .join(". ");
 
 export const spreadText = (spread) => `${pageText(PAGES[spread * 2])}. ${pageText(PAGES[spread * 2 + 1])}`;
+
+// Page canvas size. Phones show one page across ~800 CSS px at dpr 1, so half
+// resolution keeps text sharp while using a quarter of the memory.
+export const pageResolution = (compact) =>
+  compact ? { width: 683, height: 1024, maskScale: 0.5 } : { width: 1366, height: 2048, maskScale: 0.5 };

@@ -54,6 +54,10 @@ export default function DeskCanvas({ onReady, onProgress, onWarm, active }) {
 
   useEffect(() => onProgress(progress), [progress, onProgress]);
 
+  // If the canvas goes away (scene error, reduced-motion switch) mid-desk,
+  // release the page: never leave scroll locked behind a missing scene.
+  useEffect(() => () => dispatchDesk({ type: "reset" }), []);
+
   useEffect(() => {
     const query = window.matchMedia("(max-width: 600px), (pointer: coarse)");
     const update = () => {

@@ -103,7 +103,7 @@ export default function HeroSection() {
         )}
       </div>
       <div className={styles.vignette} aria-hidden="true" />
-      {showScene && !inDesk && (
+      {showScene && warm && !inDesk && (
         <button type="button" className={styles.srFocusable} onClick={() => dispatchDesk({ type: "enterDesk" })}>
           Explore Shiv&apos;s desk
         </button>
