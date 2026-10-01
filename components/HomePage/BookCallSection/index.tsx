@@ -40,7 +40,7 @@ export default function BookCallSection() {
               headingRef.current.querySelectorAll("span span");
             tl.from(
               headingSpans,
-              { y: "115%", duration: 0.6, stagger: 0.003 },
+              { y: "115%", duration: 0.6, stagger: 0.04 },
               0.4,
             );
           }
@@ -50,7 +50,7 @@ export default function BookCallSection() {
               paragraphRef.current.querySelectorAll("span span");
             tl.from(
               paragraphSpans,
-              { y: "115%", duration: 0.5, stagger: 0.002 },
+              { y: "115%", duration: 0.5, stagger: 0.04 },
               0.6,
             );
           }

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import ServiceCard from "./card";
 import styles from "./ServiceSection.module.scss";
-import { gsap, ScrollTrigger } from "@/libs/gsap";
+import { gsap } from "@/libs/gsap";
 import Tag from "@/components/Tag";
 import Button from "@/components/Button";
 import { splitText } from "@/utils/textUtils";
@@ -92,7 +92,7 @@ export default function ServiceSection() {
               headingRef.current.querySelectorAll("span span");
             headingTimeline.from(
               headingSpans,
-              { y: "110%", duration: 0.6, stagger: 0.01 },
+              { y: "110%", duration: 0.6, stagger: 0.04 },
               0.4,
             );
           }
@@ -106,87 +106,44 @@ export default function ServiceSection() {
             );
           }
 
-          // Cards animations
+          // Cards: one pinned, scrubbed timeline. Timeline units map to the
+          // pin length (3 units = 3 viewport heights): spread during 0→1,
+          // then each card flips and straightens, staggered.
           const positions = [13, 37.7, 62.4, 87];
           const rotations = [-15, -7.5, 7.5, 15];
-          const totalScrollHeight = window.innerHeight * 3;
-
-          const cardTriggers = cardRefs.current.map((card, index) => {
-            if (card) {
-              // Spread and rotate cards
-              gsap.to(card, {
-                left: `${positions[index]}%`,
-                top: "50%",
-                yPercent: -50,
-                rotation: rotations[index],
-                ease: "none",
-                scrollTrigger: {
-                  trigger: container.current,
-                  start: "top top",
-                  end: () => `+=${window.innerHeight}`,
-                  scrub: 1,
-                  invalidateOnRefresh: true,
-                },
-              });
-
-              // Flip card animation
-              const frontEl = card.querySelector(".flipCardFrontA");
-              const backEl = card.querySelector(".flipCardBackB");
-              if (frontEl && backEl) {
-                const staggerOffset = index * 0.05;
-                const startOffset = 1 / 3 + staggerOffset;
-                const endOffset = 2 / 3 + staggerOffset;
-
-                return ScrollTrigger.create({
-                  trigger: container.current,
-                  start: "top top",
-                  end: () => `+=${totalScrollHeight}`,
-                  scrub: 1,
-                  onUpdate: (self) => {
-                    const progress = self.progress;
-                    if (progress >= startOffset && progress <= endOffset) {
-                      const animationProgress =
-                        (progress - startOffset) / (1 / 3);
-                      const frontRotation = -180 * animationProgress;
-                      const backRotation = 180 - 180 * animationProgress;
-
-                      gsap.to(frontEl, {
-                        rotateY: frontRotation,
-                        ease: "power1.out",
-                      });
-                      gsap.to(backEl, {
-                        rotateY: backRotation,
-                        ease: "power1.out",
-                      });
-                      gsap.to(card, {
-                        rotate: rotations[index] * (1 - animationProgress),
-                        yPercent: -50,
-                        top: "50%",
-                        ease: "none",
-                      });
-                    }
-
-                    // Ensure card is straight when animation completes
-                    if (progress >= endOffset) {
-                      gsap.to(card, { rotate: 0, ease: "none" });
-                    }
-                  },
-                });
-              }
+          const cards = cardRefs.current.filter(Boolean);
+          const timeline = gsap.timeline({
+            defaults: { ease: "none" },
+            scrollTrigger: {
+              trigger: container.current,
+              start: "top top",
+              end: () => `+=${window.innerHeight * 3}`,
+              pin: true,
+              pinSpacing: true,
+              anticipatePin: 1,
+              scrub: true,
+              invalidateOnRefresh: true,
+            },
+          });
+          cards.forEach((card, index) => {
+            timeline.to(
+              card,
+              { left: `${positions[index]}%`, top: "50%", yPercent: -50, rotation: rotations[index], duration: 1 },
+              0,
+            );
+          });
+          cards.forEach((card, index) => {
+            const start = 1 + index * 0.15;
+            const front = card.querySelector(".flipCardFrontA");
+            const back = card.querySelector(".flipCardBackB");
+            if (front && back) {
+              timeline
+                .fromTo(front, { rotateY: 0 }, { rotateY: -180, duration: 1 }, start)
+                .fromTo(back, { rotateY: 180 }, { rotateY: 0, duration: 1 }, start);
             }
+            timeline.to(card, { rotation: 0, duration: 1 }, start);
           });
-
-          // Pin section during scroll. anticipatePin applies the pin a frame early so
-          // a fast scroll can't push the section past the top before it locks.
-          ScrollTrigger.create({
-            trigger: container.current,
-            start: "top top",
-            end: () => `+=${totalScrollHeight}`,
-            pin: true,
-            pinSpacing: true,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-          });
+          timeline.set({}, {}, 3);
         });
 
         // Cleanup on unmount: only this section's tweens and triggers

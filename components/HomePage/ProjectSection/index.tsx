@@ -38,7 +38,7 @@ export default function ProjectSection() {
           const headingSpans = headingRef.current.querySelectorAll("span span");
           tl.from(
             headingSpans,
-            { y: "110%", duration: 0.6, stagger: 0.01 },
+            { y: "110%", duration: 0.6, stagger: 0.04 },
             0.4,
           );
         }
@@ -61,7 +61,7 @@ export default function ProjectSection() {
                 trigger: cardRefs.current[i + 1],
                 start: "top center",
                 end: "top top",
-                scrub: 1,
+                scrub: true,
               },
             });
           }

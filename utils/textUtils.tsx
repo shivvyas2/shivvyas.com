@@ -1,31 +1,19 @@
 // utils/textUtils.tsx
 import React from "react";
 
-export const splitText = (text: string): JSX.Element[] => {
-  return [
-    <span key="accessible-text" className="sr-only">
-      {text}
-    </span>,
-    ...text.split(" ").map((word, wordIndex) => (
-      <span
-        aria-hidden="true"
-        key={wordIndex}
-        style={{
-          display: "inline-block",
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-        }}
-      >
-        {word.split("").map((char, charIndex) => (
-          <span
-            key={`${wordIndex}-${charIndex}`}
-            style={{ display: "inline-block", overflow: "hidden" }}
-          >
-            {char}
-          </span>
-        ))}
-        <span>&nbsp;</span> {/* Added non-breaking space */}
-      </span>
-    )),
-  ];
-};
+// One masked span per word: `span span` selects the inner word span that
+// animations slide up. Word-level keeps tween counts small on long headings.
+export const splitText = (text: string): JSX.Element[] => [
+  <span key="accessible-text" className="sr-only">
+    {text}
+  </span>,
+  ...text.split(" ").map((word, index) => (
+    <span
+      aria-hidden="true"
+      key={index}
+      style={{ display: "inline-block", overflow: "hidden", verticalAlign: "top" }}
+    >
+      <span style={{ display: "inline-block" }}>{word}&nbsp;</span>
+    </span>
+  )),
+];

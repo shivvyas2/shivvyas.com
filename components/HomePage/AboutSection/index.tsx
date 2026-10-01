@@ -21,7 +21,7 @@ export default function AboutSection() {
           trigger: heading,
           start: "top 90%",
           end: "bottom 60%",
-          scrub: 1,
+          scrub: true,
         },
       });
     });

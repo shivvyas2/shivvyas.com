@@ -61,7 +61,7 @@ export default function DribbleSection() {
 
             if (headingRef.current) {
                 const headingSpans = headingRef.current.querySelectorAll('span span');
-                tl.from(headingSpans, { y: "120%", duration: .6, stagger: 0.003 }, 0.4);
+                tl.from(headingSpans, { y: "120%", duration: .6, stagger: 0.04 }, 0.4);
             }
 
             if (btnWrapperRef.current) {

@@ -56,7 +56,7 @@ export default function SmoothScrolling({ children }: SmoothScrollingProps) {
     <ReactLenis
       root
       autoRaf={false}
-      options={{ lerp: 0.15, duration: 1.5, smoothWheel, syncTouch: false }}
+      options={{ lerp: 0.12, smoothWheel, syncTouch: false }}
     >
       <ScrollTriggerSync />
       {children}

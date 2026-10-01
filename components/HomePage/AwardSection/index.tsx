@@ -33,7 +33,7 @@ export default function AwardSection() {
               trigger: containerRef.current,
               start: "top bottom",
               end: "bottom top",
-              scrub: 1,
+              scrub: true,
             },
           })
           .to(cols[0], { yPercent: 10, ease: "none" }, 0)
@@ -52,7 +52,7 @@ export default function AwardSection() {
           })
           .from(
             headingSpans,
-            { y: "110%", duration: 0.6, stagger: 0.01, ease: "power2.out" },
+            { y: "110%", duration: 0.6, stagger: 0.04, ease: "power2.out" },
             0,
           )
           .from(
