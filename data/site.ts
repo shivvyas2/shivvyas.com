@@ -38,14 +38,13 @@ export const person = {
     url: "https://www.contextualintelligence.co",
   },
   description:
-    "Shiv Vyas is a software engineer in New York building web, mobile, and AI applications. He also makes music, runs a YouTube channel, and shoots photography as A Wannabe Photographer.",
+    "Shiv Vyas is a software engineer in New York building web, mobile, and AI applications. He has released music on Spotify and Apple Music, runs a YouTube channel, and shoots photography as A Wannabe Photographer.",
   homeLocation: {
     "@type": "Place",
     name: "New York, NY",
   },
   hasOccupation: [
     { "@type": "Occupation", name: "Software Developer" },
-    { "@type": "Occupation", name: "Musician" },
     { "@type": "Occupation", name: "Photographer" },
   ],
   knowsAbout: [
