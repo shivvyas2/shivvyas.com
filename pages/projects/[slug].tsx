@@ -6,7 +6,7 @@ import Button from "@/components/Button";
 import BookCallSection from "@/components/HomePage/BookCallSection";
 import MacbookMockup from "@/components/MacbookMockup";
 import Seo from "@/components/Seo";
-import { SITE_URL, breadcrumbs, person } from "@/data/site";
+import { SITE_URL, breadcrumbs, isoDate, person } from "@/data/site";
 import { gsap } from "@/libs/gsap";
 import { useEffect, useRef } from "react";
 
@@ -77,6 +77,10 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
               url: `${SITE_URL}/projects/${project.slug}`,
               image: `${SITE_URL}${project.img}`,
               keywords: project.category.join(", "),
+              inLanguage: "en-US",
+              ...(isoDate(project.date)
+                ? { dateCreated: isoDate(project.date) }
+                : {}),
               ...(project.live && project.live !== "#"
                 ? { sameAs: project.live }
                 : {}),

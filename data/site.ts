@@ -6,7 +6,7 @@ export const ASTRA_URL = "https://astra.shivvyas.com";
 // to merge them into one entity (and one knowledge panel). Once the knowledge
 // panel is claimed, add its Google Knowledge Graph URL here too, e.g.
 // "https://www.google.com/search?kgmid=/g/XXXXXXXX".
-const profiles = [
+export const profiles = [
   "https://www.linkedin.com/in/shivvyas/",
   "https://www.youtube.com/@ShivVyas",
   "https://www.youtube.com/channel/UCLsQR29bzbW9xQkg4hX3Mfw",
@@ -42,6 +42,18 @@ export const person = {
   // Separates this Shiv Vyas from similarly named people in search.
   disambiguatingDescription:
     "New York software developer and photographer, creator of Astra and shivvyas.com.",
+  alumniOf: [
+    {
+      "@type": "CollegeOrUniversity",
+      name: "Pace University",
+      url: "https://www.pace.edu",
+    },
+    {
+      "@type": "CollegeOrUniversity",
+      name: "Gujarat Technological University",
+      url: "https://www.gtu.ac.in",
+    },
+  ],
   homeLocation: {
     "@type": "Place",
     name: "New York, NY",
@@ -62,6 +74,14 @@ export const person = {
 };
 
 const personRef = { "@id": person["@id"] };
+
+// "August 26, 2026" -> "2026-08-26"; undefined for "Ongoing" and the like.
+export const isoDate = (value: string): string | undefined => {
+  const date = new Date(value.replace(/(\d+)(st|nd|rd|th)/, "$1"));
+  if (Number.isNaN(date.getTime())) return undefined;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+};
 
 export const breadcrumbs = (items: { name: string; path: string }[]) => ({
   "@type": "BreadcrumbList",
