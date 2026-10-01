@@ -3,6 +3,7 @@ import KeyboardInput from "./KeyboardInput";
 import DeskMouse from "./DeskMouse";
 import MicBoom from "./MicBoom";
 import Diary3D from "./Diary3D";
+import CameraProp from "./CameraProp";
 import { snapshotTransforms } from "../lib/transformSnapshot.mjs";
 
 // Loaded on first desk hover/entry so the hero's first paint stays light.
@@ -25,6 +26,7 @@ export default function DeskInteractions({ nodes, isMobile }) {
       {nodes.Interactive_Mouse && <DeskMouse node={nodes.Interactive_Mouse} />}
       {nodes.Interactive_Mic_Head && <MicBoom nodes={nodes} />}
       {nodes.Interactive_Diary && <Diary3D nodes={nodes} isMobile={isMobile} />}
+      {nodes.Interactive_Camera && <CameraProp node={nodes.Interactive_Camera} />}
     </>
   );
 }

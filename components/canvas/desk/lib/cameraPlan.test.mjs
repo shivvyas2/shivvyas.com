@@ -26,3 +26,8 @@ test("panning between diary pages is a 0.8 s move", () => {
 test("resize mid-flight restarts the flight", () => {
   assert.deepEqual(cameraPlan({ hasLook: true, prev: { mode: "desk", focus: "right" }, mode: "desk", focus: "right", transitioning: true }), { kind: "tween", duration: 1.6 });
 });
+
+test("picking up / putting down the camera keeps the desk view, so it is quick", () => {
+  assert.deepEqual(cameraPlan({ hasLook: true, prev: { mode: "desk", focus: "right" }, mode: "camera", focus: "right", transitioning: true }), { kind: "tween", duration: 0.9 });
+  assert.deepEqual(cameraPlan({ hasLook: true, prev: { mode: "camera", focus: "right" }, mode: "desk", focus: "right", transitioning: true }), { kind: "tween", duration: 0.9 });
+});

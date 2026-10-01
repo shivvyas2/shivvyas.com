@@ -17,12 +17,13 @@ const caveat = Caveat({ subsets: ["latin"], weight: ["400", "700"], preload: fal
 const SPINE = [-0.3, 0.086, 0];
 const COVER_OPEN = Math.PI;
 const STACK = 0.0025;
+// S (static left, shows PAGES[0] on its back), turnable leaves L0..Ln, and
+// R (static right, last page on its front). Leaf j carries pages 2j+1 / 2j+2.
+const TURNABLE = PAGES.length / 2 - 1;
 const LEAVES = [
   { front: null, back: 0, fixedTurn: 1 },
-  { front: 1, back: 2, index: 0 },
-  { front: 3, back: 4, index: 1 },
-  { front: 5, back: 6, index: 2 },
-  { front: 7, back: null, fixedTurn: 0 },
+  ...Array.from({ length: TURNABLE }, (_, index) => ({ front: 2 * index + 1, back: 2 * index + 2, index })),
+  { front: PAGES.length - 1, back: null, fixedTurn: 0 },
 ];
 const restTurns = () => Object.fromEntries(LEAVES.map((leaf, k) => [k, leaf.fixedTurn ?? 0]));
 
@@ -53,7 +54,7 @@ export default function Diary3D({ nodes, isMobile }) {
       const leaf = LEAVES[k];
       const u = material.userData.uniforms;
       const turn = a.turns[k];
-      const right = leaf.index === undefined ? 0 : (3 - leaf.index) * STACK;
+      const right = leaf.index === undefined ? 0 : (TURNABLE - leaf.index) * STACK;
       const left = leaf.index === undefined ? 0 : (leaf.index + 1) * STACK;
       u.uTurn.value = turn;
       u.uLift.value = right + (left - right) * turn;

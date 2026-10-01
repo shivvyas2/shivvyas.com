@@ -70,6 +70,9 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
             } else if (mode === "diary") {
               event.stopPropagation();
               dispatchDesk({ type: "closeDiary" });
+            } else if (mode === "camera") {
+              event.stopPropagation();
+              dispatchDesk({ type: "closeCamera" });
             }
           }}
         >

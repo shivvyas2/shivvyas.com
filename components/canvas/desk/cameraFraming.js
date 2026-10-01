@@ -57,7 +57,7 @@ const aspectOf = (size) => Math.max(size.width, 1) / Math.max(size.height, 1);
 
 export function getPose(mode, { bounds, size, isMobile, diaryAnchor, focus }) {
   const aspect = aspectOf(size);
-  if (mode === "desk") {
+  if (mode === "desk" || mode === "camera") {
     return fit({
       center: DESK_CENTER.clone(),
       direction: new Vector3(0.08, 1, 0.11).normalize(),

@@ -2,7 +2,7 @@
 
 `scene.glb` is the active homepage model. It was rebuilt as original 3D geometry from Shiv's desk reference, keeping the same asset entry point.
 
-The scene contains two differently sized monitors, an open laptop, a mechanical keyboard, a trackpad, an ergonomic mouse, a cream mug, a wooden desktop and tan mat, red/black audio interfaces, a small round speaker, books, a phone, and an articulated microphone arm with a pop filter.
+The scene contains two differently sized monitors, an open laptop, a mechanical keyboard, a trackpad, an ergonomic mouse, a cream mug, a wooden desktop and tan mat, red/black audio interfaces, a small round speaker, books, a phone, an articulated microphone arm with a pop filter, Shiv's Sony mirrorless camera with a Tamron 70-300 telephoto (`Interactive_Camera`), and the mint cat bottle. The bottle mesh is merged in at build time from the archived alternative desk (`ideas/shiv-desk-hero/models/shiv-desk.glb`).
 
 ## Runtime asset
 
@@ -10,7 +10,7 @@ The scene contains two differently sized monitors, an open laptop, a mechanical 
 
 The wallpaper source lives at `scripts/model/assets/manhattan-dusk.jpg` (896 px).
 
-The active asset is 447 KB (about 30k triangles), compared with about 1.66 MB for the previous glTF + bin + texture and about 15.72 MB for the original model. Lighting is generated locally rather than downloaded from an HDR environment service.
+The active asset is about 550 KB, compared with about 1.66 MB for the previous glTF + bin + texture and about 15.72 MB for the original model. Lighting is generated locally rather than downloaded from an HDR environment service.
 
 ## Regenerate
 

@@ -1,4 +1,6 @@
-export const SPREAD_COUNT = 4;
+import { SPREAD_COUNT } from "./diaryPages.mjs";
+
+export { SPREAD_COUNT };
 export const INITIAL_DESK_STATE = Object.freeze({
   mode: "hero",
   transitioning: false,
@@ -25,8 +27,12 @@ export function deskReducer(state, action) {
         : state;
     case "closeDiary":
       return state.mode === "diary" ? go(state, "desk") : state;
+    case "openCamera":
+      return state.mode === "desk" ? go(state, "camera") : state;
+    case "closeCamera":
+      return state.mode === "camera" ? go(state, "desk") : state;
     case "escape":
-      if (state.mode === "diary") return go(state, "desk");
+      if (state.mode === "diary" || state.mode === "camera") return go(state, "desk");
       if (state.mode === "desk") return go(state, "hero");
       return state;
     case "nextPage": {

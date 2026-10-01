@@ -9,9 +9,9 @@ import { copyFile, mkdir, mkdtemp, rm, stat, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { NodeIO } from "@gltf-transform/core";
+import { NodeIO, getBounds } from "@gltf-transform/core";
 import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
-import { dedup, meshopt, prune } from "@gltf-transform/functions";
+import { dedup, meshopt, mergeDocuments, prune, unpartition } from "@gltf-transform/functions";
 import { MeshoptDecoder, MeshoptEncoder } from "meshoptimizer";
 
 // Rebuild the ACTIVE desk asset from Shiv's reference setup. Units are metres
@@ -47,6 +47,8 @@ const mats = {
   rubber: material("Rubber cable and cushions", "#0b0d0e", 0.86),
   grille: material("Microphone steel grille", "#85898b", 0.43, 0.72),
   screen: material("Laptop display glass", "#0e161e", 0.24),
+  lens: material("Lens matte black", "#151618", 0.62, 0.1),
+  glass: material("Lens front glass", "#20314a", 0.08, 0.4),
 };
 const unlit = (name, color) => {
   const value = new THREE.MeshBasicMaterial({ color });
@@ -577,7 +579,8 @@ mesh(
 );
 
 // Red and black audio interfaces beside the laptop.
-const audio = group("Audio interfaces", [1.0, 0.09, -0.34]);
+// Starts at x=0.915, clear of the laptop base (x <= 0.825) and its lid.
+const audio = group("Audio interfaces", [1.32, 0.09, -0.34]);
 box(
   "Black audio interface",
   [0.81, 0.16, 0.45],
@@ -782,6 +785,64 @@ box(
   scene,
   0.003,
 );
+
+// Shiv's Sony a6400-style body with the Tamron 70-300 telephoto, resting on
+// the back-left of the desk. Proportions follow the real kit at the desk's
+// ~6x scale (body 120 x 67 x 50 mm, lens 148 mm x 77 mm + hood). Local +Z is
+// the lens axis, the LCD faces -Z and the grip is on -X (right-hand side seen
+// from behind), so the runtime can pick it up and turn the screen to the viewer.
+const cameraRig = interactive(
+  group("Interactive_Camera", [-2.86, 0.05, -0.12], [0, Math.PI / 2 - 0.32, 0]),
+);
+// Body: a slim slab with a flat top; the grip bulges forward on the right.
+box("Camera body", [0.72, 0.4, 0.22], [0, 0.2, 0], mats.black, cameraRig, 0.03);
+box("Camera grip", [0.19, 0.4, 0.17], [-0.265, 0.2, 0.18], mats.rubber, cameraRig, 0.07);
+box("Camera EVF hump", [0.2, 0.06, 0.2], [0.24, 0.42, -0.01], mats.black, cameraRig, 0.02);
+box("Camera viewfinder eyecup", [0.16, 0.1, 0.05], [0.24, 0.355, -0.125], mats.rubber, cameraRig, 0.02);
+box("Camera hot shoe", [0.13, 0.015, 0.11], [0.02, 0.405, 0], mats.silver, cameraRig, 0.004);
+cylinder("Camera mode dial", 0.06, 0.05, [-0.17, 0.425, -0.03], mats.graphite, cameraRig);
+cylinder("Camera control dial", 0.05, 0.035, [-0.06, 0.415, -0.07], mats.graphite, cameraRig);
+cylinder("Camera shutter button", 0.035, 0.03, [-0.28, 0.41, 0.2], mats.silver, cameraRig);
+box("Camera LCD bezel", [0.5, 0.31, 0.012], [0.05, 0.19, -0.114], mats.graphite, cameraRig, 0.008);
+box("Camera mount plate", [0.34, 0.34, 0.01], [0.06, 0.2, 0.113], mats.graphite, cameraRig, 0.02);
+// Lens, from the mount forward: silver mount ring, rear barrel, ribbed zoom
+// ring, mid barrel, focus ring, flared front barrel, front glass, round hood.
+const LENS_X = 0.06;
+const LENS_Y = 0.2;
+const lensPart = (name, radius, length, z, mat) =>
+  cylinder(name, radius, length, [LENS_X, LENS_Y, z], mat, cameraRig, [Math.PI / 2, 0, 0]);
+lensPart("Lens mount ring", 0.185, 0.04, 0.135, mats.silver);
+lensPart("Lens rear barrel", 0.19, 0.18, 0.245, mats.lens);
+lensPart("Lens zoom ring", 0.212, 0.3, 0.485, mats.rubber);
+for (let i = 0; i < 8; i++)
+  mesh(
+    "Lens zoom rib",
+    new THREE.TorusGeometry(0.214, 0.005, 3, 24),
+    mats.lens,
+    [LENS_X, LENS_Y, 0.36 + i * 0.035],
+    cameraRig,
+  );
+lensPart("Lens mid barrel", 0.205, 0.16, 0.715, mats.lens);
+lensPart("Lens focus ring", 0.22, 0.12, 0.855, mats.rubber);
+mesh(
+  "Lens front barrel",
+  new THREE.CylinderGeometry(0.235, 0.22, 0.14, 32),
+  mats.lens,
+  [LENS_X, LENS_Y, 0.985],
+  cameraRig,
+  [Math.PI / 2, 0, 0],
+);
+lensPart("Lens front element", 0.2, 0.01, 1.04, mats.glass);
+lensPart("Lens brand ring", 0.193, 0.012, 0.33, mats.silver);
+mesh(
+  "Lens hood",
+  new THREE.CylinderGeometry(0.29, 0.245, 0.33, 40, 1, true),
+  mats.lens,
+  [LENS_X, LENS_Y, 1.22],
+  cameraRig,
+  [Math.PI / 2, 0, 0],
+);
+
 scene.updateMatrixWorld(true);
 const ownerOf = (object) => {
   for (let p = object.parent; p; p = p.parent) if (p.userData.interactive) return p;
@@ -880,6 +941,35 @@ const io = new NodeIO()
   .registerExtensions(ALL_EXTENSIONS)
   .registerDependencies({ "meshopt.encoder": MeshoptEncoder, "meshopt.decoder": MeshoptDecoder });
 const doc = await io.read(join(work, "scene.gltf"));
+
+// Shiv's mint cat bottle, sculpted for the archived alternative desk
+// (ideas/shiv-desk-hero). Keep only its meshes and stand it by the right monitor.
+const BOTTLE = { position: [2.08, 0.035, -0.32], height: 1.45 };
+const alternative = await io.read(
+  fileURLToPath(new URL("../../ideas/shiv-desk-hero/models/shiv-desk.glb", import.meta.url)),
+);
+for (const animation of alternative.getRoot().listAnimations()) animation.dispose();
+for (const node of alternative.getRoot().listNodes())
+  if (!/Bottle •/.test(node.getName())) node.dispose();
+await alternative.transform(prune());
+const bottleScene = alternative.getRoot().listScenes()[0];
+const bottleBounds = getBounds(bottleScene);
+const bottleScale = BOTTLE.height / (bottleBounds.max[1] - bottleBounds.min[1]);
+const merged = mergeDocuments(doc, alternative);
+const bottleRoot = doc
+  .createNode("Cat bottle")
+  .setTranslation(BOTTLE.position)
+  .setScale([bottleScale, bottleScale, bottleScale]);
+const bottleOffset = doc.createNode("Cat bottle origin").setTranslation([
+  -(bottleBounds.min[0] + bottleBounds.max[0]) / 2,
+  -bottleBounds.min[1],
+  -(bottleBounds.min[2] + bottleBounds.max[2]) / 2,
+]);
+bottleRoot.addChild(bottleOffset);
+for (const node of merged.get(bottleScene).listChildren()) bottleOffset.addChild(node);
+merged.get(bottleScene).dispose();
+doc.getRoot().listScenes()[0].addChild(bottleRoot);
+await doc.transform(unpartition());
 await doc.transform(
   dedup(),
   prune({ keepLeaves: true }),

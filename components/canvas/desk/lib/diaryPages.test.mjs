@@ -1,9 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { PAGES, PAGE_SIZE, sketchItems, spreadText, wrapLines } from "./diaryPages.mjs";
+import { PAGES, PAGE_SIZE, PROJECTS, SPREAD_COUNT, sketchItems, spreadText, wrapLines } from "./diaryPages.mjs";
 
-test("four spreads, every page has a heading and a sketch inside the page", () => {
-  assert.equal(PAGES.length, 8);
+test("an even number of pages, every page has a heading and a sketch inside the page", () => {
+  assert.equal(PAGES.length % 2, 0);
+  assert.equal(SPREAD_COUNT, PAGES.length / 2);
   PAGES.forEach((page, i) => {
     assert.ok(page.heading, `page ${i}`);
     const items = sketchItems(page, i);
@@ -33,11 +34,17 @@ test("jitter is deterministic", () => {
   assert.deepEqual(sketchItems(PAGES[5], 5), sketchItems(PAGES[5], 5));
 });
 
-test("Life OS and Astra each get a notes page and a sketch page", () => {
-  assert.match(PAGES[4].heading, /Life OS/);
-  assert.match(PAGES[5].heading, /Life OS/);
-  assert.match(PAGES[6].heading, /Astra/);
-  assert.match(PAGES[7].heading, /Astra/);
+test("opens with Shiv's info and toolbox, then every project", () => {
+  assert.match(PAGES[0].heading, /Shiv/);
+  assert.match(spreadText(0), /Contextual Intelligence/);
+  assert.match(PAGES[1].heading, /toolbox/);
+  const everything = PAGES.map((_, i) => i).filter((i) => i % 2 === 0).map((i) => spreadText(i / 2)).join(" ");
+  for (const project of PROJECTS) {
+    assert.ok(everything.includes(project.title), `${project.title} is in the diary`);
+    assert.ok(project.stack.length >= 2, `${project.title} lists its stack`);
+    for (const tech of project.stack) assert.ok(everything.includes(tech), `${project.title}: ${tech}`);
+  }
+  assert.ok(PROJECTS.length >= 14);
 });
 
 test("wrapLines breaks on words within the width", () => {
@@ -48,9 +55,9 @@ test("wrapLines breaks on words within the width", () => {
 });
 
 test("spreadText includes both pages", () => {
-  const text = spreadText(2);
-  assert.match(text, /Life OS/);
-  assert.match(text, /Today/);
+  const text = spreadText(0);
+  assert.match(text, /hi, I'm Shiv/);
+  assert.match(text, /toolbox/);
 });
 
 test("phones paint diary pages at half resolution (memory)", async () => {

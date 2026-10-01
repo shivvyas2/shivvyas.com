@@ -9,5 +9,7 @@ export function cameraPlan({ hasLook, prev, mode, focus, transitioning }) {
   if (!hasLook) return { kind: "snap", endTransition: transitioning };
   if (!modeChanged && !focusChanged && !transitioning) return { kind: "snap", endTransition: false };
   const panOnly = !modeChanged && focusChanged && mode === "diary";
-  return { kind: "tween", duration: panOnly ? 0.8 : 1.6 };
+  // The camera prop is picked up within the desk view; the viewpoint stays.
+  const deskToCamera = modeChanged && [prev.mode, mode].every((m) => m === "desk" || m === "camera");
+  return { kind: "tween", duration: panOnly ? 0.8 : deskToCamera ? 0.9 : 1.6 };
 }

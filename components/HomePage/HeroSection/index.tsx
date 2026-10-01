@@ -8,13 +8,15 @@ import { useSceneLoading } from "@/components/Loader/LoadingContext";
 import SceneBoundary from "@/components/Loader/SceneBoundary";
 import { dispatchDesk, useDesk } from "@/components/canvas/desk/useDesk";
 import { MODEL_URL } from "@/components/canvas/desk/modelUrl";
+import { PHOTO_URL } from "@/components/canvas/desk/lib/cameraContent.mjs";
 import { spreadText, PAGES } from "@/components/canvas/desk/lib/diaryPages.mjs";
 
 const DeskCanvas = dynamic(() => import("@/components/canvas/desk/DeskCanvas"), { ssr: false });
 
 const ANNOUNCE: Record<string, string> = {
   hero: "",
-  desk: "Desk view. Type on your keyboard, drag the mouse or the microphone, or open the diary.",
+  desk: "Desk view. Type on your keyboard, drag the mouse or the microphone, open the diary, or pick up the camera.",
+  camera: "Shiv's camera. The screen reads: loves photography. Open Photos goes to the photography site.",
 };
 
 export default function HeroSection() {
@@ -115,7 +117,7 @@ export default function HeroSection() {
         <button
           type="button"
           className={styles.deskExit}
-          aria-label={mode === "diary" ? "Close the diary" : "Leave the desk"}
+          aria-label={mode === "diary" ? "Close the diary" : mode === "camera" ? "Put the camera down" : "Leave the desk"}
           onClick={() => dispatchDesk({ type: "escape" })}
         >
           <X size={18} strokeWidth={2} aria-hidden="true" />
@@ -127,9 +129,19 @@ export default function HeroSection() {
           : ANNOUNCE[mode]}
       </p>
       {mode === "desk" && (
-        <button type="button" className={styles.srFocusable} onClick={() => dispatchDesk({ type: "openDiary" })}>
-          Open Shiv&apos;s diary
-        </button>
+        <>
+          <button type="button" className={styles.srFocusable} onClick={() => dispatchDesk({ type: "openDiary" })}>
+            Open Shiv&apos;s diary
+          </button>
+          <button type="button" className={styles.srFocusable} onClick={() => dispatchDesk({ type: "openCamera" })}>
+            Pick up the camera
+          </button>
+        </>
+      )}
+      {mode === "camera" && (
+        <a className={styles.srFocusable} href={PHOTO_URL} target="_blank" rel="noopener noreferrer">
+          Open Shiv&apos;s photography site
+        </a>
       )}
       {mode === "diary" && (
         <>

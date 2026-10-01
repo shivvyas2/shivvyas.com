@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { stat } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import { NodeIO } from "@gltf-transform/core";
+import { NodeIO, getBounds } from "@gltf-transform/core";
 import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
 import { MeshoptDecoder } from "meshoptimizer";
 
@@ -16,11 +16,13 @@ const REQUIRED = [
   "Interactive_Mic_Head",
   "Interactive_Diary",
   "Interactive_Diary_Cover",
+  "Interactive_Camera",
 ];
 
 test("scene.glb is small and exposes the interactive hierarchy", async () => {
   const { size } = await stat(file);
-  assert.ok(size < 460_000, `scene.glb is ${size} bytes`);
+  // 460 KB for the desk + ~90 KB for the camera and the sculpted cat bottle.
+  assert.ok(size < 560_000, `scene.glb is ${size} bytes`);
   await MeshoptDecoder.ready;
   const io = new NodeIO()
     .registerExtensions(ALL_EXTENSIONS)
@@ -33,5 +35,15 @@ test("scene.glb is small and exposes the interactive hierarchy", async () => {
   assert.ok(childOf("Interactive_Mic_Lower", "Interactive_Mic_Upper"));
   assert.ok(childOf("Interactive_Mic_Upper", "Interactive_Mic_Head"));
   assert.ok(childOf("Interactive_Diary", "Interactive_Diary_Cover"));
+  // Audio interfaces sit clear of the laptop (base spans x -0.825..0.825).
+  const audio = doc.getRoot().listNodes().find((n) => n.getName() === "Audio interface red aluminum");
+  assert.ok(audio, "audio interface mesh");
+  const minX = getBounds(audio).min[0];
+  assert.ok(minX > 0.85, `audio interface starts at x=${minX}`);
+  // The mint cat bottle comes from the archived alternative desk model.
+  assert.ok(doc.getRoot().listMaterials().some((m) => m.getName() === "Bottle • mint silicone"), "cat bottle");
+  const bottle = getBounds(nodes["Cat bottle"]);
+  assert.ok(bottle.min[1] > -0.01 && bottle.min[1] < 0.1, `bottle stands on the desk (y=${bottle.min[1]})`);
+  assert.ok(bottle.max[1] - bottle.min[1] > 1.3 && bottle.max[1] - bottle.min[1] < 1.6, "bottle height");
   assert.deepEqual(nodes.Interactive_Mic_Upper.getTranslation().map((v) => +v.toFixed(3)), [0, 1.09, -0.15]);
 });

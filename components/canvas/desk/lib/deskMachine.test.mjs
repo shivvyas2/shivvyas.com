@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { INITIAL_DESK_STATE as S0, deskReducer as r, createDeskStore } from "./deskMachine.mjs";
+import { INITIAL_DESK_STATE as S0, SPREAD_COUNT, deskReducer as r, createDeskStore } from "./deskMachine.mjs";
 
 const settle = (s) => r(s, { type: "transitionEnd" });
 
@@ -26,12 +26,12 @@ test("diary cannot open from hero; escape in hero is a no-op", () => {
   assert.equal(r(S0, { type: "escape" }), S0);
 });
 
-test("desktop paging clamps to 0..3 and resets on reopen", () => {
+test("desktop paging clamps to the last spread and resets on reopen", () => {
   let s = settle(r(settle(r(S0, { type: "enterDesk" })), { type: "openDiary" }));
-  for (let i = 0; i < 6; i++) s = r(s, { type: "nextPage" });
-  assert.equal(s.spread, 3);
+  for (let i = 0; i < SPREAD_COUNT + 2; i++) s = r(s, { type: "nextPage" });
+  assert.equal(s.spread, SPREAD_COUNT - 1);
   s = r(s, { type: "prevPage" });
-  assert.equal(s.spread, 2);
+  assert.equal(s.spread, SPREAD_COUNT - 2);
   s = settle(r(settle(r(s, { type: "closeDiary" })), { type: "openDiary" }));
   assert.equal(s.spread, 0);
 });
@@ -62,4 +62,18 @@ test("reset returns to hero but keeps the mobile flag, even mid-transition", () 
   let s = r(r(S0, { type: "setMobile", mobile: true }), { type: "enterDesk" });
   s = r(s, { type: "reset" });
   assert.deepEqual(s, { ...S0, mobile: true });
+});
+
+test("camera: pick up from the desk, Esc puts it down, not reachable from hero or diary", () => {
+  assert.equal(r(S0, { type: "openCamera" }), S0);
+  let s = settle(r(S0, { type: "enterDesk" }));
+  s = r(s, { type: "openCamera" });
+  assert.deepEqual([s.mode, s.transitioning], ["camera", true]);
+  s = settle(s);
+  assert.equal(r(s, { type: "openDiary" }), s);
+  s = settle(r(s, { type: "escape" }));
+  assert.equal(s.mode, "desk");
+  s = settle(r(r(s, { type: "openCamera" }), { type: "transitionEnd" }));
+  s = settle(r(s, { type: "closeCamera" }));
+  assert.equal(s.mode, "desk");
 });
