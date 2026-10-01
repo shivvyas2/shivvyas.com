@@ -134,3 +134,4 @@ dist
 /output/site-review/**/*.png
 /output/brand/header-pulse/*.png
 /output/brand/precision-fold-production/*.png
+.superpowers/
