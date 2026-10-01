@@ -58,10 +58,8 @@ const unlit = (name, color) => {
 // Both displays share one runtime canvas (a Cursor editor, see
 // components/canvas/desk/interactions/monitorScreens.js); dark until it loads.
 mats.wallpaper = unlit("Monitor screens", "#181818");
-mats.code = unlit("Editor text", "#a4bac7");
-mats.syntax = unlit("Editor syntax orange", "#f29656");
-mats.codeBlue = unlit("Editor syntax blue", "#6f9fb2");
-mats.ui = unlit("Editor panels", "#1c2631");
+// A shade off the monitors so dedup keeps the two materials (and names) apart.
+mats.laptopScreen = unlit("Laptop screen", "#17191b");
 mats.led = unlit("Warm status LEDs", "#ff8945");
 mats.green = unlit("Audio meter green", "#a0c59a");
 
@@ -374,78 +372,14 @@ box(
   lid,
   0.008,
 );
-box(
-  "Editor sidebar",
-  [0.24, 0.78, 0.003],
-  [-0.622, 0.523, 0.04],
-  mats.ui,
+// The editor itself is a runtime canvas (Cursor with a live terminal, see
+// components/canvas/desk/interactions/monitorScreens.js); this is its surface.
+mesh(
+  "Laptop editor surface",
+  new THREE.PlaneGeometry(1.49, 0.844),
+  mats.laptopScreen,
+  [0, 0.529, 0.0385],
   lid,
-  0.002,
-);
-box(
-  "Editor titlebar",
-  [1.49, 0.054, 0.003],
-  [0, 0.929, 0.041],
-  mats.ui,
-  lid,
-  0.002,
-);
-for (let i = 0; i < 3; i++)
-  mesh(
-    "Window control",
-    new THREE.CircleGeometry(0.012, 12),
-    [mats.syntax, mats.cream, mats.green][i],
-    [-0.698 + i * 0.038, 0.93, 0.044],
-    lid,
-  );
-const lengths = [
-  0.27, 0.41, 0.19, 0.36, 0.31, 0.22, 0.43, 0.32, 0.24, 0.39, 0.28, 0.36, 0.21,
-  0.3, 0.41,
-];
-for (let row = 0; row < 15; row++) {
-  const y = 0.855 - row * 0.045;
-  box(
-    "Editor file entry",
-    [0.07 + (row % 3) * 0.021, 0.007, 0.002],
-    [-0.636, y, 0.044],
-    row === 2 ? mats.syntax : mats.codeBlue,
-    lid,
-    0.001,
-  );
-  const indent = row % 5 === 0 ? 0 : 0.055;
-  box(
-    "Code keyword",
-    [0.09, 0.009, 0.002],
-    [-0.422 + indent, y, 0.044],
-    row % 3 === 0 ? mats.syntax : mats.codeBlue,
-    lid,
-    0.001,
-  );
-  box(
-    "Code statement",
-    [lengths[row], 0.009, 0.002],
-    [-0.31 + indent + lengths[row] / 2, y, 0.044],
-    mats.code,
-    lid,
-    0.001,
-  );
-  if (row % 3 !== 1)
-    box(
-      "Code argument",
-      [0.1, 0.009, 0.002],
-      [0.27, y, 0.044],
-      mats.syntax,
-      lid,
-      0.001,
-    );
-}
-box(
-  "Editor statusbar",
-  [1.48, 0.018, 0.002],
-  [0, 0.105, 0.041],
-  mats.syntax,
-  lid,
-  0.001,
 );
 for (let row = 0; row < 5; row++)
   for (let col = 0; col < 13; col++) {
@@ -660,14 +594,37 @@ cylinder(
 const ELBOW = [0, 1.09, -0.15];
 const TIP = [-0.11, 2.05, -0.63];
 const from = (origin, point) => point.map((v, i) => v - origin[i]);
-const micBase = interactive(group("Interactive_Mic_Base", [3.24, 0.018, 0.51]));
+// The boom arm pivots in the socket of a C-clamp gripping the desk's right
+// edge (worktop ends at x 3.575, underside at y -0.2). The clamp is static;
+// only the arm turns.
+const MIC_X = 3.47;
+const MIC_Z = 0.51;
+const micBase = interactive(group("Interactive_Mic_Base", [MIC_X, 0.052, MIC_Z]));
 const micLower = interactive(group("Interactive_Mic_Lower", [0, 0, 0], [0, 0, 0], micBase));
 const micUpper = interactive(group("Interactive_Mic_Upper", ELBOW, [0, 0, 0], micLower));
 const micHead = interactive(
   group("Interactive_Mic_Head", from(ELBOW, TIP), [0, 0, 0], micUpper),
 );
 
-box("Desk microphone clamp", [0.2, 0.11, 0.32], [0, -0.032, 0], mats.black, micBase, 0.015);
+box("Mic clamp top plate", [0.27, 0.034, 0.22], [MIC_X + 0.03, 0.017, MIC_Z], mats.black, scene, 0.012);
+cylinder("Mic clamp socket", 0.052, 0.07, [MIC_X, 0.068, MIC_Z], mats.graphite);
+box("Mic clamp spine", [0.05, 0.37, 0.2], [3.6, -0.15, MIC_Z], mats.black, scene, 0.012);
+box("Mic clamp lower jaw", [0.24, 0.04, 0.2], [3.5, -0.315, MIC_Z], mats.black, scene, 0.012);
+cylinder("Mic clamp pressure pad", 0.05, 0.016, [MIC_X, -0.21, MIC_Z], mats.rubber);
+cylinder("Mic clamp screw", 0.013, 0.13, [MIC_X, -0.27, MIC_Z], mats.silver);
+cylinder("Mic clamp knob", 0.048, 0.05, [MIC_X, -0.37, MIC_Z], mats.graphite);
+for (let i = 0; i < 10; i++) {
+  const a = (i / 10) * Math.PI * 2;
+  box(
+    "Mic clamp knob grip",
+    [0.012, 0.05, 0.012],
+    [MIC_X + Math.cos(a) * 0.049, -0.37, MIC_Z + Math.sin(a) * 0.049],
+    mats.black,
+    scene,
+    0.002,
+    [0, -a, 0],
+  );
+}
 
 rod("Mic upright", [0, 0, 0], ELBOW, 0.037, mats.black, micLower);
 rod("Mic arm parallel", [0.105, 0.34, -0.044], [0.105, 1.09, -0.15], 0.018, mats.black, micLower);

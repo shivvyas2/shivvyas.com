@@ -86,6 +86,43 @@ export const MONITOR_FILES = {
       "    /// value, in the data's own units. Walk the slices until it is passed.",
       "    private func slice(at amount: Double) -> CategorySlice? {"
     ]
+  },
+  "laptop": {
+    "path": "pages/index.tsx",
+    "firstLine": 1,
+    "language": "js",
+    "lines": [
+      "import AboutSection from \"@/components/HomePage/AboutSection\";",
+      "import AwardSection from \"@/components/HomePage/AwardSection\";",
+      "import BookCallSection from \"@/components/HomePage/BookCallSection\";",
+      "import HeroSection from \"@/components/HomePage/HeroSection\";",
+      "import ProjectSection from \"@/components/HomePage/ProjectSection\";",
+      "import ServiceSection from \"@/components/HomePage/ServiceSection\";",
+      "import Seo from \"@/components/Seo\";",
+      "import { SITE_URL, ownedSites, person } from \"@/data/site\";",
+      "",
+      "export default function HomePage() {",
+      "  return (",
+      "    <>",
+      "      <Seo",
+      "        title=\"Shiv Vyas | Software Engineer & Creative Developer\"",
+      "        description=\"Shiv Vyas (shivvyas) is a software engineer in New York building web, iOS, and AI applications. Explore his projects, music, and creative work.\"",
+      "        path=\"/\"",
+      "        structuredData={{",
+      "          \"@context\": \"https://schema.org\",",
+      "          \"@graph\": [",
+      "            person,",
+      "            {",
+      "              \"@type\": \"WebSite\",",
+      "              \"@id\": `${SITE_URL}/#website`,",
+      "              name: \"Shiv Vyas\",",
+      "              alternateName: [\"shivvyas\", \"shivvyas.com\"],",
+      "              url: `${SITE_URL}/`,",
+      "              inLanguage: \"en-US\",",
+      "              author: { \"@id\": person[\"@id\"] },",
+      "              publisher: { \"@id\": person[\"@id\"] },",
+      "            },"
+    ]
   }
 };
 
@@ -124,3 +161,41 @@ export function tokenize(line, language = "js") {
   }
   return runs;
 }
+
+// `npm run build` output for this site, replayed in the laptop terminal.
+export const BUILD_LOG = [
+  "  ▲ Next.js 14.2.15",
+  "",
+  "   Linting and checking validity of types ...",
+  "   Creating an optimized production build ...",
+  " ✓ Compiled successfully",
+  "   Collecting page data ...",
+  "   Generating static pages (0/20) ...",
+  "   Generating static pages (5/20)",
+  "   Generating static pages (10/20)",
+  "   Generating static pages (15/20)",
+  " ✓ Generating static pages (20/20)",
+  "   Finalizing page optimization ...",
+  "   Collecting build traces ...",
+  "",
+  "Route (pages)                              Size     First Load JS",
+  "┌ ○ /                                      47.4 kB         201 kB",
+  "├   └ css/3f47b8a5b63e3f32.css             4.36 kB",
+  "├   /_app                                  0 B             137 kB",
+  "├ ○ /404                                   180 B           137 kB",
+  "├ ○ /about                                 4.96 kB         142 kB",
+  "├   └ css/661199760c275374.css             1.68 kB",
+  "├ ƒ /api/sitemap                           0 B             137 kB",
+  "├ ○ /contact                               3.79 kB         141 kB",
+  "├   └ css/65aacea9903a9c99.css             1.13 kB",
+  "├ ○ /projects                              1.49 kB         155 kB",
+  "├   └ css/23265ca1dfdf8d40.css             1.81 kB",
+  "└ ● /projects/[slug] (921 ms)              5.3 kB          143 kB",
+  "    └ css/61082def0be5a89c.css             2.96 kB",
+  "    ├ /projects/elxr",
+  "    ├ /projects/life-os",
+  "    ├ /projects/astra",
+  "    └ [+11 more paths]",
+  "+ First Load JS shared by all              140 kB",
+  "  ├ chunks/framework-64ad27b21261a9ce.js   44.8 kB"
+];

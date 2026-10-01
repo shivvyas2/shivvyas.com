@@ -85,6 +85,22 @@ export const deskAudio = {
     play(deep ? buffers.deep : pick(buffers.down), { rate: jitter() });
     play(pick(buffers.up), { gain: 0.45, rate: jitter(), delay: 0.09 });
   },
+  // Two quick mechanical clicks: shutter open and close.
+  shutter() {
+    if (!ready()) return;
+    if (keySample) {
+      play(keySample, { rate: 0.62, gain: 0.9 });
+      play(keySample, { rate: 0.74, gain: 0.7, delay: 0.07 });
+      return;
+    }
+    play(buffers.deep, { rate: 0.8 });
+    play(pick(buffers.up), { gain: 0.6, rate: 0.9, delay: 0.07 });
+  },
+  button() {
+    if (!ready()) return;
+    if (keySample) play(keySample, { rate: 1.45, gain: 0.45 });
+    else play(pick(buffers.up), { gain: 0.5, rate: 1.3 });
+  },
   friction(level) {
     if (!ready()) return;
     try {

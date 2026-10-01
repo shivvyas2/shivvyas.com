@@ -21,8 +21,8 @@ const REQUIRED = [
 
 test("scene.glb is small and exposes the interactive hierarchy", async () => {
   const { size } = await stat(file);
-  // 460 KB for the desk + ~90 KB for the camera and the sculpted cat bottle.
-  assert.ok(size < 560_000, `scene.glb is ${size} bytes`);
+  // ~425 KB: no embedded textures (screens are runtime canvases).
+  assert.ok(size < 480_000, `scene.glb is ${size} bytes`);
   await MeshoptDecoder.ready;
   const io = new NodeIO()
     .registerExtensions(ALL_EXTENSIONS)
@@ -40,6 +40,9 @@ test("scene.glb is small and exposes the interactive hierarchy", async () => {
   assert.ok(audio, "audio interface mesh");
   const minX = getBounds(audio).min[0];
   assert.ok(minX > 0.85, `audio interface starts at x=${minX}`);
+  // Runtime canvases find the screens by material name; dedup must not merge them.
+  const names = doc.getRoot().listMaterials().map((m) => m.getName());
+  for (const name of ["Monitor screens", "Laptop screen"]) assert.ok(names.includes(name), `material ${name}`);
   // The mint cat bottle comes from the archived alternative desk model.
   assert.ok(doc.getRoot().listMaterials().some((m) => m.getName() === "Bottle • mint silicone"), "cat bottle");
   const bottle = getBounds(nodes["Cat bottle"]);
