@@ -94,7 +94,6 @@ export default function Nav() {
         <span className={styles.brandGlow} aria-hidden="true">
           <BrandMark variant="isometric" className={styles.brandMark} />
         </span>
-        <span className={styles.wordmark}>Shiv Vyas</span>
       </Link>
       <button
         type="button"
