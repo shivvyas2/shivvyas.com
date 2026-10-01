@@ -10,7 +10,8 @@
     "generate-sitemap": "node ./scripts/generate-sitemap.js",
     "generate-brand": "node ./scripts/generate-brand-assets.js && node ./scripts/generate-social-image.js",
     "generate-desk": "node ./scripts/model/build-desk.mjs",
-    "build:resume": "tectonic resume/ShivVyas_Resume.tex -o public/resume"
+    "build:resume": "tectonic resume/ShivVyas_Resume.tex -o public/resume",
+    "test": "node --test \"components/canvas/desk/lib/*.test.mjs\""
   },
   "dependencies": {
     "@react-three/drei": "^9.120.5",
