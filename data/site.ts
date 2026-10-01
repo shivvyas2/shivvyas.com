@@ -39,6 +39,9 @@ export const person = {
   },
   description:
     "Shiv Vyas is a software engineer in New York building web, mobile, and AI applications. He has released music on Spotify and Apple Music, runs a YouTube channel, and shoots photography as A Wannabe Photographer.",
+  // Separates this Shiv Vyas from similarly named people in search.
+  disambiguatingDescription:
+    "New York software developer and photographer, creator of Astra and shivvyas.com.",
   homeLocation: {
     "@type": "Place",
     name: "New York, NY",
