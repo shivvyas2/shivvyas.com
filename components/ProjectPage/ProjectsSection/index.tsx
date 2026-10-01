@@ -1,5 +1,6 @@
 // /pages/project.tsx
 import Link from "next/link";
+import { blurredCoverUrl } from "@/utils/imageUrls";
 import Image from "next/image";
 import styles from "./ProjectsSection.module.scss";
 import { projects } from "@/data/projectsData";
@@ -42,7 +43,7 @@ export default function ProjectsSection() {
             href={`/projects/${project.slug}`}
             className={`${styles.projectCard} ${project.textColor === "black" ? styles.blackText : ""}`}
             ref={addToRefs}
-            style={{ ["--cover" as string]: `url(${project.img})` }}
+            style={{ ["--cover" as string]: blurredCoverUrl(project.img) }}
           >
             <Image
               src={project.img}

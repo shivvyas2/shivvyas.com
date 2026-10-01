@@ -7,7 +7,7 @@ import Keycaps from "./Keycaps";
 import { dispatchDesk, useDesk } from "./useDesk";
 import { springStep } from "./lib/deskMath.mjs";
 
-export const MODEL_URL = "/desktop_pc/scene.glb?v=interactive-1";
+import { MODEL_URL } from "./modelUrl";
 const DRIFT = 0.0105; // ±0.6°
 const DRIFT_PERIOD = 8;
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion, useReducedMotion } from "framer-motion";
 import { ChevronDown, X } from "lucide-react";
@@ -7,6 +7,7 @@ import styles from "./HeroSection.module.scss";
 import { useSceneLoading } from "@/components/Loader/LoadingContext";
 import SceneBoundary from "@/components/Loader/SceneBoundary";
 import { dispatchDesk, useDesk } from "@/components/canvas/desk/useDesk";
+import { MODEL_URL } from "@/components/canvas/desk/modelUrl";
 import { spreadText, PAGES } from "@/components/canvas/desk/lib/diaryPages.mjs";
 
 const DeskCanvas = dynamic(() => import("@/components/canvas/desk/DeskCanvas"), { ssr: false });
@@ -20,6 +21,8 @@ export default function HeroSection() {
   const [showScene, setShowScene] = useState(false);
   const [active, setActive] = useState(true);
   const [explored, setExplored] = useState(false);
+  const [warm, setWarm] = useState(false);
+  const onWarm = useCallback(() => setWarm(true), []);
   const sectionRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
   const lenis = useLenis();
@@ -33,6 +36,15 @@ export default function HeroSection() {
     const update = () => {
       setShowScene(!query.matches);
       if (query.matches) finishScene();
+      // Start the model download before the three.js chunk arrives.
+      if (!query.matches && !document.querySelector(`link[href="${MODEL_URL}"]`)) {
+        const link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "fetch";
+        link.href = MODEL_URL;
+        link.crossOrigin = "anonymous";
+        document.head.appendChild(link);
+      }
     };
     update();
     query.addEventListener("change", update);
@@ -83,10 +95,10 @@ export default function HeroSection() {
           building at <span>Contextual Intelligence</span>.
         </p>
       </div>
-      <div className={styles.background}>
+      <div className={`${styles.background} ${warm ? styles.warm : ""}`}>
         {showScene && (
           <SceneBoundary onError={finishScene}>
-            <DeskCanvas onReady={finishScene} onProgress={updateSceneProgress} active={active} />
+            <DeskCanvas onReady={finishScene} onProgress={updateSceneProgress} onWarm={onWarm} active={active} />
           </SceneBoundary>
         )}
       </div>

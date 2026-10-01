@@ -99,7 +99,7 @@ export default function AwardSection() {
                 width={500}
                 height={500}
                 alt={`Award ${index + 1}`}
-                unoptimized
+                sizes="(max-width: 840px) 50vw, 25vw"
               />
             ))}
           </div>

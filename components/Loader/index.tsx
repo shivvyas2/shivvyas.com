@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useLenis } from "@studio-freight/react-lenis";
 import { gsap, ScrollTrigger } from "@/libs/gsap";
 import { useSceneLoading } from "./LoadingContext";
+import { hasSeenIntro, markIntroSeen, sessionStore } from "./introSession.mjs";
 
 export default function Loader() {
   const introRef = useRef<HTMLElement>(null);
@@ -12,6 +13,11 @@ export default function Loader() {
   const [finished, setFinished] = useState(false);
   const [canSkip, setCanSkip] = useState(false);
   const [skipped, setSkipped] = useState(false);
+
+  useEffect(() => {
+    // Repeat loads in the same tab go straight to the site.
+    if (hasSeenIntro(sessionStore())) setFinished(true);
+  }, []);
   const { sceneReady, sceneProgress } = useSceneLoading();
   const router = useRouter();
   const lenis = useLenis();
@@ -32,7 +38,11 @@ export default function Loader() {
     if (finished) return;
     const controller = new AbortController();
     const { signal } = controller;
-    const images = Array.from(document.images);
+    // Only what the first screen shows gates the intro; everything below the
+    // fold keeps its own lazy loading instead of being forced up front.
+    const images = Array.from(document.images).filter(
+      (image) => image.getBoundingClientRect().top < window.innerHeight,
+    );
     let completed = 0;
     const track = (task: Promise<unknown>) =>
       task
@@ -60,8 +70,6 @@ export default function Loader() {
           image.addEventListener("load", settle, { signal });
           image.addEventListener("error", settle, { signal });
           signal.addEventListener("abort", () => resolve(), { once: true });
-          // Warm the current page's pictures while the intro covers the site.
-          image.loading = "eager";
           if (image.complete) settle();
         }),
       ),
@@ -92,6 +100,7 @@ export default function Loader() {
 
   useEffect(() => {
     if (finished) {
+      markIntroSeen(sessionStore());
       ScrollTrigger.refresh();
       return;
     }
@@ -116,7 +125,7 @@ export default function Loader() {
     const timeline = gsap.timeline();
     timeline.to(count.current, {
       value: Math.max(count.current.value, progress),
-      duration: reducedMotion ? 0 : 0.5,
+      duration: reducedMotion ? 0 : 0.3,
       ease: "power1.out",
       onUpdate: () => {
         if (percentageRef.current)
@@ -127,17 +136,17 @@ export default function Loader() {
       timeline
         .to(percentageRef.current, {
           y: "-110%",
-          duration: reducedMotion ? 0 : 1.2,
+          duration: reducedMotion ? 0 : 0.4,
           ease: "power4.inOut",
         })
         .to(
           introRef.current,
           {
             y: "-100%",
-            duration: reducedMotion ? 0 : 1.5,
+            duration: reducedMotion ? 0 : 0.6,
             ease: "power4.inOut",
           },
-          reducedMotion ? ">" : "-=0.5",
+          reducedMotion ? ">" : "-=0.2",
         )
         .call(() => {
           setFinished(true);

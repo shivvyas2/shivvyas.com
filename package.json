@@ -11,7 +11,7 @@
     "generate-brand": "node ./scripts/generate-brand-assets.js && node ./scripts/generate-social-image.js",
     "generate-desk": "node ./scripts/model/build-desk.mjs",
     "build:resume": "tectonic resume/ShivVyas_Resume.tex -o public/resume",
-    "test": "node --test \"components/canvas/desk/lib/*.test.mjs\" \"scripts/**/*.test.mjs\""
+    "test": "node --test \"components/canvas/desk/lib/*.test.mjs\" \"components/Loader/*.test.mjs\" \"scripts/**/*.test.mjs\""
   },
   "dependencies": {
     "@react-three/drei": "^9.120.5",

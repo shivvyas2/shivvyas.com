@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { blurredCoverUrl } from "@/utils/imageUrls";
 import { gsap } from "@/libs/gsap";
 import { splitText } from "@/utils/textUtils";
 import styles from "./ProjectSection.module.scss";
@@ -105,7 +106,7 @@ export default function ProjectSection() {
             href={`/projects/${project.slug}`}
             ref={addToRefs}
             className={`${styles.projectCard} ${project.textColor === "black" ? styles.blackText : ""}`}
-            style={{ ["--cover" as string]: `url(${project.img})` }}
+            style={{ ["--cover" as string]: blurredCoverUrl(project.img) }}
           >
             <Image
               src={project.img}

@@ -30,6 +30,12 @@
     position: absolute;
     inset: 0;
     z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    &.warm {
+      opacity: 1;
+    }
 
     canvas {
       display: block;

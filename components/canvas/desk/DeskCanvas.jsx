@@ -1,12 +1,30 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
-import { Environment, Lightformer, OrbitControls, Preload, useProgress } from "@react-three/drei";
+import { Environment, Lightformer, OrbitControls, useProgress } from "@react-three/drei";
 import DeskModel from "./DeskModel";
 import { dispatchDesk, useDesk } from "./useDesk";
 import { heroLook } from "./CameraDirector";
 
 const DeskInteractions = lazy(() => import("./interactions"));
 const prefetchInteractions = () => import("./interactions");
+
+// Compiles every shader without blocking the main thread (KHR_parallel_shader_compile)
+// so the intro can lift as soon as the model is parsed and the hero fades in clean.
+function WarmUp({ onWarm }) {
+  const gl = useThree((s) => s.gl);
+  const scene = useThree((s) => s.scene);
+  const camera = useThree((s) => s.camera);
+  useEffect(() => {
+    let alive = true;
+    const done = () => alive && onWarm?.();
+    const task = gl.compileAsync ? gl.compileAsync(scene, camera) : Promise.resolve(gl.compile(scene, camera));
+    task.then(done, done);
+    return () => {
+      alive = false;
+    };
+  }, [gl, scene, camera, onWarm]);
+  return null;
+}
 
 function SceneReady({ onReady }) {
   useEffect(() => {
@@ -23,7 +41,7 @@ function Kick({ deps }) {
   return null;
 }
 
-export default function DeskCanvas({ onReady, onProgress, active }) {
+export default function DeskCanvas({ onReady, onProgress, onWarm, active }) {
   const [isMobile, setIsMobile] = useState(false);
   const mode = useDesk((s) => s.mode);
   const transitioning = useDesk((s) => s.transitioning);
@@ -101,7 +119,7 @@ export default function DeskCanvas({ onReady, onProgress, active }) {
             )
           }
         </DeskModel>
-        <Preload all />
+        <WarmUp onWarm={onWarm} />
         <SceneReady onReady={onReady} />
       </Suspense>
     </Canvas>
