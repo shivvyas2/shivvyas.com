@@ -26,6 +26,7 @@ export default function HeroSection() {
   const [warm, setWarm] = useState(false);
   const onWarm = useCallback(() => setWarm(true), []);
   const sectionRef = useRef<HTMLElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
   const lenis = useLenis();
   const { finishScene, updateSceneProgress } = useSceneLoading();
@@ -56,6 +57,24 @@ export default function HeroSection() {
   }, [finishScene]);
 
   useEffect(() => () => dispatchDesk({ type: "reset" }), []);
+
+  // Tell the 3D camera where the intro text ends so the desk (even raised by
+  // its keypad) always sits below it, however many lines the text wraps to.
+  useEffect(() => {
+    const section = sectionRef.current;
+    const text = textRef.current;
+    if (!section || !text) return;
+    const measure = () => {
+      const hero = section.getBoundingClientRect();
+      const bottom = (text.getBoundingClientRect().bottom - hero.top) / Math.max(hero.height, 1);
+      dispatchDesk({ type: "setHeroText", bottom: Math.round(bottom * 1000) / 1000 });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(section);
+    observer.observe(text);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const node = sectionRef.current;
@@ -90,7 +109,7 @@ export default function HeroSection() {
       className={`${styles.hero} ${inDesk ? styles.inDesk : ""}`}
       aria-labelledby="hero-title"
     >
-      <div className={styles["text-container"]}>
+      <div ref={textRef} className={styles["text-container"]}>
         <h1 id="hero-title" aria-label="Hi, I'm Shiv Vyas">
           Hi, I&apos;m <span>Shiv</span>
           <span className="sr-only"> Vyas</span>

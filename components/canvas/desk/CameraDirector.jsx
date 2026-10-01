@@ -14,11 +14,12 @@ export default function CameraDirector({ bounds, isMobile, diaryAnchor }) {
   const mode = useDesk((s) => s.mode);
   const focus = useDesk((s) => s.diaryFocus);
   const transitioning = useDesk((s) => s.transitioning);
+  const heroTextBottom = useDesk((s) => s.heroTextBottom);
   const look = useRef(null);
   const last = useRef({ mode: null, focus: null });
 
   useEffect(() => {
-    const pose = getPose(mode, { bounds, size, isMobile, diaryAnchor, focus });
+    const pose = getPose(mode, { bounds, size, isMobile, diaryAnchor, focus, heroTextBottom });
     if (mode === "hero") heroLook.current = pose.center.clone();
     const apply = (position, center, fov, up) => {
       camera.up.copy(up);
@@ -65,7 +66,7 @@ export default function CameraDirector({ bounds, isMobile, diaryAnchor }) {
     return () => tween.kill();
     // transitioning is read, not a trigger: toggling it must not restart tweens.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, focus, bounds, size.width, size.height, isMobile, diaryAnchor, camera, invalidate]);
+  }, [mode, focus, bounds, size.width, size.height, isMobile, diaryAnchor, camera, invalidate, heroTextBottom]);
 
   return null;
 }

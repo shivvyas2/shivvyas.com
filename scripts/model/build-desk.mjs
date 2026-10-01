@@ -715,23 +715,8 @@ box(
   phone,
   0.03,
 );
-box(
-  "Standing desk control",
-  [0.66, 0.1, 0.19],
-  [2.29, -0.2, 1.34],
-  mats.black,
-  scene,
-  0.02,
-);
-for (let i = 0; i < 4; i++)
-  box(
-    "Desk controller button",
-    [0.062, 0.036, 0.008],
-    [2.1 + i * 0.11, -0.2, 1.441],
-    mats.legend,
-    scene,
-    0.005,
-  );
+// The standing-desk keypad (raise/lower + height display) is built at
+// runtime in components/canvas/desk/StandingDesk.jsx so its keys can work.
 
 // An orange back-edge strip catches the scene lighting without RGB clutter.
 box(

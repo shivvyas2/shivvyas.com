@@ -7,12 +7,15 @@ export const INITIAL_DESK_STATE = Object.freeze({
   spread: 0,
   diaryFocus: "right",
   mobile: false,
+  heroTextBottom: null,
 });
 
 const go = (state, mode, extra = {}) => ({ ...state, mode, transitioning: true, ...extra });
 
 export function deskReducer(state, action) {
   if (action.type === "setMobile") return state.mobile === action.mobile ? state : { ...state, mobile: action.mobile };
+  if (action.type === "setHeroText")
+    return state.heroTextBottom === action.bottom ? state : { ...state, heroTextBottom: action.bottom };
   if (action.type === "transitionEnd") return state.transitioning ? { ...state, transitioning: false } : state;
   if (action.type === "reset") return { ...INITIAL_DESK_STATE, mobile: state.mobile };
   if (state.transitioning) return state;

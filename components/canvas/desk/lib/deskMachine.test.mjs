@@ -82,3 +82,10 @@ test("phones only show the 3D model: entering the desk is a no-op", () => {
   const phone = r(S0, { type: "setMobile", mobile: true });
   assert.equal(r(phone, { type: "enterDesk" }), phone);
 });
+
+test("stores where the hero text ends, even mid-transition", () => {
+  const moving = r(S0, { type: "enterDesk" });
+  assert.equal(r(moving, { type: "setHeroText", bottom: 0.34 }).heroTextBottom, 0.34);
+  const same = r(S0, { type: "setHeroText", bottom: null });
+  assert.equal(same, S0);
+});

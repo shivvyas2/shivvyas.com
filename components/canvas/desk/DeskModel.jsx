@@ -5,6 +5,7 @@ import { Box3 } from "three";
 import CameraDirector from "./CameraDirector";
 import Keycaps from "./Keycaps";
 import { FixedLegs, LiftingParts, useStandingDesk } from "./StandingDesk";
+import { heroFramingBounds } from "./lib/standingDesk.mjs";
 import { applyMonitorScreens } from "./interactions/monitorScreens";
 import { dispatchDesk, useDesk } from "./useDesk";
 import { springStep } from "./lib/deskMath.mjs";
@@ -22,7 +23,7 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
   const drifting = active && mode === "hero";
   const invalidate = useThree((s) => s.invalidate);
   const lift = useRef(null);
-  const deskDisplay = useStandingDesk(lift, active && mode === "hero");
+  const { display: deskDisplay, controls: deskControls } = useStandingDesk(lift, active && mode === "hero");
 
   useEffect(() => {
     scene.traverse((part) => {
@@ -54,7 +55,8 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
 
   const bounds = useMemo(() => {
     scene.updateWorldMatrix(true, true);
-    return new Box3().setFromObject(scene);
+    // Frame the hero with headroom for the keypad-raised desk (see standingDesk.mjs).
+    return heroFramingBounds(new Box3().setFromObject(scene));
   }, [scene]);
   const diaryAnchor = nodes.Interactive_Diary;
 
@@ -129,7 +131,7 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
             <Keycaps anchor={nodes.Interactive_Keyboard} />
           )}
           {children?.(nodes)}
-          <LiftingParts display={deskDisplay} />
+          <LiftingParts display={deskDisplay} controls={deskControls} buttonsEnabled={!isMobile && (mode === "hero" || mode === "desk")} />
         </group>
       </group>
     </>

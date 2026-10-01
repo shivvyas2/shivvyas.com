@@ -1,4 +1,5 @@
 import { MathUtils, PerspectiveCamera, Vector3 } from "three";
+import { heroFrame } from "./lib/heroFrame.mjs";
 
 const DESK_CENTER = new Vector3(0, 0.12, 0.3);
 const DESK_MIN = new Vector3(-3.4, 0, -1.35);
@@ -55,7 +56,7 @@ function fit({ center, direction, corners, fov, aspect, framing, heightFraction 
 
 const aspectOf = (size) => Math.max(size.width, 1) / Math.max(size.height, 1);
 
-export function getPose(mode, { bounds, size, isMobile, diaryAnchor, focus }) {
+export function getPose(mode, { bounds, size, isMobile, diaryAnchor, focus, heroTextBottom = null }) {
   const aspect = aspectOf(size);
   if (mode === "desk" || mode === "camera") {
     return fit({
@@ -108,7 +109,7 @@ export function getPose(mode, { bounds, size, isMobile, diaryAnchor, focus }) {
     fov: 36,
     aspect,
     framing: isMobile ? 0.84 : 0.9,
-    heightFraction: isMobile ? 0.58 : 0.61,
-    drop: isMobile ? 0.11 : 0.105,
+    // Fit below the intro text, however many lines it wraps to.
+    ...heroFrame({ textBottom: heroTextBottom, mobile: isMobile }),
   });
 }
