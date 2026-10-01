@@ -68,7 +68,13 @@ export function drawPage(page, index, fontFamily) {
   g.lineJoin = "round";
   g.textBaseline = "alphabetic";
 
-  g.font = `700 92px ${fontFamily}`;
+  // Long headings shrink to fit the page instead of running off the edge.
+  let headingSize = 92;
+  g.font = `700 ${headingSize}px ${fontFamily}`;
+  while (headingSize > 56 && g.measureText(page.heading).width > 840) {
+    headingSize -= 4;
+    g.font = `700 ${headingSize}px ${fontFamily}`;
+  }
   g.fillText(page.heading, 80, 150);
   g.font = `400 60px ${fontFamily}`;
   let y = 260;

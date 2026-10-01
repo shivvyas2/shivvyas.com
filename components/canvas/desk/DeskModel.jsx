@@ -64,9 +64,13 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
           }}
           onPointerOut={() => { hover.current.on = false; }}
           onClick={(event) => {
-            if (mode !== "hero") return;
-            event.stopPropagation();
-            dispatchDesk({ type: "enterDesk" });
+            if (mode === "hero") {
+              event.stopPropagation();
+              dispatchDesk({ type: "enterDesk" });
+            } else if (mode === "diary") {
+              event.stopPropagation();
+              dispatchDesk({ type: "closeDiary" });
+            }
           }}
         >
           <planeGeometry args={[6.9, 2.8]} />

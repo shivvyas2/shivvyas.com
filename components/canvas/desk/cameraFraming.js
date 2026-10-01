@@ -20,6 +20,7 @@ const WORLD_UP = new Vector3(0, 1, 0);
 // Top-down shots look almost straight down, where a +Y up vector leaves the
 // roll undefined; they use -Z so the monitors sit at the top of the frame.
 const DESK_UP = new Vector3(0, 0, -1);
+const PORTRAIT_UP = new Vector3(1, 0, 0);
 
 function fit({ center, direction, corners, fov, aspect, framing, heightFraction = 1, drop = 0, up: upVector = WORLD_UP }) {
   probe.up.copy(upVector);
@@ -71,8 +72,9 @@ export function getPose(mode, { bounds, size, isMobile, diaryAnchor, focus }) {
       fov: isMobile ? 54 : 48,
       aspect,
       framing: isMobile ? 1.04 : 1.04,
-      up: DESK_UP,
-      drop: 0.1,
+      // Portrait phones turn the long desk vertical so it fills the screen.
+      up: aspect < 0.8 ? PORTRAIT_UP : DESK_UP,
+      drop: aspect < 0.8 ? 0 : 0.1,
     });
   }
   if (mode === "diary" && diaryAnchor) {
@@ -95,7 +97,8 @@ export function getPose(mode, { bounds, size, isMobile, diaryAnchor, focus }) {
       fov: isMobile ? 50 : 40,
       aspect,
       framing: 1.1,
-      up: DESK_UP,
+      // Roll with the book (it sits slightly askew on the desk) so lines read level.
+      up: new Vector3(0, 0, -1).transformDirection(diaryAnchor.matrixWorld),
     });
   }
   return fit({

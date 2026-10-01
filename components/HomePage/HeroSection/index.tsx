@@ -7,13 +7,13 @@ import styles from "./HeroSection.module.scss";
 import { useSceneLoading } from "@/components/Loader/LoadingContext";
 import SceneBoundary from "@/components/Loader/SceneBoundary";
 import { dispatchDesk, useDesk } from "@/components/canvas/desk/useDesk";
+import { spreadText, PAGES } from "@/components/canvas/desk/lib/diaryPages.mjs";
 
 const DeskCanvas = dynamic(() => import("@/components/canvas/desk/DeskCanvas"), { ssr: false });
 
 const ANNOUNCE: Record<string, string> = {
   hero: "",
   desk: "Desk view. Type on your keyboard, drag the mouse or the microphone, or open the diary.",
-  diary: "Diary open.",
 };
 
 export default function HeroSection() {
@@ -25,6 +25,7 @@ export default function HeroSection() {
   const lenis = useLenis();
   const { finishScene, updateSceneProgress } = useSceneLoading();
   const mode = useDesk((s: { mode: string }) => s.mode);
+  const spread = useDesk((s: { spread: number }) => s.spread);
   const inDesk = mode !== "hero";
 
   useEffect(() => {
@@ -108,7 +109,26 @@ export default function HeroSection() {
           <X size={18} strokeWidth={2} aria-hidden="true" />
         </button>
       )}
-      <p className={styles.srOnly} aria-live="polite">{ANNOUNCE[mode]}</p>
+      <p className={styles.srOnly} aria-live="polite">
+        {mode === "diary"
+          ? `Diary, pages ${spread * 2 + 1} and ${spread * 2 + 2} of ${PAGES.length}. ${spreadText(spread)}`
+          : ANNOUNCE[mode]}
+      </p>
+      {mode === "desk" && (
+        <button type="button" className={styles.srFocusable} onClick={() => dispatchDesk({ type: "openDiary" })}>
+          Open Shiv&apos;s diary
+        </button>
+      )}
+      {mode === "diary" && (
+        <>
+          <button type="button" className={styles.srFocusable} onClick={() => dispatchDesk({ type: "prevPage" })}>
+            Previous page
+          </button>
+          <button type="button" className={styles.srFocusable} onClick={() => dispatchDesk({ type: "nextPage" })}>
+            Next page
+          </button>
+        </>
+      )}
       <button
         type="button"
         aria-label="Scroll to about section"
