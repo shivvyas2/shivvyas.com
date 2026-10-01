@@ -24,7 +24,14 @@ export const person = {
   alternateName: ["Shiv Amitkumar Vyas", "shivvyas", "shivvyas2"],
   url: `${SITE_URL}/`,
   image: `${SITE_URL}/images/about.jpeg`,
-  jobTitle: "Founding Engineer",
+  // Search-only: matches the LinkedIn profile so Google links the two. The
+  // visible UI can keep its own wording.
+  jobTitle: "Software Developer",
+  worksFor: {
+    "@type": "Organization",
+    name: "Luna Social Inc",
+    alternateName: "Contextual Intelligence for Marketing",
+  },
   description:
     "Shiv Vyas is a software engineer in New York building web, mobile, and AI applications. He also makes music, runs a YouTube channel, and shoots photography as A Wannabe Photographer.",
   homeLocation: {
