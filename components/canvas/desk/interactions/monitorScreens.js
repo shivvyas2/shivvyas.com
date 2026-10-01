@@ -1,3 +1,4 @@
+import { drawMacbookKeyboard } from "./macbookKeyboard";
 import { BufferAttribute, CanvasTexture, SRGBColorSpace } from "three";
 import { BUILD_LOG, MONITOR_FILES, tokenize } from "../lib/monitorCode.mjs";
 
@@ -581,6 +582,25 @@ function quadUvs(geometry, quads) {
   geometry.setAttribute("uv", new BufferAttribute(uv, 2));
 }
 
+// UVs for a flat, horizontal surface (the laptop keyboard): u runs along x,
+// v from the front edge (+z) to the hinge (-z), so the canvas top is at the back.
+function flatUvs(geometry) {
+  const pos = geometry.attributes.position;
+  let [x0, x1, z0, z1] = [Infinity, -Infinity, Infinity, -Infinity];
+  for (let i = 0; i < pos.count; i++) {
+    x0 = Math.min(x0, pos.getX(i));
+    x1 = Math.max(x1, pos.getX(i));
+    z0 = Math.min(z0, pos.getZ(i));
+    z1 = Math.max(z1, pos.getZ(i));
+  }
+  const uv = new Float32Array(pos.count * 2);
+  for (let i = 0; i < pos.count; i++) {
+    uv[i * 2] = (pos.getX(i) - x0) / (x1 - x0 || 1);
+    uv[i * 2 + 1] = (z1 - pos.getZ(i)) / (z1 - z0 || 1);
+  }
+  geometry.setAttribute("uv", new BufferAttribute(uv, 2));
+}
+
 function findByMaterial(scene, name) {
   let found = null;
   scene.traverse((part) => {
@@ -618,6 +638,11 @@ export function applyMonitorScreens(scene, onUpdate) {
     if (!laptop.geometry.attributes.uv) quadUvs(laptop.geometry, 1);
     screen = createLaptopScreen();
     undo.push(swapMap(laptop, screen.texture));
+  }
+  const keyboard = findByMaterial(scene, "Laptop keyboard");
+  if (keyboard) {
+    if (!keyboard.geometry.attributes.uv) flatUvs(keyboard.geometry);
+    undo.push(swapMap(keyboard, drawMacbookKeyboard()));
   }
   return {
     tick: () => screen?.tick() ?? false,

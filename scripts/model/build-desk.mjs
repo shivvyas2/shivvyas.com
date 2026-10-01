@@ -60,6 +60,10 @@ const unlit = (name, color) => {
 mats.wallpaper = unlit("Monitor screens", "#181818");
 // A shade off the monitors so dedup keeps the two materials (and names) apart.
 mats.laptopScreen = unlit("Laptop screen", "#17191b");
+// MacBook keyboard: a flat surface textured at runtime with the real layout
+// (components/canvas/desk/interactions/macbookKeyboard.js).
+mats.laptopKeys = material("Laptop keyboard", "#111214", 0.55);
+mats.trackpadGlass = material("MacBook trackpad glass", "#9fa5aa", 0.16, 0.4);
 mats.led = unlit("Warm status LEDs", "#ff8945");
 mats.green = unlit("Audio meter green", "#a0c59a");
 
@@ -306,7 +310,7 @@ box(
   "Laptop lower shell",
   [1.65, 0.057, 1.03],
   [0, 0.025, 0],
-  mats.graphite,
+  mats.silver,
   laptop,
   0.035,
 );
@@ -322,17 +326,26 @@ box(
   "Laptop palm deck",
   [1.6, 0.011, 0.98],
   [0, 0.078, 0],
-  mats.graphite,
+  mats.silver,
   laptop,
   0.02,
 );
+// MacBook Pro proportions: a wide force-touch trackpad under the keyboard.
 box(
   "Glass trackpad",
-  [0.52, 0.006, 0.3],
-  [0, 0.087, 0.285],
-  mats.silver,
+  [0.72, 0.006, 0.37],
+  [0, 0.0855, 0.31],
+  mats.trackpadGlass,
   laptop,
-  0.018,
+  0.03,
+);
+mesh(
+  "MacBook keyboard surface",
+  new THREE.PlaneGeometry(1.36, 0.54),
+  mats.laptopKeys,
+  [0, 0.0845, -0.17],
+  laptop,
+  [-Math.PI / 2, 0, 0],
 );
 cylinder("Laptop hinge", 0.036, 1.48, [0, 0.068, -0.46], mats.black, laptop, [
   0,
@@ -380,25 +393,6 @@ mesh(
   mats.laptopScreen,
   [0, 0.529, 0.0385],
   lid,
-);
-for (let row = 0; row < 5; row++)
-  for (let col = 0; col < 13; col++) {
-    box(
-      "Laptop key",
-      [0.099, 0.013, 0.079],
-      [-0.66 + col * 0.11, 0.094, -0.3 + row * 0.09],
-      mats.black,
-      laptop,
-      0.005,
-    );
-  }
-box(
-  "Laptop spacebar",
-  [0.52, 0.013, 0.064],
-  [0, 0.094, 0.106],
-  mats.black,
-  laptop,
-  0.005,
 );
 
 // Mechanical keyboard case; keycaps are instanced at runtime (keyboardLayout.mjs).

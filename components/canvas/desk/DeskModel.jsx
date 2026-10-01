@@ -99,8 +99,31 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
         {/* Everything on and under the worktop rises with the standing desk. */}
         <group ref={lift}>
           <primitive object={scene} />
+          {/* In the hero, the whole setup (monitors, laptop, front lip) opens
+              the desk view, not just the flat worktop. */}
+          {mode === "hero" && (
+            <mesh
+              // Front face stops at z = 1.5 so the keypad (z ~1.56) stays clickable.
+              position={[0, 1.2, -0.05]}
+              visible={false}
+              onPointerOver={() => {
+                if (isMobile) return;
+                hover.current.on = true;
+                onHoverDesk?.();
+              }}
+              onPointerOut={() => {
+                hover.current.on = false;
+              }}
+              onClick={(event) => {
+                event.stopPropagation();
+                dispatchDesk({ type: "enterDesk" });
+              }}
+            >
+              <boxGeometry args={[7.3, 2.9, 3.1]} />
+            </mesh>
+          )}
           <mesh
-            position={[0, 0.02, 0.18]}
+            position={[0, 0.02, 0]}
             rotation={[-Math.PI / 2, 0, 0]}
             onPointerOver={() => {
               // Phones show the desk only; no hover glow, no interaction code.
@@ -124,7 +147,7 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
               }
             }}
           >
-            <planeGeometry args={[6.9, 2.8]} />
+            <planeGeometry args={[7.2, 3.15]} />
             <meshBasicMaterial transparent opacity={0} depthWrite={false} />
           </mesh>
           {nodes.Interactive_Keyboard && (
