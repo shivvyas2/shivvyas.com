@@ -23,8 +23,10 @@ const socialLinks = [
   { text: "Linkedin", href: "https://www.linkedin.com/in/shivvyas/" },
   { text: "Youtube", href: "https://www.youtube.com/@ShivVyas" },
   { text: "Github", href: "https://github.com/shivvyas2" },
+  { text: "Photography", href: "https://awannabephotographer.shivvyas.com" },
 ].map(({ text, href }) => (
-  <Link key={text} href={href} target="_blank" rel="noopener noreferrer">
+  // rel="me" tells crawlers these profiles belong to the site owner.
+  <Link key={text} href={href} target="_blank" rel="me noopener noreferrer">
     {text}
   </Link>
 ));

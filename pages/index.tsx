@@ -5,7 +5,7 @@ import HeroSection from "@/components/HomePage/HeroSection";
 import ProjectSection from "@/components/HomePage/ProjectSection";
 import ServiceSection from "@/components/HomePage/ServiceSection";
 import Seo from "@/components/Seo";
-import { SITE_URL, person } from "@/data/site";
+import { SITE_URL, ownedSites, person } from "@/data/site";
 
 export default function HomePage() {
   return (
@@ -26,6 +26,7 @@ export default function HomePage() {
               url: `${SITE_URL}/`,
               author: { "@id": person["@id"] },
             },
+            ...ownedSites,
           ],
         }}
       />
