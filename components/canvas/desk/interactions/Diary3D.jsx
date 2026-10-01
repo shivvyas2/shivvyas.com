@@ -5,6 +5,7 @@ import { Caveat } from "next/font/google";
 import { gsap } from "@/libs/gsap";
 import { dispatchDesk, useDesk } from "../useDesk";
 import { PAGE } from "../lib/pageCurl.mjs";
+import { openChoreography } from "../lib/diaryChoreography.mjs";
 import { PAGES } from "../lib/diaryPages.mjs";
 import { drawBlankPage, drawPage, loadDiaryFont } from "./diaryTextures";
 import { makeLeafMaterial } from "./leafMaterial";
@@ -25,6 +26,13 @@ const LEAVES = [
   ...Array.from({ length: TURNABLE }, (_, index) => ({ front: 2 * index + 1, back: 2 * index + 2, index })),
   { front: PAGES.length - 1, back: null, fixedTurn: 0 },
 ];
+const FLIGHT = 1.6; // CameraDirector flight from the desk down to the book
+const OPEN = openChoreography(FLIGHT);
+const idleFrame = () =>
+  new Promise((resolve) =>
+    window.requestIdleCallback ? window.requestIdleCallback(resolve, { timeout: 120 }) : setTimeout(resolve, 16),
+  );
+
 const restTurns = () => Object.fromEntries(LEAVES.map((leaf, k) => [k, leaf.fixedTurn ?? 0]));
 
 export default function Diary3D({ nodes, isMobile }) {
@@ -34,6 +42,9 @@ export default function Diary3D({ nodes, isMobile }) {
   const spread = useDesk((s) => s.spread);
   const open = mode === "diary";
   const invalidate = useThree((s) => s.invalidate);
+  const gl = useThree((s) => s.gl);
+  const camera = useThree((s) => s.camera);
+  const scene = useThree((s) => s.scene);
   const hover = useHoverLift(diary, { enabled: mode === "desk", cursor: "pointer", lift: 0.02 });
   const [leaves, setLeaves] = useState(null);
   const group = useRef(null);
@@ -53,7 +64,9 @@ export default function Diary3D({ nodes, isMobile }) {
     leaves?.forEach((material, k) => {
       const leaf = LEAVES[k];
       const u = material.userData.uniforms;
-      const turn = a.turns[k];
+      // Leaf 0 is the first page, glued inside the front cover: it swings
+      // open with the cover instead of appearing on the left ahead of it.
+      const turn = k === 0 ? a.cover / COVER_OPEN : a.turns[k];
       const right = leaf.index === undefined ? 0 : (TURNABLE - leaf.index) * STACK;
       const left = leaf.index === undefined ? 0 : (leaf.index + 1) * STACK;
       u.uTurn.value = turn;
@@ -65,28 +78,61 @@ export default function Diary3D({ nodes, isMobile }) {
     invalidate();
   };
 
-  // Paint the pages the first time the diary opens.
+  // Prepare the pages as soon as the desk is open (not on click): paint one
+  // page per idle frame and upload each texture to the GPU ahead of time, so
+  // opening the diary never stalls mid-animation.
+  const prepare = mode === "desk" || open;
   useEffect(() => {
-    if (!open || leaves) return;
+    if (!prepare || leaves) return;
     let cancelled = false;
     const family = caveat.style.fontFamily;
-    loadDiaryFont(family).then(() => {
-      if (cancelled) return;
-      const pages = PAGES.map((page, i) => drawPage(page, i, family, isMobile));
+    (async () => {
+      await loadDiaryFont(family);
+      const pages = [];
+      for (let i = 0; i < PAGES.length; i++) {
+        await idleFrame();
+        if (cancelled) return;
+        pages.push(drawPage(PAGES[i], i, family, isMobile));
+      }
       const blank = drawBlankPage(isMobile);
-      setLeaves(
-        LEAVES.map((leaf) =>
-          makeLeafMaterial(
-            leaf.front === null ? blank : pages[leaf.front],
-            leaf.back === null ? blank : pages[leaf.back],
-          ),
+      const materials = LEAVES.map((leaf) =>
+        makeLeafMaterial(
+          leaf.front === null ? blank : pages[leaf.front],
+          leaf.back === null ? blank : pages[leaf.back],
         ),
       );
-    });
+      // The cover page turns rigidly with the cover (no paper curl).
+      materials[0].userData.uniforms.uBend.value = 0;
+      const textures = new Set(
+        materials.flatMap((material) => {
+          const u = material.userData.uniforms;
+          return [u.uFront.value, u.uBack.value, u.uMaskFront.value, u.uMaskBack.value];
+        }),
+      );
+      for (const texture of textures) {
+        await idleFrame();
+        if (cancelled) return;
+        gl.initTexture(texture);
+      }
+      if (!cancelled) setLeaves(materials);
+    })();
     return () => {
       cancelled = true;
     };
-  }, [open, leaves]);
+  }, [prepare, leaves, isMobile, gl]);
+
+  // Compile the page shader in the background once the leaves exist.
+  useEffect(() => {
+    const pages = group.current;
+    if (!leaves || !pages) return;
+    pages.visible = true;
+    const settle = () => {
+      pages.visible = anim.current.cover > 0.05;
+      invalidate();
+    };
+    gl.compileAsync(pages, camera, scene).then(settle, settle);
+    settle();
+  }, [leaves, gl, camera, scene, invalidate]);
 
   useEffect(
     () => () => {
@@ -100,19 +146,29 @@ export default function Diary3D({ nodes, isMobile }) {
   );
   useEffect(() => () => geometry.dispose(), [geometry]);
 
-  // Cover opens after the camera has started its move; closing settles pages first.
+  // One continuous move per open/close: the cover lifts while the camera
+  // descends and lands as it settles; closing settles the pages first. Depends
+  // on `open` only, so the move is never restarted mid-way.
   useEffect(() => {
     const a = anim.current;
     const timeline = gsap.timeline({ onUpdate: () => sync.current() });
     if (open) {
-      timeline.to(a, { cover: COVER_OPEN, duration: 0.9, ease: "power2.inOut", delay: 0.5 });
+      // Lift, fall open past flat by a hair, and settle: a heavy cover landing.
+      timeline
+        .to(a, {
+          cover: COVER_OPEN + 0.035,
+          duration: OPEN.coverDuration * 0.82,
+          ease: "power2.inOut",
+          delay: OPEN.coverStart,
+        })
+        .to(a, { cover: COVER_OPEN, duration: OPEN.coverDuration * 0.18, ease: "power1.out" });
     } else {
       timeline
         .to(a.turns, { ...restTurns(), duration: 0.5, ease: "power2.inOut" })
         .to(a, { cover: 0, duration: 0.8, ease: "power2.inOut" });
     }
     return () => timeline.kill();
-  }, [open, leaves]);
+  }, [open]);
 
   // Turn to the current spread, then ink in its sketches once.
   useEffect(() => {
@@ -132,7 +188,7 @@ export default function Diary3D({ nodes, isMobile }) {
       [spread * 2 + 1]: 1,
       duration: 1.2,
       ease: "none",
-      delay: a.cover < COVER_OPEN - 0.01 ? 1.4 : 0.5,
+      delay: a.cover < COVER_OPEN - 0.01 ? OPEN.inkStart : 0.5,
       onUpdate: () => sync.current(),
     });
     return () => {
