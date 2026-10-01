@@ -6,10 +6,10 @@ let buffers = null;
 let friction = null;
 let keySample = null;
 
-// Shiv's recorded key press (press + release, 0.45 s). Decoded with an
+// Shiv's recorded key press, trimmed to just the click (~85 ms). Decoded with an
 // OfflineAudioContext so it is ready before the first gesture; AudioBuffers
 // can be played by any context. The synthesized clicks remain the fallback.
-const KEY_SAMPLE_URL = "/audio/key-press.mp3";
+const KEY_SAMPLE_URL = "/audio/key-press.wav";
 if (typeof window !== "undefined") {
   try {
     const Offline = window.OfflineAudioContext || window.webkitOfflineAudioContext;

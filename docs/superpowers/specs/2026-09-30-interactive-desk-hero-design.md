@@ -146,7 +146,7 @@ Most of the transfer drop came from outside the 3D scene: the phone project card
 
 Deviations from this spec:
 
-1. Keyboard sound is Shiv's recorded key press (`public/audio/key-press.mp3`, 6 KB, loaded on desk hover); synthesized clicks remain a fallback and the mouse slide sound is synthesized.
+1. Keyboard sound is Shiv's recorded key press (`public/audio/key-press.wav`, trimmed to the 85 ms click, 7.6 KB, loaded on desk hover); synthesized clicks remain a fallback and the mouse slide sound is synthesized.
 2. Hover highlight is a lift plus warm emissive tint instead of an outline.
 3. Caveat is loaded through `next/font/google` with `preload: false`.
 4. Draw calls rose by ~25 (each interactive node keeps one mesh per material).
