@@ -11,7 +11,7 @@ export const MODEL_URL = "/desktop_pc/scene.glb?v=interactive-1";
 const DRIFT = 0.0105; // ±0.6°
 const DRIFT_PERIOD = 8;
 
-export default function DeskModel({ isMobile, active, children }) {
+export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
   const { scene, nodes } = useGLTF(MODEL_URL);
   const drift = useRef(null);
   const rim = useRef(null);
@@ -58,7 +58,10 @@ export default function DeskModel({ isMobile, active, children }) {
         <mesh
           position={[0, 0.02, 0.18]}
           rotation={[-Math.PI / 2, 0, 0]}
-          onPointerOver={() => { hover.current.on = true; }}
+          onPointerOver={() => {
+            hover.current.on = true;
+            onHoverDesk?.();
+          }}
           onPointerOut={() => { hover.current.on = false; }}
           onClick={(event) => {
             if (mode !== "hero") return;

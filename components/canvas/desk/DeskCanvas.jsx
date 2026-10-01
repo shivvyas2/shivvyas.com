@@ -1,9 +1,12 @@
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Environment, Lightformer, OrbitControls, Preload, useProgress } from "@react-three/drei";
 import DeskModel from "./DeskModel";
 import { dispatchDesk, useDesk } from "./useDesk";
 import { heroLook } from "./CameraDirector";
+
+const DeskInteractions = lazy(() => import("./interactions"));
+const prefetchInteractions = () => import("./interactions");
 
 function SceneReady({ onReady }) {
   useEffect(() => {
@@ -25,6 +28,11 @@ export default function DeskCanvas({ onReady, onProgress, active }) {
   const mode = useDesk((s) => s.mode);
   const transitioning = useDesk((s) => s.transitioning);
   const progress = useProgress((s) => s.progress);
+  const [interactive, setInteractive] = useState(false);
+
+  useEffect(() => {
+    if (mode !== "hero") setInteractive(true);
+  }, [mode]);
 
   useEffect(() => onProgress(progress), [progress, onProgress]);
 
@@ -84,8 +92,14 @@ export default function DeskCanvas({ onReady, onProgress, active }) {
           <Lightformer form="rect" intensity={2.5} position={[0, 5, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[8, 5, 1]} />
           <Lightformer form="rect" intensity={1.5} position={[-5, 2, 1]} rotation={[0, Math.PI / 2, 0]} scale={[4, 5, 1]} />
         </Environment>
-        <DeskModel isMobile={isMobile} active={active}>
-          {() => null}
+        <DeskModel isMobile={isMobile} active={active} onHoverDesk={prefetchInteractions}>
+          {(nodes) =>
+            interactive && (
+              <Suspense fallback={null}>
+                <DeskInteractions nodes={nodes} isMobile={isMobile} />
+              </Suspense>
+            )
+          }
         </DeskModel>
         <Preload all />
         <SceneReady onReady={onReady} />
