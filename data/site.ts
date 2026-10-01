@@ -12,6 +12,10 @@ const profiles = [
   "https://www.youtube.com/channel/UCLsQR29bzbW9xQkg4hX3Mfw",
   "https://www.instagram.com/shivvyas_/",
   "https://github.com/shivvyas2",
+  // Music: the YouTube channel above carries the knowledge panel; these keep
+  // it tied to this person and not to similarly named artists.
+  "https://open.spotify.com/artist/0hA8muqKqdqGUfJ2dArUan",
+  "https://music.apple.com/us/artist/shiv-vyas/1512819574",
   PHOTO_SITE_URL,
 ];
 
@@ -39,6 +43,11 @@ export const person = {
     "@type": "Place",
     name: "New York, NY",
   },
+  hasOccupation: [
+    { "@type": "Occupation", name: "Software Developer" },
+    { "@type": "Occupation", name: "Musician" },
+    { "@type": "Occupation", name: "Photographer" },
+  ],
   knowsAbout: [
     "Software Engineering",
     "Web Development",
