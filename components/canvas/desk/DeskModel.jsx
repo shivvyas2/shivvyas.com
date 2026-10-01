@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { Box3 } from "three";
 import CameraDirector from "./CameraDirector";
 import Keycaps from "./Keycaps";
+import { applyMonitorScreens } from "./interactions/monitorScreens";
 import { dispatchDesk, useDesk } from "./useDesk";
 import { springStep } from "./lib/deskMath.mjs";
 
@@ -18,6 +19,7 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
   const hover = useRef({ on: false, spring: { value: 0, velocity: 0 } });
   const mode = useDesk((s) => s.mode);
   const drifting = active && mode === "hero";
+  const invalidate = useThree((s) => s.invalidate);
 
   useEffect(() => {
     scene.traverse((part) => {
@@ -27,6 +29,14 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
       }
     });
   }, [scene]);
+
+  // Left monitor: Cursor with the desk's own source. Right: Xcode split with
+  // the iOS Simulator running Life OS.
+  useEffect(() => {
+    const undo = applyMonitorScreens(scene, invalidate);
+    invalidate();
+    return undo;
+  }, [scene, invalidate]);
 
   const bounds = useMemo(() => {
     scene.updateWorldMatrix(true, true);

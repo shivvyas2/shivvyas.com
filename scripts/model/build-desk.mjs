@@ -5,7 +5,7 @@ import {
   mergeGeometries,
   mergeVertices,
 } from "three/addons/utils/BufferGeometryUtils.js";
-import { copyFile, mkdir, mkdtemp, rm, stat, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -55,7 +55,9 @@ const unlit = (name, color) => {
   value.name = name;
   return value;
 };
-mats.wallpaper = unlit("Manhattan wallpaper", "#ffffff");
+// Both displays share one runtime canvas (a Cursor editor, see
+// components/canvas/desk/interactions/monitorScreens.js); dark until it loads.
+mats.wallpaper = unlit("Monitor screens", "#181818");
 mats.code = unlit("Editor text", "#a4bac7");
 mats.syntax = unlit("Editor syntax orange", "#f29656");
 mats.codeBlue = unlit("Editor syntax blue", "#6f9fb2");
@@ -236,12 +238,10 @@ function monitor(name, x, y, z, width, height, silver, angle) {
     0.018,
   );
   const screenGeometry = new THREE.PlaneGeometry(width - 0.14, height - 0.15);
-  // glTF image coordinates start at the top-left; the Three.js plane starts
-  // at the bottom-left. The external JPEG is intentionally left unmodified.
-  const uv = screenGeometry.attributes.uv;
-  for (let i = 0; i < uv.count; i++) uv.setY(i, 1 - uv.getY(i));
+  // No UVs survive export (the material is untextured); the runtime maps the
+  // editor canvas onto these quads from their positions.
   mesh(
-    "New York screen",
+    "Monitor screen",
     screenGeometry,
     mats.wallpaper,
     [0, 0.024, 0.073],
@@ -786,69 +786,127 @@ box(
   0.003,
 );
 
-// Shiv's Sony a6400-style body with the Tamron 70-300 telephoto, resting on
-// the back-left of the desk. Proportions follow the real kit at the desk's
+// Shiv's Sony a6400 with the Tamron 70-300 telephoto, resting on the
+// back-left of the desk, modelled from a photo of the real body at the desk's
 // ~6x scale (body 120 x 67 x 50 mm, lens 148 mm x 77 mm + hood). Local +Z is
 // the lens axis, the LCD faces -Z and the grip is on -X (right-hand side seen
 // from behind), so the runtime can pick it up and turn the screen to the viewer.
+// Back-panel lettering (MENU, Fn, DISP, ISO...) and the LCD are runtime
+// canvases in components/canvas/desk/interactions/cameraScreen.js; the
+// coordinates below are shared with it through lib/cameraContent.mjs.
 const cameraRig = interactive(
-  group("Interactive_Camera", [-2.86, 0.05, -0.12], [0, Math.PI / 2 - 0.32, 0]),
+  group("Interactive_Camera", [-2.86, 0.055, -0.12], [0, Math.PI / 2 - 0.32, 0]),
 );
-// Body: a slim slab with a flat top; the grip bulges forward on the right.
+// The hood (r 0.256) is deeper than the body is tall, so a flat body would
+// sink it into the mat. Tip the nose up ~2.4 deg so the camera rests on the
+// rear of the body and the hood rim, like the real kit on a table.
+cameraRig.rotation.order = "YXZ";
+cameraRig.rotation.x = -0.042;
+const BACK = -0.11; // rear face of the body
+const BUTTON_Z = BACK - 0.009; // buttons stand 18 mm proud (scaled)
+const facing = [Math.PI / 2, 0, 0]; // cylinder axis along Z
+// Knurled rim: thin ribs around a dial, on the Y axis (top dials) or Z (rear wheel).
+function knurl(name, radius, height, center, count, axis, mat) {
+  for (let i = 0; i < count; i++) {
+    const a = (i / count) * Math.PI * 2;
+    const [cx, cy, cz] = center;
+    if (axis === "y")
+      box(name, [0.007, height, 0.007], [cx + Math.cos(a) * radius, cy, cz + Math.sin(a) * radius], mat, cameraRig, 0.002, [0, -a, 0]);
+    else
+      box(name, [0.007, 0.007, height], [cx + Math.cos(a) * radius, cy + Math.sin(a) * radius, cz], mat, cameraRig, 0.002, [0, 0, a]);
+  }
+}
+
+// Body: a flat-topped rangefinder slab (no EVF hump on the a6400) with a deep
+// leather grip on the right.
 box("Camera body", [0.72, 0.4, 0.22], [0, 0.2, 0], mats.black, cameraRig, 0.03);
 box("Camera grip", [0.19, 0.4, 0.17], [-0.265, 0.2, 0.18], mats.rubber, cameraRig, 0.07);
-box("Camera EVF hump", [0.2, 0.06, 0.2], [0.24, 0.42, -0.01], mats.black, cameraRig, 0.02);
-box("Camera viewfinder eyecup", [0.16, 0.1, 0.05], [0.24, 0.355, -0.125], mats.rubber, cameraRig, 0.02);
-box("Camera hot shoe", [0.13, 0.015, 0.11], [0.02, 0.405, 0], mats.silver, cameraRig, 0.004);
-cylinder("Camera mode dial", 0.06, 0.05, [-0.17, 0.425, -0.03], mats.graphite, cameraRig);
-cylinder("Camera control dial", 0.05, 0.035, [-0.06, 0.415, -0.07], mats.graphite, cameraRig);
-cylinder("Camera shutter button", 0.035, 0.03, [-0.28, 0.41, 0.2], mats.silver, cameraRig);
-box("Camera LCD bezel", [0.5, 0.31, 0.012], [0.05, 0.19, -0.114], mats.graphite, cameraRig, 0.008);
+box("Camera thumb rest leather", [0.045, 0.22, 0.01], [-0.318, 0.215, BACK - 0.002], mats.rubber, cameraRig, 0.006);
+
+// Top plate: Multi Interface shoe, pop-up flash seam, rear control dial and
+// mode dial at the right edge, shutter with power collar and C1 on the grip.
+box("Camera flash housing", [0.3, 0.012, 0.16], [0.06, 0.402, -0.01], mats.graphite, cameraRig, 0.004);
+box("Camera multi interface shoe", [0.13, 0.008, 0.1], [0.105, 0.411, -0.01], mats.black, cameraRig, 0.003);
+for (const side of [-1, 1])
+  box("Camera shoe rail", [0.008, 0.014, 0.1], [0.105 + side * 0.062, 0.414, -0.01], mats.silver, cameraRig, 0.002);
+cylinder("Camera rear control dial", 0.05, 0.04, [-0.196, 0.418, -0.075], mats.graphite, cameraRig);
+knurl("Camera dial knurl", 0.05, 0.034, [-0.196, 0.418, -0.075], 28, "y", mats.black);
+cylinder("Camera mode dial", 0.056, 0.05, [-0.308, 0.425, -0.045], mats.graphite, cameraRig);
+knurl("Camera dial knurl", 0.056, 0.03, [-0.308, 0.43, -0.045], 30, "y", mats.black);
+cylinder("Camera mode dial cap", 0.045, 0.006, [-0.308, 0.452, -0.045], mats.black, cameraRig);
+cylinder("Camera power collar", 0.05, 0.014, [-0.27, 0.404, 0.2], mats.graphite, cameraRig);
+cylinder("Camera shutter button", 0.033, 0.026, [-0.27, 0.418, 0.2], mats.silver, cameraRig);
+cylinder("Camera C1 button", 0.02, 0.012, [-0.2, 0.406, 0.16], mats.graphite, cameraRig);
+
+// Rear: EVF in the top-left corner with its eye sensor and diopter wheel,
+// flash and MENU buttons, AF/MF-AEL lever, Fn, the control wheel, playback
+// and trash/C2, and the tilting LCD on its own slab.
+box("Camera EVF eyecup", [0.15, 0.09, 0.016], [0.278, 0.35, BACK - 0.008], mats.rubber, cameraRig, 0.02);
+box("Camera EVF glass", [0.088, 0.055, 0.004], [0.29, 0.352, BACK - 0.017], mats.screen, cameraRig, 0.006);
+box("Camera EVF eye sensor", [0.018, 0.04, 0.004], [0.226, 0.352, BACK - 0.017], mats.screen, cameraRig, 0.004);
+cylinder("Camera diopter dial", 0.024, 0.014, [0.162, 0.33, BACK - 0.007], mats.graphite, cameraRig, facing);
+knurl("Camera diopter knurl", 0.024, 0.012, [0.162, 0.33, BACK - 0.007], 16, "z", mats.black);
+box("Camera flash button", [0.068, 0.036, 0.018], [-0.018, 0.322, BUTTON_Z], mats.graphite, cameraRig, 0.016);
+box("Camera MENU button", [0.062, 0.034, 0.018], [-0.096, 0.322, BUTTON_Z], mats.graphite, cameraRig, 0.015);
+cylinder("Camera AEL button", 0.03, 0.018, [-0.205, 0.328, BUTTON_Z], mats.graphite, cameraRig, facing);
+box("Camera AF/MF lever", [0.05, 0.016, 0.012], [-0.172, 0.312, BUTTON_Z - 0.002], mats.graphite, cameraRig, 0.005, [0, 0, 0.45]);
+cylinder("Camera Fn button", 0.027, 0.018, [-0.218, 0.24, BUTTON_Z], mats.graphite, cameraRig, facing);
+cylinder("Camera control wheel", 0.052, 0.016, [-0.262, 0.15, BUTTON_Z + 0.001], mats.graphite, cameraRig, facing);
+knurl("Camera wheel knurl", 0.05, 0.014, [-0.262, 0.15, BUTTON_Z], 36, "z", mats.black);
+cylinder("Camera wheel center button", 0.026, 0.02, [-0.262, 0.15, BUTTON_Z - 0.002], mats.black, cameraRig, facing);
+cylinder("Camera playback button", 0.027, 0.018, [-0.218, 0.055, BUTTON_Z], mats.graphite, cameraRig, facing);
+cylinder("Camera trash button", 0.027, 0.018, [-0.295, 0.055, BUTTON_Z], mats.graphite, cameraRig, facing);
+box("Camera LCD slab", [0.516, 0.279, 0.02], [0.081, 0.149, BACK - 0.01], mats.graphite, cameraRig, 0.012);
+box("Camera LCD hinge", [0.46, 0.014, 0.014], [0.081, 0.292, BACK - 0.006], mats.black, cameraRig, 0.006);
+
+// Front: mount plate, lens release and the AF illuminator.
 box("Camera mount plate", [0.34, 0.34, 0.01], [0.06, 0.2, 0.113], mats.graphite, cameraRig, 0.02);
+cylinder("Camera lens release", 0.022, 0.012, [-0.135, 0.12, 0.115], mats.silver, cameraRig, facing);
+cylinder("Camera AF illuminator", 0.016, 0.006, [-0.12, 0.33, 0.112], mats.led, cameraRig, facing);
+
 // Lens, from the mount forward: a straight Tamron-style barrel with a silver
 // mount and accent rings, a ribbed zoom ring, an index mark, a focus ring and
-// a short round hood (not a flared cone).
+// a solid round hood with real wall thickness (an open tube read as "cut").
 const LENS_X = 0.06;
 const LENS_Y = 0.2;
 const lensPart = (name, radius, length, z, mat) =>
-  cylinder(name, radius, length, [LENS_X, LENS_Y, z], mat, cameraRig, [Math.PI / 2, 0, 0]);
+  cylinder(name, radius, length, [LENS_X, LENS_Y, z], mat, cameraRig, facing);
 lensPart("Lens mount ring", 0.185, 0.04, 0.135, mats.silver);
 lensPart("Lens rear barrel", 0.19, 0.2, 0.255, mats.lens);
 lensPart("Lens brand ring", 0.192, 0.014, 0.33, mats.silver);
 lensPart("Lens zoom ring", 0.205, 0.28, 0.495, mats.rubber);
-for (let i = 0; i < 9; i++)
+for (let i = 0; i < 40; i++) {
+  const a = (i / 40) * Math.PI * 2;
   box(
     "Lens zoom grip rib",
-    [0.416, 0.008, 0.012],
-    [LENS_X, LENS_Y, 0.38 + i * 0.029],
+    [0.012, 0.012, 0.25],
+    [LENS_X + Math.cos(a) * 0.206, LENS_Y + Math.sin(a) * 0.206, 0.495],
     mats.graphite,
     cameraRig,
     0.002,
+    [0, 0, a],
   );
-for (let i = 0; i < 9; i++)
-  box(
-    "Lens zoom grip rib",
-    [0.008, 0.416, 0.012],
-    [LENS_X, LENS_Y, 0.38 + i * 0.029],
-    mats.graphite,
-    cameraRig,
-    0.002,
-  );
+}
 lensPart("Lens mid barrel", 0.2, 0.14, 0.705, mats.lens);
 box("Lens index mark", [0.012, 0.006, 0.05], [LENS_X, LENS_Y + 0.2, 0.68], mats.legend, cameraRig, 0.002);
 lensPart("Lens focus ring", 0.208, 0.1, 0.825, mats.rubber);
 lensPart("Lens front barrel", 0.215, 0.12, 0.935, mats.lens);
 lensPart("Lens front accent", 0.217, 0.012, 0.99, mats.silver);
 lensPart("Lens front element", 0.19, 0.01, 0.985, mats.glass);
+lensPart("Lens hood bayonet", 0.232, 0.03, 1.005, mats.graphite);
+// Hood profile (radius, distance along the axis), closed so both the outer
+// shell and the inside wall render.
+const hoodProfile = [
+  [0.224, 0], [0.238, 0], [0.256, 0.2], [0.256, 0.212], [0.244, 0.212], [0.224, 0.02], [0.224, 0],
+].map(([r, z]) => new THREE.Vector2(r, z));
 mesh(
   "Lens hood",
-  new THREE.CylinderGeometry(0.25, 0.228, 0.2, 40, 1, true),
+  new THREE.LatheGeometry(hoodProfile, 48),
   mats.lens,
-  [LENS_X, LENS_Y, 1.095],
+  [LENS_X, LENS_Y, 1.0],
   cameraRig,
-  [Math.PI / 2, 0, 0],
+  facing,
 );
-lensPart("Lens hood bayonet", 0.232, 0.03, 1.005, mats.graphite);
 
 scene.updateMatrixWorld(true);
 const ownerOf = (object) => {
@@ -926,20 +984,9 @@ gltf.asset.extras = {
     "Original geometric reconstruction of Shiv Vyas’s desk reference: dual displays, laptop, mechanical keyboard and music equipment.",
   source: "scripts/model/build-desk.mjs",
 };
-gltf.images = [{ uri: "textures/manhattan-dusk.jpg", name: "Generated Manhattan dusk wallpaper" }];
-gltf.samplers = [{ magFilter: 9729, minFilter: 9987, wrapS: 33071, wrapT: 33071 }];
-gltf.textures = [{ source: 0, sampler: 0 }];
-gltf.materials.find((m) => m.name === "Manhattan wallpaper").pbrMetallicRoughness.baseColorTexture = {
-  index: 0,
-};
 
 // Write a plain glTF to a scratch folder, then compress it into one GLB.
 const work = await mkdtemp(join(tmpdir(), "shiv-desk-"));
-await mkdir(join(work, "textures"));
-await copyFile(
-  fileURLToPath(new URL("./assets/manhattan-dusk.jpg", import.meta.url)),
-  join(work, "textures/manhattan-dusk.jpg"),
-);
 await writeFile(join(work, "scene.gltf"), JSON.stringify(gltf));
 await writeFile(join(work, "studio.bin"), buffer);
 

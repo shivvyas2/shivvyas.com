@@ -6,11 +6,9 @@ The scene contains two differently sized monitors, an open laptop, a mechanical 
 
 ## Runtime asset
 
-- `scene.glb`: meshopt-compressed scene with the Manhattan wallpaper embedded. Static parts are merged by material; the mouse, keyboard case, microphone arm (base, lower, upper, head pivots) and diary (with a hinged cover) are separate `Interactive_*` nodes the homepage animates. Keycaps are instanced at runtime from `components/canvas/desk/lib/keyboardLayout.mjs`.
+- `scene.glb`: meshopt-compressed scene with no embedded textures. The two monitors are drawn at runtime as a Cursor-style editor showing excerpts of the desk's own source (`components/canvas/desk/interactions/monitorScreens.js`). Static parts are merged by material; the mouse, keyboard case, microphone arm (base, lower, upper, head pivots) and diary (with a hinged cover) are separate `Interactive_*` nodes the homepage animates. Keycaps are instanced at runtime from `components/canvas/desk/lib/keyboardLayout.mjs`.
 
-The wallpaper source lives at `scripts/model/assets/manhattan-dusk.jpg` (896 px).
-
-The active asset is about 550 KB, compared with about 1.66 MB for the previous glTF + bin + texture and about 15.72 MB for the original model. Lighting is generated locally rather than downloaded from an HDR environment service.
+The active asset is about 430 KB, compared with about 1.66 MB for the previous glTF + bin + texture and about 15.72 MB for the original model. Lighting is generated locally rather than downloaded from an HDR environment service.
 
 ## Regenerate
 
@@ -18,7 +16,9 @@ Run `npm run generate-desk` from the repository root. The source is `scripts/mod
 
 The camera fits the full model to the available hero area. Desktop visitors can drag to orbit within a small range; phones retain normal page scrolling. The intro waits for the model download; shaders compile asynchronously behind a short fade-in.
 
-## Wallpaper source
+## Retired wallpaper
+
+The monitors no longer use `scripts/model/assets/manhattan-dusk.jpg`; it is kept for reference.
 
 Generated with the imagegen skill. Prompt: a flat, edge-to-edge photographic aerial view across Midtown Manhattan, with the Empire State Building as a focal point, dense architectural detail, and golden-hour light fading into charcoal blue. Warm ember-orange facades complement the website. No device frame, UI, text, or watermark. Exported as a 1280px-wide JPEG for the 3D texture.
 

@@ -3,8 +3,8 @@ import { createPortal, useThree } from "@react-three/fiber";
 import { DoubleSide, Quaternion, Vector3 } from "three";
 import { gsap } from "@/libs/gsap";
 import { dispatchDesk, useDesk } from "../useDesk";
-import { PHOTO_URL, heldPose } from "../lib/cameraProp.mjs";
-import { drawCameraScreen } from "./cameraScreen";
+import { CAMERA_BACK, CAMERA_LCD, PHOTO_URL, heldPose } from "../lib/cameraProp.mjs";
+import { drawCameraLegends, drawCameraScreen } from "./cameraScreen";
 import { useHoverLift } from "./useHoverLift";
 import HitProxy from "./HitProxy";
 
@@ -24,6 +24,7 @@ export default function CameraProp({ node }) {
   // Tint only: this component owns the node's position while it moves.
   const hover = useHoverLift(node, { enabled: mode === "desk", cursor: "pointer", lift: 0 });
   const screen = useMemo(() => drawCameraScreen(), []);
+  const legends = useMemo(() => drawCameraLegends(), []);
   const rest = useMemo(
     () => ({ position: node.position.clone(), quaternion: node.quaternion.clone() }),
     [node],
@@ -31,6 +32,7 @@ export default function CameraProp({ node }) {
   const anim = useRef({ t: 0 });
 
   useEffect(() => () => screen.dispose(), [screen]);
+  useEffect(() => () => legends.dispose(), [legends]);
 
   useEffect(() => {
     const a = anim.current;
@@ -66,7 +68,18 @@ export default function CameraProp({ node }) {
       )}
       {createPortal(
         <mesh
-          position={[0.05, 0.19, -0.1215]}
+          position={[0, CAMERA_BACK.height / 2, CAMERA_BACK.labelZ]}
+          rotation={[0, Math.PI, 0]}
+          raycast={() => null}
+        >
+          <planeGeometry args={[CAMERA_BACK.width, CAMERA_BACK.height]} />
+          <meshBasicMaterial map={legends} transparent depthWrite={false} toneMapped={false} />
+        </mesh>,
+        node,
+      )}
+      {createPortal(
+        <mesh
+          position={[CAMERA_LCD.x, CAMERA_LCD.y, CAMERA_LCD.z]}
           rotation={[0, Math.PI, 0]}
           onClick={(event) => {
             if (!held) return;
@@ -80,7 +93,7 @@ export default function CameraProp({ node }) {
             gl.domElement.style.cursor = "";
           }}
         >
-          <planeGeometry args={[0.46, 0.2875]} />
+          <planeGeometry args={[CAMERA_LCD.width, CAMERA_LCD.height]} />
           <meshBasicMaterial map={screen} toneMapped={false} side={DoubleSide} />
         </mesh>,
         node,

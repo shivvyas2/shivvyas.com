@@ -1,6 +1,6 @@
 import { Matrix4, Quaternion, Vector3 } from "three";
 
-export { PHOTO_URL, SCREEN_ROWS } from "./cameraContent.mjs";
+export { CAMERA_BACK, CAMERA_LCD, CAMERA_LEGENDS, PHOTO_URL, SCREEN_ROWS } from "./cameraContent.mjs";
 
 const flip = new Matrix4();
 const eye = new Vector3();
