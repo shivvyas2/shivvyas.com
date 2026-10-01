@@ -4,7 +4,7 @@ import { useLenis } from "@studio-freight/react-lenis";
 import { gsap, ScrollTrigger } from "@/libs/gsap";
 import { useSceneLoading } from "./LoadingContext";
 import { hasSeenIntro, markIntroSeen, sessionStore } from "./introSession.mjs";
-import { MAX_WAIT_MS, SHOW_AFTER_MS, loaderGate } from "./loaderGate.mjs";
+import { MAX_WAIT_MS, SHOW_AFTER_MS, loaderCount, loaderGate } from "./loaderGate.mjs";
 
 // Covers the page only while the home hero's 3D scene loads (never the rest of
 // the site), capped at MAX_WAIT_MS. The orange counter panel appears only if
@@ -16,7 +16,7 @@ export default function Loader() {
   const [elapsedMs, setElapsedMs] = useState(0);
   const [finished, setFinished] = useState(false);
   const [counterShown, setCounterShown] = useState(false);
-  const { sceneReady, sceneProgress } = useSceneLoading();
+  const { sceneReady } = useSceneLoading();
   const router = useRouter();
   const lenis = useLenis();
   const { ready, showCounter } = loaderGate({
@@ -66,22 +66,26 @@ export default function Loader() {
     };
   }, [finished, lenis]);
 
+  const render = (value: number) => {
+    if (percentageRef.current) percentageRef.current.textContent = `${Math.floor(value)}`;
+  };
+
+  // Count up every frame while waiting, so the number climbs 1-by-1.
   useEffect(() => {
-    if (finished || !counterShown) return;
-    const progress = ready ? 100 : Math.min(99, Math.round(sceneProgress));
-    const tween = gsap.to(count.current, {
-      value: Math.max(count.current.value, progress),
-      duration: 0.3,
-      ease: "power1.out",
-      onUpdate: () => {
-        if (percentageRef.current)
-          percentageRef.current.textContent = `${Math.floor(count.current.value)}`;
-      },
-    });
-    return () => {
-      tween.kill();
+    if (finished || !counterShown || ready) return;
+    const shownAt = performance.now();
+    let frame = 0;
+    const step = () => {
+      count.current.value = Math.max(
+        count.current.value,
+        loaderCount({ shownMs: performance.now() - shownAt }),
+      );
+      render(count.current.value);
+      frame = requestAnimationFrame(step);
     };
-  }, [sceneProgress, ready, counterShown, finished]);
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
+  }, [counterShown, ready, finished]);
 
   useEffect(() => {
     if (finished || !ready) return;
@@ -92,6 +96,13 @@ export default function Loader() {
       timeline.set(introRef.current, { opacity: 0 });
     } else if (counterShown) {
       timeline
+        // Finish the count (it keeps ticking through every number) before leaving.
+        .to(count.current, {
+          value: 100,
+          duration: 0.12 + (100 - count.current.value) * 0.008,
+          ease: "power1.out",
+          onUpdate: () => render(count.current.value),
+        })
         .to(percentageRef.current, { y: "-110%", duration: 0.35, ease: "power4.inOut" })
         .to(introRef.current, { y: "-100%", duration: 0.55, ease: "power4.inOut" }, "-=0.15");
     } else {

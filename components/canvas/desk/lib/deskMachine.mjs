@@ -18,7 +18,8 @@ export function deskReducer(state, action) {
   if (state.transitioning) return state;
   switch (action.type) {
     case "enterDesk":
-      return state.mode === "hero" ? go(state, "desk") : state;
+      // Phones get the 3D model as a display piece only.
+      return state.mode === "hero" && !state.mobile ? go(state, "desk") : state;
     case "exitDesk":
       return state.mode === "desk" ? go(state, "hero") : state;
     case "openDiary":

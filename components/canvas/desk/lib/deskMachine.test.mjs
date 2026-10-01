@@ -36,9 +36,9 @@ test("desktop paging clamps to the last spread and resets on reopen", () => {
   assert.equal(s.spread, 0);
 });
 
-test("mobile paging pans between pages before flipping", () => {
-  let s = r(S0, { type: "setMobile", mobile: true });
-  s = settle(r(settle(r(s, { type: "enterDesk" })), { type: "openDiary" }));
+test("mobile paging pans between pages before flipping (window shrunk to phone size)", () => {
+  let s = settle(r(settle(r(S0, { type: "enterDesk" })), { type: "openDiary" }));
+  s = { ...r(s, { type: "setMobile", mobile: true }), diaryFocus: "left" };
   assert.deepEqual([s.spread, s.diaryFocus], [0, "left"]);
   s = r(s, { type: "nextPage" });
   assert.deepEqual([s.spread, s.diaryFocus], [0, "right"]);
@@ -76,4 +76,9 @@ test("camera: pick up from the desk, Esc puts it down, not reachable from hero o
   s = settle(r(r(s, { type: "openCamera" }), { type: "transitionEnd" }));
   s = settle(r(s, { type: "closeCamera" }));
   assert.equal(s.mode, "desk");
+});
+
+test("phones only show the 3D model: entering the desk is a no-op", () => {
+  const phone = r(S0, { type: "setMobile", mobile: true });
+  assert.equal(r(phone, { type: "enterDesk" }), phone);
 });

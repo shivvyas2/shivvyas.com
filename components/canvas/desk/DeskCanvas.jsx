@@ -75,7 +75,8 @@ export default function DeskCanvas({ onReady, onProgress, onWarm, active }) {
     <Canvas
       frameloop="demand"
       shadows={isMobile ? "basic" : true}
-      dpr={isMobile ? 1 : [1, 1.5]}
+      // Phones render at their real pixel density (capped at 2x) so the model stays sharp.
+      dpr={isMobile ? [1, 2] : [1, 1.5]}
       camera={{ position: [3.4, 4, 10], fov: 36, near: 0.1, far: 80 }}
       gl={{ powerPreference: isMobile ? "low-power" : "high-performance", antialias: true }}
       style={{ touchAction: mode === "hero" ? "manipulation" : "none" }}
@@ -100,7 +101,7 @@ export default function DeskCanvas({ onReady, onProgress, onWarm, active }) {
         intensity={3.2}
         color="#fff1df"
         castShadow={!isMobile}
-        shadow-mapSize={isMobile ? 512 : 1024}
+        shadow-mapSize={1024}
         shadow-camera-left={-5}
         shadow-camera-right={5}
         shadow-camera-top={5}
@@ -110,7 +111,7 @@ export default function DeskCanvas({ onReady, onProgress, onWarm, active }) {
       <directionalLight position={[4, 3, -3]} intensity={2} color="#e0e9f6" />
       <pointLight position={[-3, 1, -2]} intensity={4} color="#f47734" distance={9} />
       <Suspense fallback={null}>
-        <Environment resolution={isMobile ? 64 : 128} frames={1}>
+        <Environment resolution={128} frames={1}>
           <Lightformer form="rect" intensity={2.5} position={[0, 5, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[8, 5, 1]} />
           <Lightformer form="rect" intensity={1.5} position={[-5, 2, 1]} rotation={[0, Math.PI / 2, 0]} scale={[4, 5, 1]} />
         </Environment>

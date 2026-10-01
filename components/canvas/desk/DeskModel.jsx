@@ -101,6 +101,8 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
             position={[0, 0.02, 0.18]}
             rotation={[-Math.PI / 2, 0, 0]}
             onPointerOver={() => {
+              // Phones show the desk only; no hover glow, no interaction code.
+              if (isMobile) return;
               hover.current.on = true;
               onHoverDesk?.();
             }}

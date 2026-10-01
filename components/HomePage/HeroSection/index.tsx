@@ -31,6 +31,8 @@ export default function HeroSection() {
   const { finishScene, updateSceneProgress } = useSceneLoading();
   const mode = useDesk((s: { mode: string }) => s.mode);
   const spread = useDesk((s: { spread: number }) => s.spread);
+  // Phones show the desk as a display piece only (no desk mode).
+  const mobile = useDesk((s: { mobile: boolean }) => s.mobile);
   const inDesk = mode !== "hero";
 
   useEffect(() => {
@@ -106,12 +108,12 @@ export default function HeroSection() {
         )}
       </div>
       <div className={styles.vignette} aria-hidden="true" />
-      {showScene && warm && !inDesk && (
+      {showScene && warm && !inDesk && !mobile && (
         <button type="button" className={styles.srFocusable} onClick={() => dispatchDesk({ type: "enterDesk" })}>
           Explore Shiv&apos;s desk
         </button>
       )}
-      {showScene && !inDesk && !explored && (
+      {showScene && !inDesk && !explored && !mobile && (
         <p className={styles.deskHint} aria-hidden="true">click the desk</p>
       )}
       {inDesk && (
