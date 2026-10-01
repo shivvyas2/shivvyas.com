@@ -4,6 +4,27 @@ let ctx = null;
 let master = null;
 let buffers = null;
 let friction = null;
+let keySample = null;
+
+// Shiv's recorded key press (press + release, 0.45 s). Decoded with an
+// OfflineAudioContext so it is ready before the first gesture; AudioBuffers
+// can be played by any context. The synthesized clicks remain the fallback.
+const KEY_SAMPLE_URL = "/audio/key-press.mp3";
+if (typeof window !== "undefined") {
+  try {
+    const Offline = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    if (Offline)
+      fetch(KEY_SAMPLE_URL)
+        .then((response) => (response.ok ? response.arrayBuffer() : Promise.reject(response.status)))
+        .then((data) => new Offline(1, 1, 44100).decodeAudioData(data))
+        .then((buffer) => {
+          keySample = buffer;
+        })
+        .catch(() => {});
+  } catch {
+    // Synthesized clicks are used instead.
+  }
+}
 
 // Created on the first key press/drag (a user gesture), so autoplay rules pass.
 function ready() {
@@ -57,6 +78,10 @@ const jitter = () => 1 + (Math.random() * 0.08 - 0.04);
 export const deskAudio = {
   key({ deep = false } = {}) {
     if (!ready()) return;
+    if (keySample) {
+      play(keySample, { rate: jitter() * (deep ? 0.86 : 1) });
+      return;
+    }
     play(deep ? buffers.deep : pick(buffers.down), { rate: jitter() });
     play(pick(buffers.up), { gain: 0.45, rate: jitter(), delay: 0.09 });
   },
