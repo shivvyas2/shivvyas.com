@@ -36,7 +36,7 @@ export default function ProjectHeroSection() {
     <>
       <section className={styles.projectHero}>
         {/* big heading */}
-        <h1 ref={bannerHeadingRef}>{splitText("projects")}</h1>
+        <h1 ref={bannerHeadingRef}>{splitText("projects", "Projects by Shiv Vyas")}</h1>
       </section>
     </>
   );

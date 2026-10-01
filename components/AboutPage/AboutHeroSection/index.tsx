@@ -76,7 +76,7 @@ export default function AboutHeroSection() {
   return (
     <section className={styles.aboutHero}>
       {/* big heading */}
-      <h1 ref={bannerHeadingRef}>{splitText("about")}</h1>
+      <h1 ref={bannerHeadingRef}>{splitText("about", "About Shiv Vyas")}</h1>
 
       {/* Wrapper */}
       <div className={styles.wrapper}>

@@ -68,7 +68,7 @@ export default function ContactSection() {
   return (
     <>
       <section className={styles.contact}>
-        <h1 ref={bannerHeadingRef}>{splitText("Contact")}</h1>
+        <h1 ref={bannerHeadingRef}>{splitText("Contact", "Contact Shiv Vyas")}</h1>
       </section>
 
       <section className={styles.linkSection}>

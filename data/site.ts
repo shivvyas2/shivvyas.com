@@ -31,6 +31,7 @@ export const person = {
     "@type": "Organization",
     name: "Luna Social Inc",
     alternateName: "Contextual Intelligence for Marketing",
+    url: "https://www.contextualintelligence.co",
   },
   description:
     "Shiv Vyas is a software engineer in New York building web, mobile, and AI applications. He also makes music, runs a YouTube channel, and shoots photography as A Wannabe Photographer.",
@@ -50,6 +51,16 @@ export const person = {
 };
 
 const personRef = { "@id": person["@id"] };
+
+export const breadcrumbs = (items: { name: string; path: string }[]) => ({
+  "@type": "BreadcrumbList",
+  itemListElement: items.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.name,
+    item: `${SITE_URL}${item.path}`,
+  })),
+});
 
 // Sites Shiv runs outside this domain, linked back to the same person entity.
 export const ownedSites = [

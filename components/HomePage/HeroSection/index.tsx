@@ -91,6 +91,7 @@ export default function HeroSection() {
       <div className={styles["text-container"]}>
         <h1 id="hero-title" aria-label="Hi, I'm Shiv Vyas">
           Hi, I&apos;m <span>Shiv</span>
+          <span className="sr-only"> Vyas</span>
         </h1>
         <p>
           I&apos;m a <span>Founding Engineer</span> from New York, currently

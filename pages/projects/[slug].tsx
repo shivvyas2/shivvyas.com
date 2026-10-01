@@ -6,7 +6,7 @@ import Button from "@/components/Button";
 import BookCallSection from "@/components/HomePage/BookCallSection";
 import MacbookMockup from "@/components/MacbookMockup";
 import Seo from "@/components/Seo";
-import { SITE_URL, person } from "@/data/site";
+import { SITE_URL, breadcrumbs, person } from "@/data/site";
 import { gsap } from "@/libs/gsap";
 import { useEffect, useRef } from "react";
 
@@ -69,17 +69,30 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
         imageAlt={`${project.title} — a project by Shiv Vyas`}
         structuredData={{
           "@context": "https://schema.org",
-          "@type": "CreativeWork",
-          name: project.title,
-          description: project.overview,
-          url: `${SITE_URL}/projects/${project.slug}`,
-          image: `${SITE_URL}${project.img}`,
-          creator: {
-            "@type": "Person",
-            "@id": person["@id"],
-            name: person.name,
-            url: person.url,
-          },
+          "@graph": [
+            {
+              "@type": "CreativeWork",
+              name: project.title,
+              description: project.overview,
+              url: `${SITE_URL}/projects/${project.slug}`,
+              image: `${SITE_URL}${project.img}`,
+              keywords: project.category.join(", "),
+              ...(project.live && project.live !== "#"
+                ? { sameAs: project.live }
+                : {}),
+              creator: {
+                "@type": "Person",
+                "@id": person["@id"],
+                name: person.name,
+                url: person.url,
+              },
+            },
+            breadcrumbs([
+              { name: "Home", path: "/" },
+              { name: "Projects", path: "/projects" },
+              { name: project.title, path: `/projects/${project.slug}` },
+            ]),
+          ],
         }}
       />
       {/*========= Header ==========*/}
