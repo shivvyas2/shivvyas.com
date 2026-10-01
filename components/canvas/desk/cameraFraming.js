@@ -4,6 +4,7 @@ const DESK_CENTER = new Vector3(0, 0.12, 0.3);
 const DESK_MIN = new Vector3(-3.4, 0, -1.35);
 const DESK_MAX = new Vector3(3.75, 0, 1.5);
 const probe = new PerspectiveCamera();
+const MIC_HEAD = [new Vector3(3.45, 2.2, -0.25), new Vector3(2.6, 2.2, -0.15)];
 
 const boxCorners = (min, max) => {
   const out = [];
@@ -59,10 +60,14 @@ export function getPose(mode, { bounds, size, isMobile, diaryAnchor, focus }) {
     return fit({
       center: DESK_CENTER.clone(),
       direction: new Vector3(0.08, 1, 0.11).normalize(),
-      corners: boxCorners(
-        new Vector3(DESK_MIN.x, -0.04, DESK_MIN.z),
-        new Vector3(DESK_MAX.x, 0.48, DESK_MAX.z),
-      ),
+      corners: [
+        ...boxCorners(
+          new Vector3(DESK_MIN.x, -0.04, DESK_MIN.z),
+          new Vector3(DESK_MAX.x, 0.48, DESK_MAX.z),
+        ),
+        // The mic head rises toward the camera; keep the drag handle in frame.
+        ...MIC_HEAD,
+      ],
       fov: isMobile ? 54 : 48,
       aspect,
       framing: isMobile ? 1.04 : 1.04,
