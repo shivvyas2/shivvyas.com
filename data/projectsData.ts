@@ -131,6 +131,35 @@ export const projects: Project[] = [
   },
   {
     // For Post
+    title: "SATistics",
+    slug: "satistics",
+    category: ["Next.js", "Three.js", "FastAPI", "Claude AI"],
+    img: "/images/SATistics.png",
+    textColor: "black",
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "November 20, 2025",
+    services: "Game Development, Full-Stack Development, AI Integration",
+    duration: "2 Days",
+    budget: "Hackathon Project",
+    live: "https://www.satistic.tech",
+
+    // Scroll
+    overview:
+    "SATistics makes SAT and GRE practice something students actually want to open. It started at NYU Hacks as a set of arcade games with real SAT questions inside, and has grown into a full prep platform: six games including a first-person zombie shooter, an endless runner, Squid Game and Pac-Man, concept lessons for every exam topic with recommended video lessons, student profiles with goals and test-day countdowns, and a dashboard that points each student at their weakest topic. Answer correctly to keep playing; behind the games, an AI agent adapts the questions to each student.",
+
+  objective:
+    "The goal was to hold attention long enough for practice to work. The games had to be genuinely fun, not quizzes with a skin, and the questions had to match the real exams' formats rather than feel random. The redesign added the other half of studying: a way to learn a concept before drilling it, and a dashboard that turns scores into a clear next step, all in a visual identity that feels like a game studio rather than a test-prep company.",
+
+  process:
+    "The frontend is Next.js 14 with TypeScript and Tailwind, with Three.js powering the 3D games and a neo-brutalist design system mixing thick outlines and hard shadows with frosted-glass panels. Every game cover is custom SVG art. A FastAPI backend on Supabase handles auth, profiles, score tracking, and the learning agent, which reviews a student's history, finds weak topics, and uses Claude Haiku to write personalized questions checked against practice material found on the web. Lesson videos are found per topic through the YouTube Data API and ranked toward lesson-length videos from established prep channels. Both apps deploy on Vercel at satistic.tech.",
+
+  impact:
+    "SATistics shows that adaptive learning and play are not in tension. Students learn a concept, watch a lesson, and lock it in with a game loop they want to repeat, while the agent quietly steers practice toward what each person needs most. What began as a weekend hackathon build is now a complete SAT and GRE prep product, showing how far modern web tooling and an LLM can take a focused idea."
+  },
+  {
+    // For Post
     title: "WhyKnot",
     slug: "whyknot",
     category: ["Next.js", "Supabase", "Data Visualization", "Fintech API"],
@@ -215,35 +244,6 @@ export const projects: Project[] = [
 
   impact:
     "Trashee turns a civic chore into a rewards program and gives local businesses a new way to reach customers who share their values. Verified deposits from IoT bins remove fraud and paperwork from the reward loop, and the carbon rating in the app lets people see their own impact grow. The complete operator tooling means the company can onboard partners, approve payouts, and reconcile statements without engineering help, which is what turns a good idea into a business."
-  },
-  {
-    // For Post
-    title: "SATistics",
-    slug: "satistics",
-    category: ["Next.js", "Three.js", "FastAPI", "Claude AI"],
-    img: "/images/SATistics.png",
-    textColor: "black",
-
-    // Sticky
-    owner: "Shiv Vyas",
-    date: "November 20, 2025",
-    services: "Game Development, Full-Stack Development, AI Integration",
-    duration: "2 Days",
-    budget: "Hackathon Project",
-    live: "https://www.satistic.tech",
-
-    // Scroll
-    overview:
-    "SATistics makes SAT practice something students actually want to open. Built at NYU Hacks, it wraps real SAT questions inside seven arcade games: an endless runner, a Squid Game inspired red light green light, a platformer, Pac-Man, whack-a-mole, a first-person zombie shooter, and a carnival balloon pop. Answer correctly to keep playing. Behind the games, an AI agent watches performance and adapts the questions to each student.",
-
-  objective:
-    "The goal was to hold attention long enough for practice to work. The games had to be genuinely fun, not quizzes with a skin, and the questions had to feel relevant rather than random. That meant tracking scores and accuracy per topic, identifying where a student struggles, and generating new questions targeted at those gaps, all wrapped in an account and statistics dashboard so progress was visible.",
-
-  process:
-    "The frontend is Next.js 14 with TypeScript and Tailwind, with Three.js powering the 3D games. A FastAPI backend on Supabase handles auth, score tracking, and the learning agent. The agent reviews a student's game history, flags topics under sixty percent accuracy, and uses Claude Haiku to generate personalized questions with a mix of sixty percent weak topics, thirty percent mixed review, and ten percent challenge. Real SAT questions are sourced through search to seed the pool. The whole system runs locally with a single start script and is deployed at satistic.tech.",
-
-  impact:
-    "SATistics shows that adaptive learning and play are not in tension. Students get immediate feedback inside a game loop they want to repeat, and the agent quietly steers practice toward what each person needs most. The project came together in a weekend and has continued to grow, demonstrating how quickly a focused team can pair modern 3D web tooling with an LLM to build something that feels like a product rather than a demo."
   },
   {
     // For Post
@@ -334,32 +334,32 @@ export const projects: Project[] = [
   },
   {
     // For Post
-    title: "Futeur AI",
+    title: "FuteurCredX",
     slug: "futeur-ai",
-    category: [ "React Development","UIUX Design", "Branding",],
-    img: "/images/project1_1.jpeg",
+    category: ["React Development", "UIUX Design", "Branding", "Fintech"],
+    img: "/images/FuteurCredX.png",
     textColor: "white",
 
     // Sticky
-    owner: "Futeur AI",
+    owner: "FuteurCredX (formerly Futeur AI)",
     date: "Jan 6, 2025",
-    services: "React Development, UIUX design, Branding",
-    duration: "4 Months",
-   
-    live: "https://www.futeur.ai/",
+    services: "React Development, UIUX design, Branding, Rebrand",
+    duration: "Ongoing",
+
+    live: "https://futeurcredx.com/",
 
     // Scroll
     overview:
-    "Futeur AI is a cutting-edge business intelligence solution specifically designed for small and medium-sized enterprises (SMEs). By harnessing real-time data analytics and advanced AI algorithms, Futeur AI empowers businesses to predict trends, optimize operations, and accelerate growth. This project aimed to create a seamless, forward-thinking platform that embodies innovation and accessibility, reflecting the brand’s commitment to democratizing AI for everyday business use.",
+    "FuteurCredX is the rebrand and full redesign of Futeur AI: a business-funding marketplace that helps US business owners decide what their capital needs to do before they compare offers. Instead of asking how much they can borrow, owners start from the business move (building capacity, bridging timing, buying an asset, unlocking invoices, or making a long move) and a live capital routing table maps it to the financing structure built for it, from term loans and lines of credit to SBA loans, equipment financing, revenue-based financing, and invoice factoring.",
 
   objective:
-    "Our primary objective was to design a user-friendly interface and brand identity that resonates with time-strapped entrepreneurs and business owners. The platform had to be intuitive enough for non-technical users while offering robust, data-driven insights for strategic decisions. From forecasting to survival feasibility analysis, Futeur AI’s features were developed to give SMEs an edge in a rapidly evolving marketplace. Every element needed to reinforce trust, forward-thinking innovation, and tangible value.",
+    "The objective was to turn a generic AI-for-SMEs product into a clear, trustworthy funding guide. Owners needed to understand how each structure works, what pressure it puts on cash flow, and how to exit it, before ever talking to a provider. The brand had to read as serious, calm financial advice rather than a lead-capture form, and the experience had to work for owners in English, Spanish, Mandarin, Vietnamese, Korean, Russian, Japanese, and Hebrew.",
 
   process:
-    "The journey began with extensive market research and user interviews to understand the unique hurdles small businesses face. We then mapped out core features—real-time analytics dashboards, predictive modeling, and social-economic trend tracking—to help business owners make data-backed decisions quickly. During the design phase, wireframes and prototypes were iterated to ensure a frictionless user flow. A sleek, modern aesthetic was chosen to signal innovation and accessibility, using a blend of vibrant accent colors and cooler base tones, reflecting Futeur AI’s balance between approachability and cutting-edge technology. Branding elements, including a bold logo and contemporary typography, further emphasized the sense of dynamic progress and reliability. Throughout development, we consistently revisited user feedback to refine the platform’s overall experience, ensuring it remained as practical as it was futuristic.",
+    "The redesign replaced the old dashboard aesthetic with an editorial identity: a serif display face, a deep green and paper palette, monospace labels, and hard-edged panels that make financial structures feel inspectable. The centerpiece is the capital routing table, an interactive component that walks a chosen business move through job, profile, structure, and exit, and links into a decision desk for each product. A Funding Lab adds payment and readiness tools that work without a credit check, and a one-click pre-qualification flow lets owners explore paths in minutes. The site is fully localized across eight languages.",
 
   impact:
-    "Futeur AI’s final design speaks directly to a tech-savvy yet time-constrained audience, clearly communicating the brand’s dedication to real-time, predictive insights. The cohesive brand identity—across platform dashboards, website materials, and marketing assets—reinforces trust and authority in the AI-driven solutions space. By aligning the platform’s functionality with a forward-focused visual design, Futeur AI successfully positions itself as the go-to partner for small businesses seeking sustainable growth and operational resilience, ultimately bridging the gap between cutting-edge innovation and everyday business needs."
+    "FuteurCredX gives small-business owners a deliberate way to compare unlike financing mechanisms, bringing cost, pressure, and exit into view before they sign. The rebrand repositions the company from an AI analytics tool to a funding marketplace with a distinct, credible voice, and the routing-first experience turns a confusing category into a set of clear choices an owner can actually reason about."
   },
   {
     // For Post
