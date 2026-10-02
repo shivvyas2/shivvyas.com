@@ -78,7 +78,7 @@ export const PROJECTS = [
   { title: "Life OS", when: "ongoing", summary: ["one iOS app for money,", "health and plans"], stack: ["Swift", "SwiftUI", "Supabase", "Plaid"], sketch: "phone", note: "the Today screen" },
   { title: "Astra", when: "Aug 2026", summary: ["real birth charts,", "Claude writes the reading"], stack: ["Next.js", "iOS", "Claude AI", "Supabase"], sketch: "wheel", note: "computed, never guessed" },
   { title: "WhyKnot", when: "Aug 2026", summary: ["where should a restaurant", "open next?"], stack: ["Next.js", "Supabase", "Data viz", "Fintech API"], sketch: "pins", note: "data, not instinct" },
-  { title: "Luna", when: "Jul 2026", summary: ["an AI agent that lives", "in iMessage"], stack: ["Python", "LangGraph", "AI Agents", "iOS"], sketch: "chat", note: "just text it" },
+  { title: "Contextual Intelligence", when: "Jul 2026", summary: ["an AI agent that lives", "in iMessage"], stack: ["Python", "LangGraph", "AI Agents", "iOS"], sketch: "chat", note: "just text it" },
   { title: "Trashee", when: "Jul 2026", summary: ["trash it, earn it:", "waste loop for India"], stack: ["React Native", "Next.js", "IoT", "Supabase"], sketch: "loop", note: "bin -> points" },
   { title: "SATistics", when: "Nov 2025", summary: ["SAT practice students", "actually want to open"], stack: ["Next.js", "Three.js", "FastAPI", "Claude AI"], sketch: "bars", note: "scores going up" },
   { title: "Inhale", when: "Feb 2025", summary: ["breathing + meditation,", "built on CalmPulse"], stack: ["React Native", "iOS", "Android", "Clerk"], sketch: "breath", note: "in... and out" },
@@ -93,7 +93,8 @@ export const PROJECTS = [
 // One project in half a page (top = 200 for the upper block, 830 for the lower).
 function projectBlock(project, top) {
   const items = [
-    { label: [80, top + 60, project.title, 66] },
+    // Long titles shrink so they stay clear of the date column.
+    { label: [80, top + 60, project.title, project.title.length > 16 ? 44 : 66] },
     { label: [700, top + 60, project.when, 36] },
     { label: [90, top + 120, project.summary[0], 44] },
     { label: [90, top + 165, project.summary[1], 44] },

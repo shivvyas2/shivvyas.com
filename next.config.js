@@ -6,6 +6,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/projects/luna',
+        destination: '/projects/contextual-intelligence',
+        permanent: true,
+      },
+      {
         source: '/:path*',
         has: [
           {

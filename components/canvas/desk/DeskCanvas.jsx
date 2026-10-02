@@ -73,7 +73,12 @@ export default function DeskCanvas({ onReady, onProgress, onWarm, active }) {
 
   return (
     <Canvas
-      frameloop="demand"
+      // Off screen the scene never renders, so scrolling the rest of the page
+      // doesn't pay for redrawing the desk.
+      frameloop={active ? "demand" : "never"}
+      // Don't re-measure on scroll: every measure changes the canvas size state
+      // and forces a redraw. Pointer events use element-relative offsets anyway.
+      resize={{ scroll: false }}
       shadows={isMobile ? "basic" : true}
       // Phones render at their real pixel density (capped at 2x) so the model stays sharp.
       dpr={isMobile ? [1, 2] : [1, 1.5]}

@@ -172,6 +172,7 @@ export const projects: Project[] = [
     category: ["Next.js", "Supabase", "Data Visualization", "Fintech API"],
     img: "/images/WhyKnot.png",
     textColor: "black",
+    screenshot: true,
 
     // Sticky
     owner: "Shiv Vyas",
@@ -196,11 +197,12 @@ export const projects: Project[] = [
   },
   {
     // For Post
-    title: "Luna",
-    slug: "luna",
+    title: "Contextual Intelligence",
+    slug: "contextual-intelligence",
     category: ["AI Agents", "Python", "LangGraph", "iOS Development"],
     img: "/images/Luna.png",
     textColor: "black",
+    screenshot: true,
 
     // Sticky
     owner: "Shiv Vyas",
@@ -212,16 +214,16 @@ export const projects: Project[] = [
 
     // Scroll
     overview:
-    "Luna is a contextual intelligence agent that lives in iMessage. Its public face is Clo, your Chief Life Officer. A person tells it what they love, who they want to see, and when they are free, and Luna quietly turns that into real plans: a dinner reservation, tickets, an introduction to someone worth meeting, a ride. Partner venues in New York receive the people they most want to reach. Behind the conversation is a FastAPI and LangGraph service on Google Gemini, with a marketing site, a Clerk-authenticated API, and a customized SwiftUI chat interface.",
+    "Contextual Intelligence is an AI agent that lives in iMessage. Its public face is Clo, your Chief Life Officer. A person tells it what they love, who they want to see, and when they are free, and it quietly turns that into real plans: a dinner reservation, tickets, an introduction to someone worth meeting, a ride. Partner venues in New York receive the people they most want to reach. Behind the conversation is a FastAPI and LangGraph service on Google Gemini, with a marketing site, a Clerk-authenticated API, and a customized SwiftUI chat interface.",
 
   objective:
-    "The aim was an assistant that acts rather than answers. Luna had to hold long-lived context about a person, decide when to reach out proactively, and complete tasks end to end through real integrations, all inside a messaging channel with no app to install. Consent had to be explicit at every step, especially for introductions between people, and the system had to gate access during launch, meter usage, and run safely with a staging instance beside production.",
+    "The aim was an assistant that acts rather than answers. The agent had to hold long-lived context about a person, decide when to reach out proactively, and complete tasks end to end through real integrations, all inside a messaging channel with no app to install. Consent had to be explicit at every step, especially for introductions between people, and the system had to gate access during launch, meter usage, and run safely with a staging instance beside production.",
 
   process:
     "Inbound iMessage webhooks are routed through deterministic handlers for access gating, consent flows, and RSVPs before falling through to a LangGraph agent with tools for reservations, events, people matching, personal apps, orders, and rides. Redis holds cache, coordination, and conversation checkpoints; Firestore stores users, RSVPs, and match embeddings. A Composio sidecar gives each person Google Calendar and Gmail access on their own terms. Background workers handle morning briefings, proactive plan suggestions, approval notifications, and profile embeddings. Resy credentials are stored in an encrypted vault for booking. The stack deploys as two systemd instances on one box, with an evals suite and test suite guarding agent behavior.",
 
   impact:
-    "Luna demonstrates a full agent product rather than a chat demo: gated beta access, billing, proactive outreach with consent, and real bookings at real venues. Meeting people inside the messaging app they already use removes the biggest adoption barrier for a personal AI. For partner venues it is a direct channel to the customers who fit them best. The modular agent design, with capabilities unlocked progressively per person, provides a template for how consumer agents can grow in scope without overwhelming the people using them."
+    "Contextual Intelligence demonstrates a full agent product rather than a chat demo: gated beta access, billing, proactive outreach with consent, and real bookings at real venues. Meeting people inside the messaging app they already use removes the biggest adoption barrier for a personal AI. For partner venues it is a direct channel to the customers who fit them best. The modular agent design, with capabilities unlocked progressively per person, provides a template for how consumer agents can grow in scope without overwhelming the people using them."
   },
   {
     // For Post
@@ -230,6 +232,7 @@ export const projects: Project[] = [
     category: ["React Native", "Next.js", "IoT", "Supabase"],
     img: "/images/Trashee.png",
     textColor: "white",
+    screenshot: true,
 
     // Sticky
     owner: "Shiv Vyas",
@@ -259,6 +262,7 @@ export const projects: Project[] = [
     category: [ "React Development","iOS Development", "Android Development","Clerk"],
     img: "/images/Inhale.png",
     textColor: "black",
+    screenshot: true,
 
     // Sticky
     owner: "Shiv Vyas",
@@ -317,6 +321,7 @@ export const projects: Project[] = [
     category: ["Node.js", "React Development", "Backend Development", "Google Cloud Platform"],
     img: "/images/project2_1.jpeg",
     textColor: "white",
+    screenshot: true,
 
     // Sticky
     owner: "Shiv Vyas",
@@ -376,6 +381,7 @@ export const projects: Project[] = [
     category: ["React-Native", "Swift", "Android"],
     img: "/images/project3_1.png",
     textColor: "black",
+    screenshot: true,
 
     // Sticky
     owner: "Futeur AI",
