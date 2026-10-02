@@ -108,6 +108,47 @@
         }
     }
 
+    // Screenshot covers (set per project in projectsData): the whole image,
+    // contained between the nav and the title, over a blurred copy of itself.
+    &.screenshot {
+        @media (min-width: 601px) {
+            display: flex;
+            flex-direction: column;
+            background: $textDark;
+
+            &::before {
+                content: "";
+                position: absolute;
+                inset: -10%;
+                background: var(--cover) center / cover no-repeat;
+                filter: blur(32px) saturate(1.2) brightness(0.45);
+            }
+
+            &::after {
+                display: none;
+            }
+
+            .imageWrapper {
+                position: relative;
+                z-index: 1;
+                flex: 1 1 0;
+                min-height: 0;
+                height: auto;
+                padding: 6.5rem 3rem 0;
+
+                img {
+                    object-fit: contain;
+                    filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.5));
+                }
+            }
+
+            .projectDetails {
+                position: relative;
+                flex: none;
+            }
+        }
+    }
+
     @media (max-width: 600px) {
         height: auto;
         padding: 6rem 1rem 0;

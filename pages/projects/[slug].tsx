@@ -6,6 +6,7 @@ import Button from "@/components/Button";
 import BookCallSection from "@/components/HomePage/BookCallSection";
 import MacbookMockup from "@/components/MacbookMockup";
 import Seo from "@/components/Seo";
+import { blurredCoverUrl } from "@/utils/imageUrls";
 import { SITE_URL, breadcrumbs, isoDate, person } from "@/data/site";
 import { gsap } from "@/libs/gsap";
 import { useEffect, useRef } from "react";
@@ -101,7 +102,12 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
       />
       {/*========= Header ==========*/}
       <header
-        className={`${styles.ProjectSinglePage} ${project.textColor === "black" ? styles.blackText : ""}`}
+        className={`${styles.ProjectSinglePage} ${project.screenshot ? styles.screenshot : project.textColor === "black" ? styles.blackText : ""}`}
+        style={
+          project.screenshot
+            ? { ["--cover" as string]: blurredCoverUrl(project.img) }
+            : undefined
+        }
       >
         <div ref={imageRef} className={styles.imageWrapper}>
           <Image

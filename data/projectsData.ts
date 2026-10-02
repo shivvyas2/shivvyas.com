@@ -7,6 +7,12 @@ export type Project = {
   img: string;
   /** Colour of the title/tags overlaid on the cover image. Pick based on the image background. */
   textColor: TextColor;
+  /**
+   * The cover is a UI screenshot. Cards and the project header show the whole
+   * image (never cropped, even when zoomed on hover) over a blurred copy of
+   * itself, with light text on top.
+   */
+  screenshot?: boolean;
   logo?: string;
   gallery?: string[];
   /** Screen recording shown inside a MacBook mockup on the project page */
@@ -136,6 +142,7 @@ export const projects: Project[] = [
     category: ["Next.js", "Three.js", "FastAPI", "Claude AI"],
     img: "/images/SATistics.png",
     textColor: "black",
+    screenshot: true,
 
     // Sticky
     owner: "Shiv Vyas",
@@ -339,6 +346,7 @@ export const projects: Project[] = [
     category: ["React Development", "UIUX Design", "Branding", "Fintech"],
     img: "/images/FuteurCredX.png",
     textColor: "white",
+    screenshot: true,
 
     // Sticky
     owner: "FuteurCredX (formerly Futeur AI)",

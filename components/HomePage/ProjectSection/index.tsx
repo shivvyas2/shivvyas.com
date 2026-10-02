@@ -7,6 +7,7 @@ import Link from "next/link";
 import Button from "@/components/Button";
 import Tag from "@/components/Tag";
 import { projects } from "@/data/projectsData";
+import { blurredCoverUrl } from "@/utils/imageUrls";
 
 export default function ProjectSection() {
   const cardRefs = useRef<HTMLAnchorElement[]>([]);
@@ -110,7 +111,12 @@ export default function ProjectSection() {
             key={project.slug}
             href={`/projects/${project.slug}`}
             ref={addToRefs}
-            className={`${styles.projectCard} ${project.textColor === "black" ? styles.blackText : ""}`}
+            className={`${styles.projectCard} ${project.screenshot ? styles.screenshot : project.textColor === "black" ? styles.blackText : ""}`}
+            style={
+              project.screenshot
+                ? { ["--cover" as string]: blurredCoverUrl(project.img) }
+                : undefined
+            }
           >
             <Image
               src={project.img}

@@ -41,7 +41,7 @@ export default function ProjectsSection() {
           <Link
             key={project.slug}
             href={`/projects/${project.slug}`}
-            className={`${styles.projectCard} ${project.textColor === "black" ? styles.blackText : ""}`}
+            className={`${styles.projectCard} ${project.screenshot ? styles.screenshot : project.textColor === "black" ? styles.blackText : ""}`}
             ref={addToRefs}
             style={{ ["--cover" as string]: blurredCoverUrl(project.img) }}
           >
