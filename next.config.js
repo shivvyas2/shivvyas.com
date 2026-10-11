@@ -6,6 +6,17 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/launchpad',
+        destination: '/projects/macbook-launchpad',
+        permanent: false,
+      },
+      {
+        // Always the newest release's DMG
+        source: '/launchpad/download',
+        destination: 'https://github.com/shivvyas2/macbook-launchpad/releases/latest/download/MacBook-Launchpad.dmg',
+        permanent: false,
+      },
+      {
         source: '/projects/luna',
         destination: '/projects/contextual-intelligence',
         permanent: true,

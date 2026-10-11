@@ -317,3 +317,71 @@
         }
     }
 }
+
+// Download / repository buttons for downloadable products
+.downloads {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+
+    a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0.9rem 1.6rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        letter-spacing: 0.08rem;
+        text-transform: uppercase;
+        transition: all 0.4s ease;
+    }
+
+    .primaryAction {
+        background: $primary;
+        color: $white;
+        box-shadow: inset 0px -20px 20px rgba(255, 255, 255, 0.2);
+        filter: drop-shadow(0px 0px 5px $primary);
+
+        &:hover {
+            filter: drop-shadow(0px 0px 12px $primary);
+        }
+    }
+
+    .secondaryAction {
+        color: $white;
+        background: #ffffff1f;
+        border: 1px solid #ffffff40;
+        backdrop-filter: blur(12px);
+
+        &:hover {
+            background: #ffffff33;
+        }
+    }
+
+    &.stacked {
+        flex-direction: column;
+        margin-top: 0;
+
+        a {
+            width: 100%;
+        }
+
+        .secondaryAction {
+            color: inherit;
+            background: transparent;
+            border-color: currentColor;
+            backdrop-filter: none;
+        }
+    }
+
+    @media (max-width: 600px) {
+        margin-top: 1rem;
+
+        a {
+            flex: 1 1 100%;
+        }
+    }
+}

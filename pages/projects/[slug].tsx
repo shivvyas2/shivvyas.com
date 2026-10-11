@@ -37,6 +37,31 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   };
 };
 
+/** Plain anchors: downloads go through a server redirect, so client-side routing must not intercept them. */
+const DownloadLinks = ({
+  downloads,
+  stacked = false,
+}: {
+  downloads: NonNullable<Project["downloads"]>;
+  stacked?: boolean;
+}) => (
+  <div className={`${styles.downloads} ${stacked ? styles.stacked : ""}`}>
+    {downloads.map((d, i) => {
+      const external = d.href.startsWith("http");
+      return (
+        <a
+          key={d.href}
+          href={d.href}
+          className={i === 0 ? styles.primaryAction : styles.secondaryAction}
+          {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        >
+          {d.label}
+        </a>
+      );
+    })}
+  </div>
+);
+
 type ProjectPageProps = {
   project: Project;
 };
@@ -122,6 +147,7 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
 
         {/* Project Details */}
         <div className={styles.projectDetails}>
+          <div>
           <div className={styles.titleRow}>
             {project.logo && (
               <Image
@@ -134,6 +160,8 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
               />
             )}
             <h1>{project.title}</h1>
+          </div>
+          {project.downloads && <DownloadLinks downloads={project.downloads} />}
           </div>
           <div className={styles.category}>
             {project.category.map((cat, idx) => (
@@ -181,11 +209,15 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
               <h4>{project.budget ?? "—"}</h4>
             </div>
           </div>
-          <Button
-            text="Launch Project"
-            targetBlank={true}
-            href={project.live}
-          />
+          {project.downloads ? (
+            <DownloadLinks downloads={project.downloads} stacked />
+          ) : (
+            <Button
+              text="Launch Project"
+              targetBlank={true}
+              href={project.live}
+            />
+          )}
         </div>
 
         {/* Scroll project Content */}

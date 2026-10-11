@@ -23,6 +23,8 @@ export type Project = {
   duration: string;
   budget?: string;
   live: string;
+  /** Buttons for downloadable products, shown in the header and the details card. The first is the primary action. */
+  downloads?: { label: string; href: string }[];
   overview: string;
   objective: string;
   process: string;
@@ -30,6 +32,40 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  {
+    // For Post
+    title: "MacBook Launchpad",
+    slug: "macbook-launchpad",
+    category: ["Swift", "SwiftUI", "macOS", "Open Source"],
+    img: "/images/launchpad/cover.jpg",
+    textColor: "white",
+    logo: "/images/launchpad/logo.png",
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "October 11, 2026",
+    services: "macOS Development, Swift, SwiftUI, Product Design",
+    duration: "1 Week",
+    budget: "Free & Open Source",
+    live: "https://github.com/shivvyas2/macbook-launchpad",
+    downloads: [
+      { label: "Download for Mac (DMG)", href: "/launchpad/download" },
+      { label: "View on GitHub", href: "https://github.com/shivvyas2/macbook-launchpad" },
+    ],
+
+    // Scroll
+    overview:
+      "MacBook Launchpad brings the classic Launchpad back to macOS 26 Tahoe, which removed it in favour of a Spotlight-style Apps list. It opens a full-screen grid of every app on the Mac over a frosted Liquid Glass blur of the desktop, with instant search, folders, drag to rearrange, and paging by swipe, scroll, or arrow keys. It is free, open source under the MIT license, and ships as a 1.7 MB universal DMG for Apple Silicon and Intel Macs.",
+
+    objective:
+      "The goal was a replacement that feels like the original rather than a third-party approximation: open it with a keyboard shortcut, the Dock icon, a hot corner, or the thumb-and-three-finger pinch, and have it get out of the way the moment an app launches. It had to need no Accessibility or Screen Recording permission, keep the user's arrangement across launches, and help people with hundreds of apps get organised without dragging every icon by hand.",
+
+    process:
+      "The app is written in Swift and SwiftUI with an AppKit window layer. A borderless panel sits just beneath the Dock while the menu bar and Dock auto-hide, and its background is a behind-window blur with the system tint layers removed so wallpaper colours stay true. The global shortcut uses Carbon hot keys, the hot corner polls the pointer, and the pinch gesture reads raw trackpad contacts through a small C bridge to the MultitouchSupport framework. Layout is a typed model of apps and folders persisted as JSON and reconciled against the disk on every open. The Organize Apps assistant groups apps by name, bundle identifier, and App Store category into folders like Developer, Creative, Productivity, and AI, previews the result for editing, and supports undo.",
+
+    impact:
+      "MacBook Launchpad restores a workflow millions of Mac users relied on and that Tahoe took away, at a fraction of the size of commercial alternatives and with no accounts, ads, or tracking. Because the full source is public, anyone can audit it, build it themselves, or contribute, and the one-click organiser turns a cluttered Applications folder into a tidy grid in seconds.",
+  },
   {
     // For Post
     title: "ELXR Creative",
