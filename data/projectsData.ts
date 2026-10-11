@@ -110,6 +110,49 @@ export const projects: Project[] = [
   },
   {
     // For Post
+    title: "PrepBoard",
+    slug: "prepboard",
+    category: ["SwiftUI", "Next.js", "Claude AI", "Supabase"],
+    img: "/images/prepboard/dashboard.jpg",
+    textColor: "white",
+    screenshot: true,
+    logo: "/images/prepboard/logo.png",
+    gallery: [
+      "/images/prepboard/timeline.jpg",
+      "/images/prepboard/docs.jpg",
+      "/images/prepboard/new.jpg",
+      "/images/prepboard/ipad-dashboard.jpg",
+      "/images/prepboard/iphone-dashboard.jpg",
+    ],
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "October 10, 2026",
+    services: "Full-Stack Development, macOS & iOS Development, AI Integration, Product Design",
+    duration: "Ongoing",
+    budget: "Personal Project",
+    live: "https://prepboard.shivvyas.com",
+    downloads: [
+      { label: "Download for Mac (DMG)", href: "/prepboard/download" },
+      { label: "Open Web App", href: "https://prepboard.shivvyas.com" },
+      { label: "View on GitHub", href: "https://github.com/shivvyas2/Prepboard" },
+    ],
+
+    // Scroll
+    overview:
+      "PrepBoard is a calm, timeline-first workspace for interview preparation that runs on the web, Mac, iPad, and iPhone. You start by chatting with a planner: give it the role, paste the job posting, and say when the interview is, and it builds a time-blocked study timeline with tailored guides. Home shows the countdown, what is happening now, today's hour strip, and the day-by-day plan, and every session links straight to the guide section to study, a coding problem to practice, or a quiz to take.",
+
+    objective:
+      "Interview prep usually sprawls across notes, LeetCode tabs, PDFs, and videos with no sense of what to do next. The goal was a single place that answers that question at any moment: a timeline that schedules study, practice, mocks, and review against a real interview date, with the material for each session one click away. It had to work the same on a laptop, a tablet, and a phone, keep everything in sync, and let people use their own Claude account instead of paying for another subscription.",
+
+    process:
+      "The web app and the native SwiftUI apps share a Supabase backend for accounts and sync of roles, sessions, documents, PDFs, quiz history, and profiles. The planner uses Claude to research the company, team, and interview process, and writes guides for the role and for the résumé the candidate applied with. Practice mirrors LeetCode and CoderPad, with a problem pane, a code editor and console for Swift, Python, or JavaScript, built-in tests, an interview timer, and an AI assistant that can be switched off for no-AI rounds. Quizzes generate multiple-choice questions from a session's material and track mastery by topic, and a video finder docks explainers beside the documents. On the Mac, the full Claude Code terminal runs in a side panel, and iPhones and iPads can pair with the Mac to use its Claude Code session over the local network or Tailscale.",
+
+    impact:
+      "PrepBoard turns a scattered prep routine into a plan that tells you what to work on next and gives you everything for it in place. Scheduling against the real interview date keeps preparation paced instead of crammed, quizzes and scores make weak spots visible, and syncing across every device means a study session can start on the Mac and finish on an iPhone. The Mac app is available as a free DMG, and the web app runs at prepboard.shivvyas.com.",
+  },
+  {
+    // For Post
     title: "ELXR Creative",
     slug: "elxr",
     category: ["Next.js", "Three.js", "GSAP", "3D Web"],

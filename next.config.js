@@ -27,6 +27,16 @@ const nextConfig = {
         permanent: false,
       },
       {
+        source: '/prepboard',
+        destination: '/projects/prepboard',
+        permanent: false,
+      },
+      {
+        source: '/prepboard/download',
+        destination: 'https://github.com/shivvyas2/Prepboard/releases/latest/download/PrepBoard-mac.dmg',
+        permanent: false,
+      },
+      {
         source: '/projects/luna',
         destination: '/projects/contextual-intelligence',
         permanent: true,
