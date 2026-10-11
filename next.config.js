@@ -17,6 +17,16 @@ const nextConfig = {
         permanent: false,
       },
       {
+        source: '/stash',
+        destination: '/projects/stash',
+        permanent: false,
+      },
+      {
+        source: '/stash/download',
+        destination: 'https://github.com/shivvyas2/Stash/releases/latest/download/Stash.dmg',
+        permanent: false,
+      },
+      {
         source: '/projects/luna',
         destination: '/projects/contextual-intelligence',
         permanent: true,

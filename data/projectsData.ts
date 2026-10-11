@@ -37,9 +37,15 @@ export const projects: Project[] = [
     title: "MacBook Launchpad",
     slug: "macbook-launchpad",
     category: ["Swift", "SwiftUI", "macOS", "Open Source"],
-    img: "/images/launchpad/cover.jpg",
+    img: "/images/launchpad/grid.jpg",
     textColor: "white",
+    screenshot: true,
     logo: "/images/launchpad/logo.png",
+    gallery: [
+      "/images/launchpad/folder.jpg",
+      "/images/launchpad/organize.jpg",
+      "/images/launchpad/search.jpg",
+    ],
 
     // Sticky
     owner: "Shiv Vyas",
@@ -65,6 +71,42 @@ export const projects: Project[] = [
 
     impact:
       "MacBook Launchpad restores a workflow millions of Mac users relied on and that Tahoe took away, at a fraction of the size of commercial alternatives and with no accounts, ads, or tracking. Because the full source is public, anyone can audit it, build it themselves, or contribute, and the one-click organiser turns a cluttered Applications folder into a tidy grid in seconds.",
+  },
+  {
+    // For Post
+    title: "Stash",
+    slug: "stash",
+    category: ["Swift", "SwiftUI", "macOS", "Gaming", "Open Source"],
+    img: "/images/stash/library.jpg",
+    textColor: "white",
+    screenshot: true,
+    logo: "/images/stash/logo.png",
+    gallery: ["/images/stash/game.jpg", "/images/stash/welcome.jpg"],
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "October 10, 2026",
+    services: "macOS Development, Swift, SwiftUI, Wine, Game Porting",
+    duration: "Ongoing",
+    budget: "Free & Open Source",
+    live: "https://github.com/shivvyas2/Stash",
+    downloads: [
+      { label: "Download for Mac (DMG)", href: "/stash/download" },
+      { label: "View on GitHub", href: "https://github.com/shivvyas2/Stash" },
+    ],
+
+    // Scroll
+    overview:
+      "Stash is a macOS launcher for Windows and console games on Apple Silicon. Add a game from an installer, a disc image, a folder, or a console game file, and Stash sets up everything it needs to run: a private Windows environment, the right graphics path to Metal, and optional upgrades like widescreen fixes. Every game lands in one library with cover art, playtime, and a Play button, whether it is a modern Windows title, a 2000s DirectX 8 classic, Steam, or a PlayStation, PSP, GameCube, or Wii disc.",
+
+    objective:
+      "Running Windows games on a Mac usually means juggling Wine builds, prefixes, DLL overrides, and emulators by hand. The goal was to hide all of that behind a library that feels native: one Add Game flow that detects what it was given, sensible per-game defaults, and a Play button that just works. Games had to be isolated so one could never break another, uninstalling had to leave nothing behind, and classic games needed to run at their original resolution without flipping the Mac's display mode.",
+
+    process:
+      "Stash is written in SwiftUI with a model layer that manages the library, the downloadable Windows runtime, console engines, mods, and artwork. Windows games run through WhiskyKit on a Game Porting Toolkit build of Wine under Rosetta 2, with DirectX 11 and 12 translated by D3DMetal, DirectX 8 and 9 by WineD3D, and an optional DXVK and MoltenVK path. 32-bit DirectX 7 to 9 games are detected automatically and moved to a second CrossOver-based engine with dxwrapper, which keeps them windowed and scales them to fill the screen. Console discs are identified from their headers and booted fullscreen in DuckStation, PCSX2, PPSSPP, or Dolphin. One-click upgrades for the 3D-era Grand Theft Auto games install widescreen fixes, SilentPatch, and SkyGfx with every overwritten file backed up, and cover art is fetched from SteamGridDB.",
+
+    impact:
+      "Stash turns an Apple Silicon Mac into a single library for games that were never built for it. Players add a game and press Play instead of learning Wine, and each title can be exported as a Mac app for the Dock, Launchpad, or Spotlight. Per-game environments and clean uninstalls keep the Mac tidy, and because the project is open source under the GPL, the compatibility work is available for anyone to inspect and build on.",
   },
   {
     // For Post
