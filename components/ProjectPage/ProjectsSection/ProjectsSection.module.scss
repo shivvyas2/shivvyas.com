@@ -14,6 +14,11 @@
             position: relative;
             height: 70vh;
 
+            .media {
+                width: 100%;
+                height: 100%;
+            }
+
             img {
                 width: 100%;
                 height: 100%;
@@ -100,14 +105,27 @@
                         flex: none;
                     }
 
-                    img {
+                    // The image box shrinks to the picture itself so its rounded
+                    // corners land on the screenshot's real edges.
+                    .media {
                         position: relative;
                         z-index: 1;
                         flex: 1 1 0;
                         min-height: 0;
                         height: auto;
-                        object-fit: contain;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                         padding: 0 1.5rem 1.5rem;
+                    }
+
+                    img {
+                        width: auto;
+                        height: auto;
+                        max-width: 100%;
+                        max-height: 100%;
+                        object-fit: contain;
+                        border-radius: 10px;
                         filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.45));
                     }
 
@@ -163,15 +181,25 @@
                     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
                 }
 
-                img {
+                .media {
                     position: relative;
                     z-index: 1;
                     flex: 1 1 0;
                     min-height: 0;
                     height: auto;
-                    object-fit: contain;
-                    object-position: center bottom;
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: center;
                     padding: 0 0.75rem 1rem;
+                }
+
+                img {
+                    width: auto;
+                    height: auto;
+                    max-width: 100%;
+                    max-height: 100%;
+                    object-fit: contain;
+                    border-radius: 8px;
                 }
 
                 &.blackText {
@@ -238,8 +266,11 @@
                 max-height: none;
                 border-radius: 12px;
 
-                img {
+                .media {
                     flex: none;
+                }
+
+                img {
                     width: 100%;
                     height: auto;
                 }

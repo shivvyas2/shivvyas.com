@@ -118,13 +118,15 @@ export default function ProjectSection() {
                 : undefined
             }
           >
-            <Image
-              src={project.img}
-              width={1200}
-              height={750}
-              sizes="(max-width: 840px) 100vw, 65vw"
-              alt={`${project.title} project preview`}
-            />
+            <div className={styles.media}>
+              <Image
+                src={project.img}
+                width={1200}
+                height={750}
+                sizes="(max-width: 840px) 100vw, 65vw"
+                alt={`${project.title} project preview`}
+              />
+            </div>
             <div className={styles.projectDetails}>
               <div className={styles.title}>
                 <h3>{project.title}</h3>

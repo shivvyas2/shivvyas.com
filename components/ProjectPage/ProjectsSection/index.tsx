@@ -45,13 +45,15 @@ export default function ProjectsSection() {
             ref={addToRefs}
             style={{ ["--cover" as string]: blurredCoverUrl(project.img) }}
           >
-            <Image
-              src={project.img}
-              alt={project.title}
-              width={500}
-              height={500}
-              sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, 33vw"
-            />
+            <div className={styles.media}>
+              <Image
+                src={project.img}
+                alt={project.title}
+                width={500}
+                height={500}
+                sizes="(max-width: 600px) 100vw, 50vw"
+              />
+            </div>
             <div className={styles.projectDetails}>
               <div className={styles.title}>
                 <h3>{project.title}</h3>
