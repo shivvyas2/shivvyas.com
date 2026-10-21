@@ -37,14 +37,13 @@ export const projects: Project[] = [
     title: "MacBook Launchpad",
     slug: "macbook-launchpad",
     category: ["Swift", "SwiftUI", "macOS", "Open Source"],
-    img: "/images/launchpad/grid.jpg",
+    img: "/images/launchpad/photos/cover.jpg",
     textColor: "white",
-    screenshot: true,
     logo: "/images/launchpad/logo.png",
     gallery: [
-      "/images/launchpad/folder.jpg",
-      "/images/launchpad/organize.jpg",
-      "/images/launchpad/search.jpg",
+      "/images/launchpad/photos/search.jpg",
+      "/images/launchpad/photos/organize.jpg",
+      "/images/launchpad/photos/folder-wide.jpg",
     ],
 
     // Sticky
