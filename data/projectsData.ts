@@ -39,6 +39,7 @@ export const projects: Project[] = [
     category: ["Swift", "SwiftUI", "macOS", "Open Source"],
     img: "/images/launchpad/photos/cover.jpg",
     textColor: "white",
+    screenshot: true,
     logo: "/images/launchpad/logo.png",
     gallery: [
       "/images/launchpad/photos/search.jpg",
