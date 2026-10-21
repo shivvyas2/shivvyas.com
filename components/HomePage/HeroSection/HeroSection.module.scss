@@ -9,6 +9,8 @@
   justify-content: flex-end;
   align-items: center;
   overflow: hidden;
+  // Projected object cues move with the camera, not the document scroll.
+  overflow-anchor: none;
   position: relative;
 
   background: linear-gradient(
@@ -52,22 +54,6 @@
     opacity: 0;
     transition: opacity 0.8s ease;
     background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
-  }
-
-  .deskHint {
-    position: absolute;
-    z-index: 3;
-    left: 50%;
-    bottom: 22%;
-    transform: translateX(-50%);
-    margin: 0;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.72rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    pointer-events: none;
-    animation: deskHintPulse 2.4s ease-in-out infinite;
-    transition: opacity 0.4s ease;
   }
 
   .deskExit {
@@ -130,8 +116,7 @@
 
   &.inDesk {
     .text-container,
-    .scrollDown,
-    .deskHint {
+    .scrollDown {
       opacity: 0;
       pointer-events: none;
     }
@@ -324,15 +309,5 @@
         font-size: 40vw;
       }
     }
-  }
-}
-
-@keyframes deskHintPulse {
-  0%,
-  100% {
-    opacity: 0.35;
-  }
-  50% {
-    opacity: 0.8;
   }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { Box3 } from "three";
@@ -9,6 +9,7 @@ import { heroFramingBounds } from "./lib/standingDesk.mjs";
 import { applyMonitorScreens } from "./interactions/monitorScreens";
 import { dispatchDesk, useDesk } from "./useDesk";
 import { springStep } from "./lib/deskMath.mjs";
+import { AffordanceContext, DeskEntryCue } from "./DeskAffordances";
 
 import { MODEL_URL } from "./modelUrl";
 const DRIFT = 0.0105; // ±0.6°
@@ -19,11 +20,37 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
   const drift = useRef(null);
   const rim = useRef(null);
   const hover = useRef({ on: false, spring: { value: 0, velocity: 0 } });
+  const [hovered, setHovered] = useState(false);
   const mode = useDesk((s) => s.mode);
+  const transitioning = useDesk((s) => s.transitioning);
   const drifting = active && mode === "hero";
   const invalidate = useThree((s) => s.invalidate);
+  const gl = useThree((s) => s.gl);
   const lift = useRef(null);
   const { display: deskDisplay, controls: deskControls } = useStandingDesk(lift, active && mode === "hero");
+
+  const hoverDesk = (event) => {
+    if (isMobile || mode !== "hero" || transitioning) return;
+    event?.stopPropagation();
+    hover.current.on = true;
+    setHovered(true);
+    gl.domElement.style.cursor = "pointer";
+    onHoverDesk?.();
+    invalidate();
+  };
+  const leaveDesk = () => {
+    const ownedCursor = hover.current.on;
+    hover.current.on = false;
+    setHovered(false);
+    if (ownedCursor && gl.domElement.style.cursor === "pointer") gl.domElement.style.cursor = "";
+    invalidate();
+  };
+
+  useEffect(() => {
+    hover.current.on = false;
+    setHovered(false);
+    if (gl.domElement.style.cursor === "pointer") gl.domElement.style.cursor = "";
+  }, [mode, isMobile, gl]);
 
   useEffect(() => {
     scene.traverse((part) => {
@@ -81,7 +108,7 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
   });
 
   return (
-    <>
+    <AffordanceContext.Provider value={active}>
       <CameraDirector
         bounds={bounds}
         isMobile={isMobile}
@@ -106,17 +133,11 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
               // Front face stops at z = 1.5 so the keypad (z ~1.56) stays clickable.
               position={[0, 1.2, -0.05]}
               visible={false}
-              onPointerOver={() => {
-                if (isMobile) return;
-                hover.current.on = true;
-                onHoverDesk?.();
-              }}
-              onPointerOut={() => {
-                hover.current.on = false;
-              }}
+              onPointerOver={hoverDesk}
+              onPointerOut={leaveDesk}
               onClick={(event) => {
                 event.stopPropagation();
-                dispatchDesk({ type: "enterDesk" });
+                if (event.delta <= 4) dispatchDesk({ type: "enterDesk" });
               }}
             >
               <boxGeometry args={[7.3, 2.9, 3.1]} />
@@ -125,19 +146,12 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
           <mesh
             position={[0, 0.02, 0]}
             rotation={[-Math.PI / 2, 0, 0]}
-            onPointerOver={() => {
-              // Phones show the desk only; no hover glow, no interaction code.
-              if (isMobile) return;
-              hover.current.on = true;
-              onHoverDesk?.();
-            }}
-            onPointerOut={() => {
-              hover.current.on = false;
-            }}
+            onPointerOver={hoverDesk}
+            onPointerOut={leaveDesk}
             onClick={(event) => {
               if (mode === "hero") {
                 event.stopPropagation();
-                dispatchDesk({ type: "enterDesk" });
+                if (event.delta <= 4) dispatchDesk({ type: "enterDesk" });
               } else if (mode === "diary") {
                 event.stopPropagation();
                 dispatchDesk({ type: "closeDiary" });
@@ -150,6 +164,7 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
             <planeGeometry args={[7.2, 3.15]} />
             <meshBasicMaterial transparent opacity={0} depthWrite={false} />
           </mesh>
+          <DeskEntryCue hovered={hovered} onPointerEnter={hoverDesk} onPointerLeave={leaveDesk} />
           {nodes.Interactive_Keyboard && (
             <Keycaps anchor={nodes.Interactive_Keyboard} />
           )}
@@ -157,6 +172,6 @@ export default function DeskModel({ isMobile, active, onHoverDesk, children }) {
           <LiftingParts display={deskDisplay} controls={deskControls} buttonsEnabled={!isMobile && (mode === "hero" || mode === "desk")} />
         </group>
       </group>
-    </>
+    </AffordanceContext.Provider>
   );
 }

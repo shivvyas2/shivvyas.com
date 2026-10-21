@@ -17,7 +17,7 @@ export function useDeskDrag({ enabled, onStart, onMove, onEnd }) {
       if (!drag.end(pointerId)) return;
       cleanup.current?.();
       cleanup.current = null;
-      gl.domElement.style.cursor = "";
+      if (gl.domElement.style.cursor === "grabbing") gl.domElement.style.cursor = "";
       callbacks.current.onEnd?.();
     },
     [drag, gl],
@@ -40,6 +40,8 @@ export function useDeskDrag({ enabled, onStart, onMove, onEnd }) {
         );
         raycaster.setFromCamera(ndc, camera);
         callbacks.current.onMove(raycaster.ray);
+        // R3F can hover another object while the native pointer is captured.
+        element.style.cursor = "grabbing";
       };
       const up = (e) => end(e.pointerId);
       const blur = () => end();
@@ -47,6 +49,8 @@ export function useDeskDrag({ enabled, onStart, onMove, onEnd }) {
       element.addEventListener("pointerup", up);
       element.addEventListener("pointercancel", up);
       element.addEventListener("lostpointercapture", up);
+      window.addEventListener("pointerup", up);
+      window.addEventListener("pointercancel", up);
       window.addEventListener("blur", blur);
       try {
         element.setPointerCapture(pointerId);
@@ -58,6 +62,8 @@ export function useDeskDrag({ enabled, onStart, onMove, onEnd }) {
         element.removeEventListener("pointerup", up);
         element.removeEventListener("pointercancel", up);
         element.removeEventListener("lostpointercapture", up);
+        window.removeEventListener("pointerup", up);
+        window.removeEventListener("pointercancel", up);
         window.removeEventListener("blur", blur);
         try {
           element.releasePointerCapture(pointerId);

@@ -1,10 +1,12 @@
-import { useLayoutEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { createPortal, useFrame, useThree } from "@react-three/fiber";
 import { CanvasTexture, Color, InstancedBufferAttribute, Object3D, PlaneGeometry, SRGBColorSpace } from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { KEYS, KEY_TONES, KEY_TRAVEL } from "./lib/keyboardLayout.mjs";
 import { keyPressOffset } from "./lib/deskMath.mjs";
 import { legendFor } from "./lib/keyLegends.mjs";
+import { useDesk } from "./useDesk";
+import { ObjectCue } from "./DeskAffordances";
 
 // Lets the lazily loaded keyboard input press keys without owning the meshes.
 export const keycapsApi = { press: () => {}, onKey: null };
@@ -84,12 +86,23 @@ const patchLegendShader = (shader) => {
 export default function Keycaps({ anchor }) {
   const caps = useRef(null);
   const legends = useRef(null);
+  const hovered = useRef(false);
   const pressedAt = useRef(new Float64Array(KEYS.length).fill(-1));
   const invalidate = useThree((s) => s.invalidate);
   const gl = useThree((s) => s.gl);
+  const enabled = useDesk((s) => s.mode === "desk" && !s.transitioning && !s.mobile);
+  const releaseHover = useCallback(() => {
+    if (hovered.current && gl.domElement.style.cursor === "pointer") gl.domElement.style.cursor = "";
+    hovered.current = false;
+  }, [gl]);
   const capGeometry = useMemo(() => new RoundedBoxGeometry(1, 1, 1, 2, 0.12), []);
   const legendGeometry = useMemo(() => legendGeometryWithCells(), []);
   const atlas = useMemo(() => legendAtlas(), []);
+
+  useEffect(() => {
+    if (!enabled) releaseHover();
+    return releaseHover;
+  }, [enabled, releaseHover]);
 
   const place = (i, offset) => {
     const k = KEYS[i];
@@ -160,17 +173,19 @@ export default function Keycaps({ anchor }) {
         receiveShadow
         name="Keycaps"
         onPointerDown={(event) => {
-          if (keycapsApi.onKey?.(event.instanceId)) event.stopPropagation();
+          if (enabled && keycapsApi.onKey?.(event.instanceId)) event.stopPropagation();
         }}
-        onPointerOver={() => {
-          if (keycapsApi.onKey) gl.domElement.style.cursor = "pointer";
+        onPointerOver={(event) => {
+          if (!enabled || gl.domElement.style.cursor === "grabbing") return;
+          event.stopPropagation();
+          hovered.current = true;
+          gl.domElement.style.cursor = "pointer";
         }}
-        onPointerOut={() => {
-          gl.domElement.style.cursor = "";
-        }}
+        onPointerOut={releaseHover}
       >
         <meshStandardMaterial roughness={0.63} />
       </instancedMesh>
+      <ObjectCue position={[KEYS[0].x, KEYS[0].y + KEYS[0].h / 2 + 0.035, KEYS[0].z]} delay={0.6} />
       <instancedMesh
         ref={legends}
         args={[legendGeometry, undefined, LEGEND_KEYS.length]}

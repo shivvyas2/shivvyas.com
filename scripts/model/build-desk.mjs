@@ -1,11 +1,12 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { GLTFExporter } from "three/addons/exporters/GLTFExporter.js";
+import { FontLoader } from "three/addons/loaders/FontLoader.js";
 import {
   mergeGeometries,
   mergeVertices,
 } from "three/addons/utils/BufferGeometryUtils.js";
-import { mkdir, mkdtemp, rm, stat, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -39,7 +40,7 @@ const mats = {
   keyLight: material("Light gray keycaps", "#9caaa9", 0.62),
   legend: material("Key legends", "#c7d0ce", 0.75),
   orange: material("Signature orange accent", "#f44e00", 0.36, 0.18),
-  red: material("Audio interface red aluminum", "#86291d", 0.36, 0.65),
+  red: material("Audio interface red aluminum", "#b52b3a", 0.32, 0.68),
   cream: material("Cream ceramic", "#d7c491", 0.25),
   coffee: material("Coffee", "#1b100b", 0.2),
   paper: material("Book pages", "#e5ddc5", 0.85),
@@ -63,7 +64,14 @@ mats.laptopScreen = unlit("Laptop screen", "#17191b");
 // MacBook keyboard: a flat surface textured at runtime with the real layout
 // (components/canvas/desk/interactions/macbookKeyboard.js).
 mats.laptopKeys = material("Laptop keyboard", "#111214", 0.55);
-mats.trackpadGlass = material("MacBook trackpad glass", "#9fa5aa", 0.16, 0.4);
+mats.laptopAluminum = material("MacBook satin aluminum", "#bec3c9", 0.32, 0.78);
+mats.laptopEdge = material("MacBook machined edges", "#d3d7dd", 0.24, 0.82);
+mats.trackpadGlass = material("MacBook trackpad glass", "#b3b9c0", 0.44, 0.58);
+mats.audioFace = material("Scarlett charcoal faceplate", "#232730", 0.48, 0.24);
+mats.audioKnob = material("Audio dial anodized caps", "#3c4149", 0.38, 0.58);
+mats.audioInk = material("Audio panel printing", "#c7cbd0", 0.7);
+mats.signal = unlit("Scarlett gain halos", "#5bd576");
+mats.signalPeak = unlit("Scarlett gain peaks", "#dfc15c");
 mats.led = unlit("Warm status LEDs", "#ff8945");
 mats.green = unlit("Audio meter green", "#a0c59a");
 
@@ -139,6 +147,39 @@ function group(name, position, rotation = [0, 0, 0], parent = scene) {
 function interactive(object) {
   object.userData.interactive = true;
   return object;
+}
+// Rounded profiles keep broad corner radii even on very thin metal shells.
+// RoundedBoxGeometry clamps its radius to thickness, making laptops boxy.
+function panel(name, width, height, depth, radius, position, mat, parent, rotation = [0, 0, 0], bevel = 0.0015) {
+  const x = -width / 2, y = -height / 2;
+  const shape = new THREE.Shape();
+  shape.moveTo(x + radius, y);
+  shape.lineTo(x + width - radius, y);
+  shape.quadraticCurveTo(x + width, y, x + width, y + radius);
+  shape.lineTo(x + width, y + height - radius);
+  shape.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  shape.lineTo(x + radius, y + height);
+  shape.quadraticCurveTo(x, y + height, x, y + height - radius);
+  shape.lineTo(x, y + radius);
+  shape.quadraticCurveTo(x, y, x + radius, y);
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth, steps: 1, curveSegments: 5,
+    bevelEnabled: bevel > 0, bevelSegments: 2, bevelSize: bevel, bevelThickness: bevel,
+  });
+  geometry.translate(0, 0, -depth / 2);
+  return mesh(name, geometry, mat, position, parent, rotation);
+}
+const hardwareFont = new FontLoader().parse(JSON.parse(await readFile(
+  new URL("../../node_modules/three/examples/fonts/helvetiker_regular.typeface.json", import.meta.url), "utf8",
+)));
+function printing(name, text, size, position, mat, parent, rotation = [0, 0, 0]) {
+  const geometry = new THREE.ShapeGeometry(hardwareFont.generateShapes(text, size), 3);
+  geometry.computeBoundingBox();
+  geometry.translate(-(geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2, 0, 0);
+  return mesh(name, geometry, mat, position, parent, rotation);
+}
+function ring(name, radius, tube, position, mat, parent, arc = Math.PI * 2, angle = 0) {
+  return mesh(name, new THREE.TorusGeometry(radius, tube, 6, 40, arc), mat, position, parent, [0, 0, angle]);
 }
 function rod(name, start, end, radius, mat, parent = scene) {
   const a = new THREE.Vector3(...start),
@@ -304,96 +345,71 @@ function monitor(name, x, y, z, width, height, silver, angle) {
 monitor("Left black monitor", -1.61, 1.68, -0.89, 2.76, 1.63, false, 0.08);
 monitor("Right silver monitor", 1.37, 1.78, -0.98, 3.01, 1.75, true, -0.055);
 
-// The open laptop sits between the two large displays, with a modeled editor.
+// Silver MacBook Pro: a continuous unibody, black keyboard well, broad
+// trackpad and narrow display border. Proportions and port arrangement follow
+// Apple's product imagery: https://www.apple.com/macbook-pro/specs/.
 const laptop = group("Center laptop", [0, 0.066, 0.26]);
-box(
-  "Laptop lower shell",
-  [1.65, 0.057, 1.03],
-  [0, 0.025, 0],
-  mats.silver,
-  laptop,
-  0.035,
-);
-box(
-  "Laptop bevel",
-  [1.63, 0.022, 1.01],
-  [0, 0.063, 0],
-  mats.silver,
-  laptop,
-  0.03,
-);
-box(
-  "Laptop palm deck",
-  [1.6, 0.011, 0.98],
-  [0, 0.078, 0],
-  mats.silver,
-  laptop,
-  0.02,
-);
-// MacBook Pro proportions: a wide force-touch trackpad under the keyboard.
-box(
-  "Glass trackpad",
-  [0.72, 0.006, 0.37],
-  [0, 0.0855, 0.31],
-  mats.trackpadGlass,
-  laptop,
-  0.03,
-);
-mesh(
-  "MacBook keyboard surface",
-  new THREE.PlaneGeometry(1.36, 0.54),
-  mats.laptopKeys,
-  [0, 0.0845, -0.17],
-  laptop,
-  [-Math.PI / 2, 0, 0],
-);
-cylinder("Laptop hinge", 0.036, 1.48, [0, 0.068, -0.46], mats.black, laptop, [
-  0,
-  0,
-  Math.PI / 2,
-]);
-const lid = group("Laptop screen", [0, 0.07, -0.46], [-0.15, 0, 0], laptop);
-box(
-  "Display housing",
-  [1.66, 1.03, 0.045],
-  [0, 0.516, 0],
-  mats.graphite,
-  lid,
-  0.035,
-);
-box(
-  "Display black border",
-  [1.6, 0.974, 0.012],
-  [0, 0.526, 0.027],
-  mats.black,
-  lid,
-  0.02,
-);
-box(
-  "Code editor display",
-  [1.51, 0.864, 0.006],
-  [0, 0.529, 0.035],
-  mats.screen,
-  lid,
-  0.007,
-);
-box(
-  "Camera notch",
-  [0.14, 0.028, 0.009],
-  [0, 0.998, 0.03],
-  mats.black,
-  lid,
-  0.008,
-);
-// The editor itself is a runtime canvas (Cursor with a live terminal, see
-// components/canvas/desk/interactions/monitorScreens.js); this is its surface.
-mesh(
-  "Laptop editor surface",
-  new THREE.PlaneGeometry(1.49, 0.844),
-  mats.laptopScreen,
-  [0, 0.529, 0.0385],
-  lid,
-);
+const horizontal = [-Math.PI / 2, 0, 0];
+panel("Laptop lower shell", 1.65, 1.03, 0.053, 0.065,
+  [0, 0.027, 0], mats.laptopAluminum, laptop, horizontal, 0.004);
+panel("Laptop underside seam", 1.624, 1.006, 0.002, 0.058,
+  [0, 0.001, 0], mats.graphite, laptop, horizontal, 0);
+panel("Laptop palm deck", 1.642, 1.022, 0.009, 0.061,
+  [0, 0.057, 0], mats.laptopAluminum, laptop, horizontal, 0.002);
+// A flush glass insert with its fine machined perimeter, not a raised pad.
+panel("Trackpad perimeter", 0.738, 0.358, 0.001, 0.028,
+  [0, 0.064, 0.29], mats.graphite, laptop, horizontal, 0);
+panel("Glass trackpad", 0.728, 0.348, 0.0015, 0.025,
+  [0, 0.065, 0.29], mats.trackpadGlass, laptop, horizontal, 0);
+panel("Keyboard recessed well", 1.376, 0.555, 0.002, 0.024,
+  [0, 0.0635, -0.178], mats.black, laptop, horizontal, 0);
+// Keep a single planar surface and the runtime material name for keyboard UVs.
+mesh("MacBook keyboard surface", new THREE.PlaneGeometry(1.36, 0.54),
+  mats.laptopKeys, [0, 0.065, -0.178], laptop, horizontal);
+// Small perforations read as aluminum speaker grilles at the desk camera scale.
+for (const side of [-1, 1]) {
+  for (let col = 0; col < 4; col++) {
+    for (let row = 0; row < 32; row++) {
+      mesh("Speaker grille perforation", new THREE.CircleGeometry(0.0024, 6),
+        mats.graphite, [side * (0.721 + col * 0.014), 0.064, -0.412 + row * 0.015], laptop, horizontal);
+    }
+  }
+  // Side vents, chamfered port rims, and dark inset ports avoid painted slots.
+  box("Side ventilation inlet", [0.002, 0.011, 0.22], [side * 0.826, 0.022, -0.32], mats.black, laptop, 0.001);
+}
+function laptopPort(name, side, z, length, height = 0.017) {
+  panel(`${name} rim`, length + 0.008, height + 0.006, 0.001, height / 2,
+    [side * 0.827, 0.033, z], mats.laptopEdge, laptop, [0, side * Math.PI / 2, 0], 0);
+  panel(name, length, height, 0.002, height / 2 - 0.002,
+    [side * 0.8285, 0.033, z], mats.black, laptop, [0, side * Math.PI / 2, 0], 0);
+}
+laptopPort("MagSafe charging socket", -1, -0.361, 0.069, 0.014);
+laptopPort("Thunderbolt socket left rear", -1, -0.24, 0.047);
+laptopPort("Thunderbolt socket left front", -1, -0.145, 0.047);
+laptopPort("Headphone socket", -1, 0.005, 0.019, 0.019);
+laptopPort("HDMI socket", 1, -0.355, 0.073, 0.024);
+laptopPort("Thunderbolt socket right", 1, -0.225, 0.047);
+laptopPort("SD card slot", 1, -0.06, 0.126, 0.009);
+// The finger recess has a dark upper cut and a lighter lower chamfer.
+panel("Lid opening recess", 0.25, 0.014, 0.002, 0.006,
+  [0, 0.054, 0.515], mats.graphite, laptop, [0, 0, 0], 0);
+box("Lid opening lower edge", [0.24, 0.003, 0.004], [0, 0.045, 0.516], mats.laptopEdge, laptop, 0.001);
+cylinder("Laptop hinge", 0.025, 1.38, [0, 0.06, -0.46], mats.black, laptop, [0, 0, Math.PI / 2]);
+const lid = group("Laptop screen", [0, 0.064, -0.46], [-0.15, 0, 0], laptop);
+panel("Display aluminum housing", 1.65, 1.03, 0.022, 0.05,
+  [0, 0.516, 0], mats.laptopAluminum, lid, [0, 0, 0], 0.002);
+panel("Display black border", 1.62, 1.004, 0.007, 0.04,
+  [0, 0.518, 0.016], mats.black, lid, [0, 0, 0], 0);
+// The screen stays a four-vertex plane for the runtime editor canvas.
+mesh("Laptop editor surface", new THREE.PlaneGeometry(1.566, 0.936),
+  mats.laptopScreen, [0, 0.524, 0.0205], lid);
+// The notch overlaps the active screen, as on the real display.
+panel("Camera notch", 0.18, 0.041, 0.003, 0.009,
+  [0, 0.977, 0.023], mats.black, lid, [0, 0, 0], 0);
+cylinder("FaceTime camera surround", 0.0057, 0.003,
+  [0, 0.981, 0.026], mats.graphite, lid, [Math.PI / 2, 0, 0]);
+cylinder("FaceTime camera lens", 0.0033, 0.003,
+  [0, 0.981, 0.028], mats.glass, lid, [Math.PI / 2, 0, 0]);
 
 // Mechanical keyboard case; keycaps are instanced at runtime (keyboardLayout.mjs).
 const keyboard = interactive(
@@ -506,62 +522,79 @@ mesh(
   [0, 0, -Math.PI * 0.84],
 );
 
-// Red and black audio interfaces beside the laptop.
-// Starts at x=0.915, clear of the laptop base (x <= 0.825) and its lid.
+// Scarlett Solo 4th generation above the compact black desktop interface.
+// The red folded shell, asymmetric controls, and halo gain meters follow the
+// official front/top references: https://us.focusrite.com/products/scarlett-solo.
+// Keep the left edge clear of the laptop (x <= 0.83).
 const audio = group("Audio interfaces", [1.32, 0.09, -0.34]);
-box(
-  "Black audio interface",
-  [0.81, 0.16, 0.45],
-  [0, 0, 0],
-  mats.black,
-  audio,
-  0.02,
-);
-box(
-  "Red audio interface",
-  [0.77, 0.13, 0.43],
-  [0, 0.16, -0.02],
-  mats.red,
-  audio,
-  0.02,
-);
-for (const y of [-0.01, 0.15]) {
-  box(
-    "Audio faceplate",
-    [0.76, 0.104, 0.014],
-    [0, y, 0.231],
-    mats.graphite,
-    audio,
-    0.004,
-  );
-  for (const x of [-0.25, -0.03, 0.24]) {
-    cylinder(
-      "Audio gain knob",
-      x === 0.24 ? 0.052 : 0.031,
-      0.038,
-      [x, y, 0.256],
-      mats.black,
-      audio,
-      [Math.PI / 2, 0, 0],
-    );
-    box(
-      "Audio level marker",
-      [0.006, 0.027, 0.003],
-      [x, y + 0.008, 0.278],
-      mats.legend,
-      audio,
-      0.001,
-    );
+panel("Black desktop interface chassis", 0.81, 0.14, 0.45, 0.018,
+  [0, -0.005, 0], mats.graphite, audio, [0, 0, 0], 0.003);
+panel("Black desktop interface fascia", 0.786, 0.116, 0.004, 0.012,
+  [0, -0.005, 0.228], mats.black, audio, [0, 0, 0], 0);
+for (const x of [-0.3, 0.3]) {
+  for (const z of [-0.16, 0.16]) {
+    cylinder("Interface isolation foot", 0.035, 0.019, [x, -0.078, z], mats.rubber, audio);
+    cylinder("Scarlett rubber foot", 0.03, 0.02, [x, 0.078, z], mats.rubber, audio);
   }
-  box(
-    "Audio signal LED",
-    [0.016, 0.015, 0.004],
-    [0.1, y, 0.244],
-    mats.green,
-    audio,
-    0.002,
-  );
 }
+function audioSocket(name, x, y, z, radius, direction = 1) {
+  const parent = audio;
+  cylinder(`${name} socket rim`, radius, 0.009, [x, y, z], mats.audioKnob, parent, [Math.PI / 2, 0, 0]);
+  cylinder(`${name} recessed opening`, radius * 0.71, 0.01, [x, y, z + direction * 0.002], mats.rubber, parent, [Math.PI / 2, 0, 0]);
+  ring(`${name} machined lip`, radius * 0.92, 0.0022, [x, y, z + direction * 0.006], mats.silver, parent);
+}
+function audioDial(name, x, y, z, radius, depth, parent = audio) {
+  cylinder(`${name} shadow collar`, radius * 1.03, 0.007, [x, y, z], mats.rubber, parent, [Math.PI / 2, 0, 0]);
+  cylinder(`${name} barrel`, radius, depth, [x, y, z + depth / 2], mats.black, parent, [Math.PI / 2, 0, 0]);
+  cylinder(`${name} satin cap`, radius * 0.96, 0.003, [x, y, z + depth + 0.002], mats.audioKnob, parent, [Math.PI / 2, 0, 0]);
+  box(`${name} indicator`, [0.0026, radius * 0.5, 0.002],
+    [x, y + radius * 0.58, z + depth + 0.004], mats.audioInk, parent, 0.001);
+  const teeth = radius > 0.06 ? 40 : 24;
+  for (let i = 0; i < teeth; i++) {
+    const angle = i * Math.PI * 2 / teeth;
+    box(`${name} knurled grip`, [0.002, 0.002, depth * 0.75],
+      [x + Math.cos(angle) * radius, y + Math.sin(angle) * radius, z + depth * 0.5], mats.audioKnob, parent, 0.001, [0, 0, angle]);
+  }
+}
+// The lower unit has real jack openings and a restrained output control.
+for (const x of [-0.29, -0.16]) audioSocket("Lower interface input", x, -0.005, 0.234, 0.032);
+audioDial("Lower interface output", 0.275, -0.005, 0.235, 0.044, 0.023);
+for (let i = 0; i < 4; i++) box("Lower interface meter", [0.008, 0.006, 0.002],
+  [-0.012 + i * 0.017, -0.005, 0.232], i < 2 ? mats.green : mats.audioKnob, audio, 0.001);
+// Solo: width / height / depth closely follow its 143 x 46.5 x 96 mm case.
+panel("Scarlett red aluminum shell", 0.78, 0.25, 0.522, 0.035,
+  [0, 0.215, -0.012], mats.red, audio, [0, 0, 0], 0.003);
+panel("Scarlett inset front panel", 0.753, 0.226, 0.005, 0.025,
+  [0, 0.215, 0.252], mats.audioFace, audio, [0, 0, 0], 0);
+panel("Scarlett rear panel", 0.75, 0.221, 0.005, 0.025,
+  [0, 0.215, -0.276], mats.audioFace, audio, [0, 0, 0], 0);
+for (const x of [-0.265, -0.109]) {
+  ring("Gain halo dark track", 0.043, 0.0035, [x, 0.263, 0.259], mats.black, audio);
+  ring("Scarlett gain light", 0.043, 0.0032, [x, 0.263, 0.261], mats.signal, audio, Math.PI * 1.36, -Math.PI * 0.18);
+  ring("Scarlett gain peak", 0.043, 0.0032, [x, 0.263, 0.261], mats.signalPeak, audio, Math.PI * 0.19, -Math.PI * 0.37);
+  audioDial("Scarlett input gain", x, 0.263, 0.263, 0.034, 0.033);
+}
+audioSocket("Scarlett instrument input", -0.302, 0.144, 0.261, 0.026);
+for (const [x, label] of [[-0.216, "Inst"], [-0.138, "48V"], [-0.06, "Air"]]) {
+  cylinder(`Scarlett ${label} switch rim`, 0.019, 0.008, [x, 0.143, 0.262], mats.black, audio, [Math.PI / 2, 0, 0]);
+  cylinder(`Scarlett ${label} button`, 0.015, 0.008, [x, 0.143, 0.268], mats.audioKnob, audio, [Math.PI / 2, 0, 0]);
+  printing(`Scarlett ${label} print`, label, 0.0105, [x, 0.171, 0.257], mats.audioInk, audio);
+}
+box("Scarlett channel divider", [0.0008, 0.171, 0.001], [-0.015, 0.219, 0.257], mats.audioKnob, audio, 0.0002);
+audioDial("Scarlett output dial", 0.112, 0.216, 0.263, 0.077, 0.042);
+audioDial("Scarlett headphone dial", 0.307, 0.274, 0.263, 0.033, 0.027);
+audioSocket("Scarlett headphone output", 0.307, 0.148, 0.261, 0.026);
+cylinder("Scarlett direct monitoring switch", 0.014, 0.008, [0.219, 0.276, 0.264], mats.audioKnob, audio, [Math.PI / 2, 0, 0]);
+printing("Scarlett channel one", "1", 0.011, [-0.309, 0.306, 0.257], mats.audioInk, audio);
+printing("Scarlett channel two", "2", 0.011, [-0.153, 0.306, 0.257], mats.audioInk, audio);
+printing("Scarlett output label", "Output", 0.0105, [0.108, 0.307, 0.257], mats.audioInk, audio);
+printing("Scarlett direct label", "Direct", 0.0105, [0.219, 0.307, 0.257], mats.audioInk, audio);
+printing("Scarlett Solo product mark", "Scarlett Solo", 0.017, [0.218, 0.113, 0.257], mats.audioInk, audio);
+printing("Focusrite top wordmark", "Focusrite", 0.063, [0, 0.344, -0.035], mats.audioFace, audio, [-Math.PI / 2, 0, 0]);
+// Rear XLR microphone input and balanced line outputs are visible on rotation.
+audioSocket("Scarlett rear microphone XLR", -0.255, 0.215, -0.286, 0.047, -1);
+for (const x of [-0.085, 0.025]) audioSocket("Scarlett rear line output", x, 0.215, -0.286, 0.027, -1);
+box("Scarlett USB C port", [0.045, 0.016, 0.005], [0.258, 0.215, -0.283], mats.black, audio, 0.004);
 // Compact round white speaker to the left of the laptop.
 cylinder("Speaker stand", 0.16, 0.025, [-0.99, 0.035, -0.43], mats.silver);
 cylinder(

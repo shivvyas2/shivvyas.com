@@ -14,7 +14,7 @@ const FOLLOW = { stiffness: 300, damping: 2 * Math.sqrt(300) };
 const WOBBLE = { stiffness: 180, damping: 9 };
 
 export default function DeskMouse({ node }) {
-  const enabled = useDesk((s) => s.mode === "desk");
+  const enabled = useDesk((s) => s.mode === "desk" && !s.transitioning && !s.mobile);
   const invalidate = useThree((s) => s.invalidate);
   const hover = useHoverLift(node, { enabled, cursor: "grab" });
   const hit = useMemo(() => new Vector3(), []);

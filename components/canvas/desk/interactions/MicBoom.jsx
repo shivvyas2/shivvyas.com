@@ -17,7 +17,7 @@ export default function MicBoom({ nodes }) {
   const lower = nodes.Interactive_Mic_Lower;
   const upper = nodes.Interactive_Mic_Upper;
   const head = nodes.Interactive_Mic_Head;
-  const enabled = useDesk((s) => s.mode === "desk");
+  const enabled = useDesk((s) => s.mode === "desk" && !s.transitioning && !s.mobile);
   const invalidate = useThree((s) => s.invalidate);
   const hover = useHoverLift(head, { lift: 0, enabled, cursor: "grab" });
   const hit = useMemo(() => new Vector3(), []);

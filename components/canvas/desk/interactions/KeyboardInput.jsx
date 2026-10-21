@@ -10,7 +10,8 @@ const DEEP = new Set(["Space", "Enter", "Backspace", "ShiftLeft", "ShiftRight"])
 export default function KeyboardInput() {
   useEffect(() => {
     keycapsApi.onKey = (index) => {
-      if (deskStore.get().mode !== "desk" || index === undefined) return false;
+      const { mode, transitioning, mobile } = deskStore.get();
+      if (mode !== "desk" || transitioning || mobile || index === undefined) return false;
       keycapsApi.press(index);
       deskAudio.key({ deep: DEEP.has(KEYS[index].code) });
       return true;

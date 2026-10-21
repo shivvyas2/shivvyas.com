@@ -1,14 +1,22 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { springStep } from "../lib/deskMath.mjs";
+import { useDesk } from "../useDesk";
 
 const WARM = [0.96, 0.47, 0.2];
 
 export function useHoverLift(object, { lift = 0.03, enabled = true, cursor = "grab" } = {}) {
   const gl = useThree((s) => s.gl);
   const invalidate = useThree((s) => s.invalidate);
+  const ready = useDesk((s) => s.mode === "desk" && !s.transitioning && !s.mobile);
+  const canHover = enabled && ready;
   const hovered = useRef(false);
   const state = useRef({ spring: { value: 0, velocity: 0 }, baseY: 0, materials: [] });
+  const releaseHover = useCallback(() => {
+    if (hovered.current && gl.domElement.style.cursor === cursor) gl.domElement.style.cursor = "";
+    hovered.current = false;
+    invalidate();
+  }, [cursor, gl, invalidate]);
 
   useEffect(() => {
     if (!object) return;
@@ -27,7 +35,7 @@ export function useHoverLift(object, { lift = 0.03, enabled = true, cursor = "gr
   useFrame((_, delta) => {
     if (!object) return;
     const s = state.current;
-    const target = hovered.current && enabled ? 1 : 0;
+    const target = hovered.current && canHover ? 1 : 0;
     s.spring = springStep(s.spring, target, delta, { stiffness: 220, damping: 2 * Math.sqrt(220) });
     if (lift) object.position.y = s.baseY + s.spring.value * lift;
     for (const material of s.materials)
@@ -36,23 +44,20 @@ export function useHoverLift(object, { lift = 0.03, enabled = true, cursor = "gr
   });
 
   useEffect(() => {
-    if (!enabled) hovered.current = false;
+    if (!canHover) releaseHover();
     invalidate();
-  }, [enabled, invalidate]);
+  }, [canHover, invalidate, releaseHover]);
+  useEffect(() => releaseHover, [releaseHover]);
 
   return {
     hovered,
     onPointerOver: (event) => {
-      if (!enabled) return;
+      if (!canHover || gl.domElement.style.cursor === "grabbing") return;
       event.stopPropagation();
       hovered.current = true;
       gl.domElement.style.cursor = cursor;
       invalidate();
     },
-    onPointerOut: () => {
-      hovered.current = false;
-      gl.domElement.style.cursor = "";
-      invalidate();
-    },
+    onPointerOut: releaseHover,
   };
 }

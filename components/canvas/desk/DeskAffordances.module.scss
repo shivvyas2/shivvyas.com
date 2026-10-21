@@ -1,0 +1,85 @@
+.entry {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid rgba(255, 222, 196, 0.6);
+  border-radius: 50%;
+  color: #fff3e8;
+  background: rgba(38, 25, 19, 0.7);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border: 1px solid rgba(255, 190, 137, 0.7);
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+    animation: invite 2.8s ease-out 0.8s 3;
+  }
+
+  &:hover,
+  &.hovered {
+    background: rgba(111, 51, 22, 0.85);
+    border-color: #ffc396;
+    transform: scale(1.08);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #ffc396;
+    outline-offset: 4px;
+  }
+}
+
+.object {
+  position: relative;
+  display: block;
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(255, 246, 236, 0.85);
+  border-radius: 50%;
+  background: #f3b080;
+  box-shadow: 0 0 0 3px rgba(35, 22, 16, 0.4), 0 1px 5px rgba(0, 0, 0, 0.3);
+  opacity: 0.65;
+  transition: opacity 160ms ease, transform 160ms ease;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    border: 1px solid rgba(255, 217, 184, 0.8);
+    border-radius: inherit;
+    opacity: 0;
+    animation: invite 2.4s ease-out var(--cue-delay) 2;
+  }
+
+  &.objectHovered {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes invite {
+  0% { opacity: 0; transform: scale(0.9); }
+  18% { opacity: 0.65; }
+  75%, 100% { opacity: 0; transform: scale(1.75); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entry,
+  .object {
+    transition: none;
+    &::before { animation: none; }
+  }
+}

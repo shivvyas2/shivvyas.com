@@ -22,7 +22,6 @@ const ANNOUNCE: Record<string, string> = {
 export default function HeroSection() {
   const [showScene, setShowScene] = useState(false);
   const [active, setActive] = useState(true);
-  const [explored, setExplored] = useState(false);
   const [warm, setWarm] = useState(false);
   const onWarm = useCallback(() => setWarm(true), []);
   const sectionRef = useRef<HTMLElement>(null);
@@ -32,8 +31,6 @@ export default function HeroSection() {
   const { finishScene, updateSceneProgress } = useSceneLoading();
   const mode = useDesk((s: { mode: string }) => s.mode);
   const spread = useDesk((s: { spread: number }) => s.spread);
-  // Phones show the desk as a display piece only (no desk mode).
-  const mobile = useDesk((s: { mobile: boolean }) => s.mobile);
   const inDesk = mode !== "hero";
 
   useEffect(() => {
@@ -86,10 +83,10 @@ export default function HeroSection() {
 
   useEffect(() => {
     if (!inDesk) return;
-    setExplored(true);
     const root = document.documentElement;
     const previous = root.style.overflow;
-    lenis?.scrollTo(0, { duration: 0.6, onComplete: () => lenis?.stop() });
+    lenis?.scrollTo(0, { immediate: true, force: true });
+    lenis?.stop();
     if (!lenis) window.scrollTo({ top: 0 });
     root.style.overflow = "hidden";
     const onKey = (event: KeyboardEvent) => {
@@ -127,14 +124,6 @@ export default function HeroSection() {
         )}
       </div>
       <div className={styles.vignette} aria-hidden="true" />
-      {showScene && warm && !inDesk && !mobile && (
-        <button type="button" className={styles.srFocusable} onClick={() => dispatchDesk({ type: "enterDesk" })}>
-          Explore Shiv&apos;s desk
-        </button>
-      )}
-      {showScene && !inDesk && !explored && !mobile && (
-        <p className={styles.deskHint} aria-hidden="true">click the desk</p>
-      )}
       {inDesk && (
         <button
           type="button"

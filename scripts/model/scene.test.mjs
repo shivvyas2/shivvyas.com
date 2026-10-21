@@ -21,7 +21,7 @@ const REQUIRED = [
 
 test("scene.glb is small and exposes the interactive hierarchy", async () => {
   const { size } = await stat(file);
-  // ~425 KB: no embedded textures (screens are runtime canvases).
+  // Keep the detailed hardware within the hero budget; screens are runtime canvases.
   assert.ok(size < 480_000, `scene.glb is ${size} bytes`);
   await MeshoptDecoder.ready;
   const io = new NodeIO()
@@ -42,7 +42,13 @@ test("scene.glb is small and exposes the interactive hierarchy", async () => {
   assert.ok(minX > 0.85, `audio interface starts at x=${minX}`);
   // Runtime canvases find the screens by material name; dedup must not merge them.
   const names = doc.getRoot().listMaterials().map((m) => m.getName());
-  for (const name of ["Monitor screens", "Laptop screen"]) assert.ok(names.includes(name), `material ${name}`);
+  for (const [name, vertices] of [["Monitor screens", 8], ["Laptop screen", 4], ["Laptop keyboard", 4]]) {
+    assert.ok(names.includes(name), `material ${name}`);
+    const surfaces = doc.getRoot().listMeshes().flatMap((mesh) => mesh.listPrimitives())
+      .filter((primitive) => primitive.getMaterial()?.getName() === name);
+    assert.equal(surfaces.length, 1, `${name} must stay in one runtime texture batch`);
+    assert.equal(surfaces[0].getAttribute("POSITION").getCount(), vertices, `${name} must preserve the runtime UV quads`);
+  }
   // The mint cat bottle comes from the archived alternative desk model.
   assert.ok(doc.getRoot().listMaterials().some((m) => m.getName() === "Bottle • mint silicone"), "cat bottle");
   const bottle = getBounds(nodes["Cat bottle"]);
