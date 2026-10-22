@@ -113,16 +113,14 @@ export const projects: Project[] = [
     title: "PrepBoard",
     slug: "prepboard",
     category: ["SwiftUI", "Next.js", "Claude AI", "Supabase"],
-    img: "/images/prepboard/dashboard.jpg",
+    img: "/images/prepboard/photos/cover.jpg",
     textColor: "white",
     screenshot: true,
     logo: "/images/prepboard/logo.png",
     gallery: [
-      "/images/prepboard/timeline.jpg",
-      "/images/prepboard/docs.jpg",
-      "/images/prepboard/new.jpg",
-      "/images/prepboard/ipad-dashboard.jpg",
-      "/images/prepboard/iphone-dashboard.jpg",
+      "/images/prepboard/photos/dashboard.jpg",
+      "/images/prepboard/photos/ipad.jpg",
+      "/images/prepboard/photos/iphone.jpg",
     ],
 
     // Sticky
