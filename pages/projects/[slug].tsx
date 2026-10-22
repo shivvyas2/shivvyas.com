@@ -68,9 +68,11 @@ type ProjectPageProps = {
 
 const ProjectPage = ({ project }: ProjectPageProps) => {
   const imageRef = useRef<HTMLDivElement | null>(null);
+  const showFullImages = project.slug === "macbook-launchpad";
 
   useEffect(() => {
     if (
+      showFullImages ||
       window.matchMedia("(max-width: 840px), (prefers-reduced-motion: reduce)")
         .matches
     )
@@ -83,7 +85,7 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
     return () => {
       tween.revert();
     };
-  }, []);
+  }, [showFullImages, project.slug]);
 
   return (
     <>
@@ -243,7 +245,7 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
 
       {/*========= Gallery ==========*/}
       {project.gallery && project.gallery.length > 0 && (
-        <section className={styles.gallery}>
+        <section className={`${styles.gallery} ${showFullImages ? styles.fullImages : ""}`}>
           {project.gallery.map((src, idx) => (
             <div key={src} className={styles.galleryItem}>
               <Image

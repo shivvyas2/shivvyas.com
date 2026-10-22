@@ -39,7 +39,11 @@
       top: 10vh;
       width: 65vw;
       height: calc(100vh - 20vh);
-      border-radius: 15px;
+      --card-radius: 15px;
+      border-radius: var(--card-radius);
+      // Safari drops border-radius + overflow clipping while the card or its image
+      // is transformed (stack scaling, hover zoom); clip-path keeps the corners round.
+      clip-path: inset(0 round var(--card-radius));
       overflow: hidden;
 
       .media {
@@ -232,7 +236,7 @@
       top: 13svh;
       width: 100%;
       height: min(72svh, 128vw);
-      border-radius: 14px;
+      --card-radius: 14px;
       color: $white;
 
       img {

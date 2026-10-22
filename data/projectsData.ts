@@ -43,8 +43,8 @@ export const projects: Project[] = [
     logo: "/images/launchpad/logo.png",
     gallery: [
       "/images/launchpad/photos/search.jpg",
-      "/images/launchpad/photos/organize.jpg",
-      "/images/launchpad/photos/folder-wide.jpg",
+      "/images/launchpad/organize.jpg",
+      "/images/launchpad/folder.jpg",
     ],
 
     // Sticky

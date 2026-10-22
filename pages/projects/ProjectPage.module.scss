@@ -222,6 +222,22 @@
             aspect-ratio: 3 / 2;
         }
     }
+
+    // Product photos retain their complete composition, including wide shots
+    // when the gallery collapses to a single column on a phone.
+    &.fullImages {
+        align-items: start;
+
+        .galleryItem,
+        .galleryItem:last-child:nth-child(odd) {
+            aspect-ratio: auto;
+
+            img {
+                height: auto;
+                object-fit: contain;
+            }
+        }
+    }
 }
 
 /* ========== Header ========== */

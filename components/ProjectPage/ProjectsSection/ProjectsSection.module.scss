@@ -9,7 +9,11 @@
         gap: 1rem;
 
         .projectCard {
-            border-radius: 15px;
+            --card-radius: 15px;
+            border-radius: var(--card-radius);
+            // Safari drops border-radius + overflow clipping while the card or its image
+            // is transformed (stack scaling, hover zoom); clip-path keeps the corners round.
+            clip-path: inset(0 round var(--card-radius));
             overflow: hidden;
             position: relative;
             height: 70vh;
@@ -264,7 +268,7 @@
             .projectCard {
                 height: auto;
                 max-height: none;
-                border-radius: 12px;
+                --card-radius: 12px;
 
                 .media {
                     flex: none;
