@@ -401,3 +401,22 @@
         }
     }
 }
+
+/* ========== App legal links (privacy, terms, EULA) ========== */
+.legalLinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    margin: 1rem 0;
+
+    a {
+        font-size: 0.85rem;
+        color: $textGrey;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+
+        &:hover {
+            color: $primary;
+        }
+    }
+}

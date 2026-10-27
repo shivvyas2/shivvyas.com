@@ -25,6 +25,8 @@ export type Project = {
   live: string;
   /** Buttons for downloadable products, shown in the header and the details card. The first is the primary action. */
   downloads?: { label: string; href: string }[];
+  /** Links to the app's legal pages (/projects/<slug>/privacy etc.), shown under the project details. */
+  legal?: { label: string; href: string }[];
   overview: string;
   objective: string;
   process: string;
@@ -148,6 +150,51 @@ export const projects: Project[] = [
 
     impact:
       "PrepBoard turns a scattered prep routine into a plan that tells you what to work on next and gives you everything for it in place. Scheduling against the real interview date keeps preparation paced instead of crammed, quizzes and scores make weak spots visible, and syncing across every device means a study session can start on the Mac and finish on an iPhone. The Mac app is available as a free DMG, and the web app runs at prepboard.shivvyas.com.",
+  },
+  {
+    // For Post
+    title: "CinemaHUD",
+    slug: "cinemahud",
+    category: ["Swift", "SwiftUI", "Metal", "iOS", "iPadOS", "macOS"],
+    img: "/images/cinemahud/cover.jpg",
+    textColor: "white",
+    screenshot: true,
+    logo: "/images/cinemahud/logo.png",
+    gallery: [
+      "/images/cinemahud/iphone.jpg",
+      "/images/cinemahud/ipad.jpg",
+      "/images/cinemahud/peaking.jpg",
+    ],
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "September 16, 2026",
+    services: "iOS, iPadOS & macOS Development, Camera Protocols, Metal, Product Design",
+    duration: "Ongoing",
+    budget: "Free",
+    live: "https://github.com/shivvyas2/Sony-Alpha-A6400-Cinema-Monitor",
+    downloads: [
+      { label: "Download for Mac (DMG)", href: "/cinemahud/download" },
+      { label: "View on GitHub", href: "https://github.com/shivvyas2/Sony-Alpha-A6400-Cinema-Monitor" },
+    ],
+    legal: [
+      { label: "Privacy Policy", href: "/projects/cinemahud/privacy" },
+      { label: "Terms of Use", href: "/projects/cinemahud/terms" },
+      { label: "EULA", href: "/projects/cinemahud/eula" },
+    ],
+
+    // Scroll
+    overview:
+      "CinemaHUD turns a Sony α6400 into a remote-monitored cinema camera on iPhone, iPad, and Mac. It shows the live view with a cinema-style HUD for shutter angle, iris, EI, white balance, EV, and focus, and adds the tools of a professional monitor: focus peaking, zebras, false color, waveform, RGB parade, histogram, vectorscope, frame lines, and cinema and social crops. Every camera setting can be changed from the screen, and stills and movie recording are one tap away.",
+
+    objective:
+      "The α6400's flip screen is small and hard to judge focus and exposure on. The goal was a proper field monitor without extra hardware: connect over the camera's own Wi-Fi or USB, need no Sony software or drivers, and keep up with the camera at low latency while giving the exposure and focus tools a cinematographer expects.",
+
+    process:
+      "The apps share two Swift modules. SonyCameraKit speaks the Sony Camera Remote API over Wi-Fi and PTP with Sony's extensions over USB, driven directly through IOUSBHost on the Mac, with Bonjour discovery and automatic reconnects. CinemaUI renders the monitor in SwiftUI over a Core Image to Metal pipeline that applies LUTs, peaking, zebras and false color on the GPU and computes the scopes from a downsampled tile. The Mac can share its camera to iPhones and iPads on the same network, and Shot Assist uses on-device analysis to suggest exposure and focus fixes.",
+
+    impact:
+      "Moving image processing from Core Image on the CPU to a Metal pipeline cut CPU load from 72% to about 14%, and 166 tests cover the protocol, parsing, and processing code. The Mac app ships as a notarized DMG, and the iPhone and iPad app is free with no accounts, tracking, or data collection.",
   },
   {
     // For Post

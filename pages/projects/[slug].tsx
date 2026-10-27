@@ -1,5 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { projects, Project } from "@/data/projectsData";
 import styles from "./ProjectPage.module.scss";
 import Button from "@/components/Button";
@@ -211,6 +212,13 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
               <h4>{project.budget ?? "—"}</h4>
             </div>
           </div>
+          {project.legal && (
+            <nav className={styles.legalLinks} aria-label={`${project.title} legal`}>
+              {project.legal.map((l) => (
+                <Link key={l.href} href={l.href}>{l.label}</Link>
+              ))}
+            </nav>
+          )}
           {project.downloads ? (
             <DownloadLinks downloads={project.downloads} stacked />
           ) : (

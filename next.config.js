@@ -37,6 +37,17 @@ const nextConfig = {
         permanent: false,
       },
       {
+        source: '/cinemahud',
+        destination: '/projects/cinemahud',
+        permanent: false,
+      },
+      {
+        // The DMG name carries the version, so point at the newest release page
+        source: '/cinemahud/download',
+        destination: 'https://github.com/shivvyas2/Sony-Alpha-A6400-Cinema-Monitor/releases/latest',
+        permanent: false,
+      },
+      {
         source: '/projects/luna',
         destination: '/projects/contextual-intelligence',
         permanent: true,

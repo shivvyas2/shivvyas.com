@@ -1,0 +1,79 @@
+@import "@/styles/variables.scss";
+
+/* ========== App legal pages (privacy, terms, EULA) ========== */
+.legal {
+    @include section;
+    max-width: 46rem;
+    margin: 0 auto;
+    padding-top: 9rem;
+    padding-bottom: 6rem;
+    color: $textDark;
+
+    header {
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    h1 {
+        @include font-4_5;
+        margin: 0.25rem 0 1rem;
+    }
+
+    h2 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin: 2.25rem 0 0.6rem;
+    }
+
+    p {
+        font-size: 1.05rem;
+        line-height: 1.65;
+        margin: 0 0 0.9rem;
+    }
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+
+    a {
+        font-size: 0.85rem;
+        padding: 0.45rem 0.9rem;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        color: $textDark;
+        text-decoration: none;
+        transition: background 0.2s, color 0.2s;
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        &[aria-current="page"] {
+            background: $textDark;
+            border-color: $textDark;
+            color: $white;
+        }
+    }
+}
+
+.eyebrow {
+    @include gradientText;
+    font-size: 0.9rem !important;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 0 !important;
+}
+
+.meta {
+    color: $textGrey;
+    font-size: 0.95rem !important;
+}
+
+.summary {
+    font-size: 1.2rem !important;
+}
