@@ -5,7 +5,7 @@ import { legalDocs, LegalDoc } from "@/data/legalDocs";
 import { breadcrumbs } from "@/data/site";
 import styles from "./LegalPage.module.scss";
 
-const DOC_LABELS = { privacy: "Privacy Policy", terms: "Terms of Use", eula: "EULA" } as const;
+const DOC_LABELS = { privacy: "Privacy Policy", terms: "Terms of Use", eula: "EULA", support: "Support" } as const;
 type DocKey = keyof typeof DOC_LABELS;
 
 export const getStaticPaths: GetStaticPaths = async () => ({
@@ -20,12 +20,21 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const doc = params!.doc as DocKey;
   const app = legalDocs[slug];
   if (!app?.docs[doc]) return { notFound: true };
-  return { props: { slug, docKey: doc, app: app.app, doc: app.docs[doc] } };
+  return {
+    props: {
+      slug,
+      docKey: doc,
+      app: app.app,
+      doc: app.docs[doc],
+      docKeys: (Object.keys(DOC_LABELS) as DocKey[]).filter((k) => app.docs[k]),
+      projectPage: app.projectPage !== false,
+    },
+  };
 };
 
-type Props = { slug: string; docKey: DocKey; app: string; doc: LegalDoc };
+type Props = { slug: string; docKey: DocKey; app: string; doc: LegalDoc; docKeys: DocKey[]; projectPage: boolean };
 
-const LegalPage = ({ slug, docKey, app, doc }: Props) => {
+const LegalPage = ({ slug, docKey, app, doc, docKeys, projectPage }: Props) => {
   const path = `/projects/${slug}/${docKey}`;
   return (
     <>
@@ -39,7 +48,7 @@ const LegalPage = ({ slug, docKey, app, doc }: Props) => {
             breadcrumbs([
               { name: "Home", path: "/" },
               { name: "Projects", path: "/projects" },
-              { name: app, path: `/projects/${slug}` },
+              ...(projectPage ? [{ name: app, path: `/projects/${slug}` }] : []),
               { name: doc.title, path },
             ]),
           ],
@@ -47,8 +56,8 @@ const LegalPage = ({ slug, docKey, app, doc }: Props) => {
       />
       <main className={styles.legal}>
         <nav className={styles.tabs} aria-label={`${app} legal documents`}>
-          <Link href={`/projects/${slug}`}>{app}</Link>
-          {(Object.keys(DOC_LABELS) as DocKey[]).map((k) => (
+          {projectPage ? <Link href={`/projects/${slug}`}>{app}</Link> : <span>{app}</span>}
+          {docKeys.map((k) => (
             <Link key={k} href={`/projects/${slug}/${k}`} aria-current={k === docKey ? "page" : undefined}>
               {DOC_LABELS[k]}
             </Link>
