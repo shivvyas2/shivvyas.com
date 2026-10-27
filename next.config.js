@@ -42,9 +42,9 @@ const nextConfig = {
         permanent: false,
       },
       {
-        // The DMG name carries the version, so point at the newest release page
+        // Always the newest release's DMG (the release-branch workflow attaches CinemaHUD.dmg)
         source: '/cinemahud/download',
-        destination: 'https://github.com/shivvyas2/Sony-Alpha-A6400-Cinema-Monitor/releases/latest',
+        destination: 'https://github.com/shivvyas2/Sony-Alpha-A6400-Cinema-Monitor/releases/latest/download/CinemaHUD.dmg',
         permanent: false,
       },
       {
