@@ -36,6 +36,48 @@ export type Project = {
 export const projects: Project[] = [
   {
     // For Post
+    title: "Neuralyzer",
+    slug: "neuralyzer",
+    category: ["Swift", "SwiftUI", "macOS", "Open Source"],
+    img: "/images/neuralyzer/cover.jpg",
+    textColor: "white",
+    screenshot: true,
+    logo: "/images/neuralyzer/logo.png",
+    gallery: [
+      "/images/neuralyzer/home.jpg",
+      "/images/neuralyzer/home-dark.jpg",
+      "/images/neuralyzer/sorted.jpg",
+      "/images/neuralyzer/safety.jpg",
+    ],
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "October 29, 2026",
+    services: "macOS Development, Swift, SwiftUI, Product Design",
+    duration: "2 Days",
+    budget: "Free & Open Source",
+    live: "https://neuralyzer.shivvyas.com",
+    downloads: [
+      { label: "Download for Mac (DMG)", href: "/neuralyzer/download" },
+      { label: "Visit Website", href: "https://neuralyzer.shivvyas.com" },
+      { label: "View on GitHub", href: "https://github.com/shivvyas2/Neuralyzer" },
+    ],
+
+    // Scroll
+    overview:
+      "Neuralyzer is a free, open source macOS app that finds what fills a developer Mac's disk and cleans it. A scan sorts everything into cards by what it is: Xcode DerivedData, DeviceSupport, and archives; simulator devices and runtimes; old Claude Code session logs and caches; package caches for npm, pnpm, Yarn, Bun, pip, Homebrew, CocoaPods, Gradle, Cargo, Go, and SwiftPM; node_modules, .build, and .next folders under ~/Projects; VMs, app caches, junk, the Trash, large files, files left unopened for 90 days, and a System card for system caches and logs, Time Machine local snapshots, old macOS installers, and iPhone backups.",
+
+    objective:
+      "Developer Macs fill up with data that rebuilds itself, spread across dozens of folders nobody remembers. The goal was one scan that shows where the space went and lets you clean it without worrying about what gets deleted. Personal files had to be recoverable, Claude Code memory, settings, and skills could never be touched, and the app had to make no network calls at all.",
+
+    process:
+      "The app is written in Swift and SwiftUI, with the scanning and cleaning logic in a separate Swift package, NeuralyzerKit, covered by 76 tests. Each category has a root folder, and every path must sit inside its root before anything is removed, so symlinks that point elsewhere are refused. Rebuildable data is deleted outright, personal files go to the Trash, and every clean is written to ~/Library/Logs/Neuralyzer/clean.log. Simulators are managed through xcrun simctl, and the System card asks for an admin password once per clean. The UI is white with bold flat cards in a different colour per category, ink outlines, and serif titles. The project is generated with XcodeGen, uses no third-party dependencies, and ships as a DMG signed with Developer ID and notarized by Apple.",
+
+    impact:
+      "The first scan on a 494 GB MacBook with 6 GB free found about 140 GB that could be reclaimed, most of it data that rebuilds the next time it is needed. Version 1.1.1 is available as a free DMG on GitHub Releases, with no account, analytics, or tracking, and the full source is public under the MIT license. Neuralyzer is coming to iPhone next.",
+  },
+  {
+    // For Post
     title: "MacBook Launchpad",
     slug: "macbook-launchpad",
     category: ["SwiftUI", "AppKit", "Swift", "macOS", "Open Source"],

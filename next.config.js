@@ -6,6 +6,17 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/neuralyzer',
+        destination: '/projects/neuralyzer',
+        permanent: false,
+      },
+      {
+        // Always the newest release's DMG
+        source: '/neuralyzer/download',
+        destination: 'https://github.com/shivvyas2/Neuralyzer/releases/latest/download/Neuralyzer.dmg',
+        permanent: false,
+      },
+      {
         source: '/launchpad',
         destination: '/projects/macbook-launchpad',
         permanent: false,
