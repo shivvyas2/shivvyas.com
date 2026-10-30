@@ -9,8 +9,6 @@ import MacbookMockup from "@/components/MacbookMockup";
 import Seo from "@/components/Seo";
 import { blurredCoverUrl } from "@/utils/imageUrls";
 import { SITE_URL, breadcrumbs, isoDate, person } from "@/data/site";
-import { gsap } from "@/libs/gsap";
-import { useEffect, useRef } from "react";
 
 // Fetch the list of possible slugs for static generation
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -68,25 +66,7 @@ type ProjectPageProps = {
 };
 
 const ProjectPage = ({ project }: ProjectPageProps) => {
-  const imageRef = useRef<HTMLDivElement | null>(null);
-  const showFullImages = project.slug === "macbook-launchpad";
-
-  useEffect(() => {
-    if (
-      showFullImages ||
-      window.matchMedia("(max-width: 840px), (prefers-reduced-motion: reduce)")
-        .matches
-    )
-      return;
-    const tween = gsap.from(imageRef.current, {
-      duration: 1.5,
-      ease: "power3.out",
-      scale: "1.4",
-    });
-    return () => {
-      tween.revert();
-    };
-  }, [showFullImages, project.slug]);
+  const showFullGalleryImages = project.slug === "macbook-launchpad";
 
   return (
     <>
@@ -130,14 +110,10 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
       />
       {/*========= Header ==========*/}
       <header
-        className={`${styles.ProjectSinglePage} ${project.screenshot ? styles.screenshot : project.textColor === "black" ? styles.blackText : ""}`}
-        style={
-          project.screenshot
-            ? { ["--cover" as string]: blurredCoverUrl(project.img) }
-            : undefined
-        }
+        className={`${styles.ProjectSinglePage} ${project.textColor === "black" ? styles.blackText : ""}`}
+        style={{ ["--cover" as string]: blurredCoverUrl(project.img) }}
       >
-        <div ref={imageRef} className={styles.imageWrapper}>
+        <div className={styles.imageWrapper}>
           <Image
             src={project.img}
             alt={project.title}
@@ -241,8 +217,14 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
             <p>{project.objective}</p>
           </div>
           <div>
-            <h2>Process</h2>
+            <h2>{project.implementation ? "Implementation" : "Process"}</h2>
             <p>{project.process}</p>
+            {project.implementation?.map((detail) => (
+              <div key={detail.title} className={styles.implementationDetail}>
+                <h3>{detail.title}</h3>
+                <p>{detail.description}</p>
+              </div>
+            ))}
           </div>
           <div>
             <h2>Impact</h2>
@@ -253,7 +235,7 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
 
       {/*========= Gallery ==========*/}
       {project.gallery && project.gallery.length > 0 && (
-        <section className={`${styles.gallery} ${showFullImages ? styles.fullImages : ""}`}>
+        <section className={`${styles.gallery} ${showFullGalleryImages ? styles.fullImages : ""}`}>
           {project.gallery.map((src, idx) => (
             <div key={src} className={styles.galleryItem}>
               <Image

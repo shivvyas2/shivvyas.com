@@ -8,9 +8,8 @@ export type Project = {
   /** Colour of the title/tags overlaid on the cover image. Pick based on the image background. */
   textColor: TextColor;
   /**
-   * The cover is a UI screenshot. Cards and the project header show the whole
-   * image (never cropped, even when zoomed on hover) over a blurred copy of
-   * itself, with light text on top.
+   * The cover is a UI screenshot. Project cards show the whole image over a
+   * blurred copy of itself, with light text on top.
    */
   screenshot?: boolean;
   logo?: string;
@@ -30,6 +29,7 @@ export type Project = {
   overview: string;
   objective: string;
   process: string;
+  implementation?: { title: string; description: string }[];
   impact: string;
 };
 
@@ -38,7 +38,7 @@ export const projects: Project[] = [
     // For Post
     title: "MacBook Launchpad",
     slug: "macbook-launchpad",
-    category: ["Swift", "SwiftUI", "macOS", "Open Source"],
+    category: ["SwiftUI", "AppKit", "Swift", "macOS", "Open Source"],
     img: "/images/launchpad/photos/cover.jpg",
     textColor: "white",
     screenshot: true,
@@ -52,7 +52,7 @@ export const projects: Project[] = [
     // Sticky
     owner: "Shiv Vyas",
     date: "October 11, 2026",
-    services: "macOS Development, Swift, SwiftUI, Product Design",
+    services: "macOS UI Engineering, SwiftUI, AppKit, Interaction Design",
     duration: "1 Week",
     budget: "Free & Open Source",
     live: "https://github.com/shivvyas2/macbook-launchpad",
@@ -63,16 +63,39 @@ export const projects: Project[] = [
 
     // Scroll
     overview:
-      "MacBook Launchpad brings the classic Launchpad back to macOS 26 Tahoe, which removed it in favour of a Spotlight-style Apps list. It opens a full-screen grid of every app on the Mac over a frosted Liquid Glass blur of the desktop, with instant search, folders, drag to rearrange, and paging by swipe, scroll, or arrow keys. It is free, open source under the MIT license, and ships as a 1.7 MB universal DMG for Apple Silicon and Intel Macs.",
+      "MacBook Launchpad is a native macOS app launcher built in Swift with SwiftUI and AppKit. It recreates the classic Launchpad workflow on macOS Tahoe: a full-screen app grid, type-to-search, animated folders, drag to rearrange, and paging by trackpad, scroll wheel, or keyboard. The project brings together declarative UI, AppKit window management, and custom interaction handling in a free, MIT-licensed app for Apple Silicon and Intel Macs.",
 
     objective:
-      "The goal was a replacement that feels like the original rather than a third-party approximation: open it with a keyboard shortcut, the Dock icon, a hot corner, or the thumb-and-three-finger pinch, and have it get out of the way the moment an app launches. It had to need no Accessibility or Screen Recording permission, keep the user's arrangement across launches, and help people with hundreds of apps get organised without dragging every icon by hand.",
+      "Make the launcher feel at home on macOS, from the way a folder opens to the way keyboard focus returns to the previous app. The UI needed to adapt to different displays, respect the camera notch and Dock, preserve the user's arrangement, and keep search, paging, and dragging coherent as views appear and disappear.",
 
     process:
-      "The app is written in Swift and SwiftUI with an AppKit window layer. A borderless panel sits just beneath the Dock while the menu bar and Dock auto-hide, and its background is a behind-window blur with the system tint layers removed so wallpaper colours stay true. The global shortcut uses Carbon hot keys, the hot corner polls the pointer, and the pinch gesture reads raw trackpad contacts through a small C bridge to the MultitouchSupport framework. Layout is a typed model of apps and folders persisted as JSON and reconciled against the disk on every open. The Organize Apps assistant groups apps by name, bundle identifier, and App Store category into folders like Developer, Creative, Productivity, and AI, previews the result for editing, and supports undo.",
+      "SwiftUI renders the grid, search field, folder overlays, organizer, and settings. AppKit owns the launcher window, display geometry, and keyboard and scroll events. NSHostingView connects the two layers, with a main-actor observable store coordinating their shared UI state.",
+
+    implementation: [
+      {
+        title: "SwiftUI composition & state",
+        description:
+          "GeometryReader drives the grid layout, while matchedGeometryEffect connects folder icons to their expanded overlays. An @MainActor @Observable store exposes UI state through @Bindable. Pointer position lives in a separate observable DragPointer read by the floating icon; hit-test geometry is excluded from observation with @ObservationIgnored. Folder backdrops fade a material layer instead of animating a blur over the entire grid.",
+      },
+      {
+        title: "AppKit window integration",
+        description:
+          "A borderless NSPanel hosts the SwiftUI content through NSHostingView, with explicit window level and Spaces behavior. NSScreen supplies the display under the pointer, safe-area insets, and Dock clearance; display-change notifications trigger a new grid fit. The controller manages focus, presentation options, transitions, and event-monitor cleanup. On close, it returns focus to the previous app if Launchpad is still active and has no other visible normal window.",
+      },
+      {
+        title: "Keyboard & trackpad interaction",
+        description:
+          "AppKit key events feed type-to-search into SwiftUI's @FocusState and TextSelection, placing the caret after the initial characters while respecting existing text editing. Arrow keys navigate pages or search results, and Escape dismisses the current interaction before closing the launcher. Scroll handling distinguishes precise trackpad phases from mouse-wheel input, following the swipe with edge resistance and snapping to a page while rate-limiting wheel-driven page changes.",
+      },
+      {
+        title: "Keeping a drag alive",
+        description:
+          "Pulling an app out of a folder closes the overlay and removes the SwiftUI cell that owns its DragGesture, so onEnded is no longer called. The drag engine hands off to an NSEvent mouse monitor, converts window coordinates into the grid's shared coordinate space, and continues until release or cancellation. This connects SwiftUI gesture handling with AppKit events across a change in view lifetime.",
+      },
+    ],
 
     impact:
-      "MacBook Launchpad restores a workflow millions of Mac users relied on and that Tahoe took away, at a fraction of the size of commercial alternatives and with no accounts, ads, or tracking. Because the full source is public, anyone can audit it, build it themselves, or contribute, and the one-click organiser turns a cluttered Applications folder into a tidy grid in seconds.",
+      "The app ships as a universal DMG with the full source available on GitHub. Its typed app-and-folder layout persists as JSON and is reconciled with installed apps on each open. The Organize Apps assistant offers an editable folder preview and undo. Together, these features demonstrate a complete macOS UI workflow spanning SwiftUI composition, AppKit integration, input handling, animation, and persistent state.",
   },
   {
     // For Post

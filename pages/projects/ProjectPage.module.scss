@@ -5,38 +5,50 @@
     position: relative;
     width: 100%;
     height: 100vh;
+    height: 100svh;
+    min-height: 40rem;
     overflow: hidden;
+    background: $textDark;
 
-    // Soft scrim behind the title on small screens, where the cover's subject
-    // often sits right under the text. Colour follows the text colour.
+    // Extend the image's colours through the space around its natural proportions.
+    &::before {
+        content: "";
+        position: absolute;
+        inset: -3rem;
+        pointer-events: none;
+        background: var(--cover) center / cover no-repeat;
+        filter: blur(32px) saturate(1.2) brightness(0.65);
+    }
+
+    // Keep the navigation and title readable over both the image and its backdrop.
     &::after {
         content: "";
         position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 45%;
+        inset: 0;
         pointer-events: none;
         z-index: 1;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
-        opacity: 0;
-
-        @media (max-width: 840px) {
-            opacity: 1;
-        }
+        background:
+            linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent 8rem),
+            linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent 60%);
     }
 
     &.blackText::after {
-        background: linear-gradient(to top, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0));
+        background:
+            linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent 8rem),
+            linear-gradient(to top, rgba(255, 255, 255, 0.85), transparent 60%);
     }
 
     .imageWrapper {
+        position: absolute;
+        inset: 0;
         width: 100%;
         height: 100%;
         img {
+            display: block;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            // Fit the complete image; the blurred backdrop fills any remaining space.
+            object-fit: contain;
         }
     }
 
@@ -108,71 +120,30 @@
         }
     }
 
-    // Screenshot covers (set per project in projectsData): the whole image,
-    // contained between the nav and the title, over a blurred copy of itself.
-    &.screenshot {
-        @media (min-width: 601px) {
-            display: flex;
-            flex-direction: column;
-            background: $textDark;
-
-            &::before {
-                content: "";
-                position: absolute;
-                inset: -10%;
-                background: var(--cover) center / cover no-repeat;
-                filter: blur(32px) saturate(1.2) brightness(0.45);
-            }
-
-            &::after {
-                display: none;
-            }
-
-            .imageWrapper {
-                position: relative;
-                z-index: 1;
-                flex: 1 1 0;
-                min-height: 0;
-                height: auto;
-                padding: 6.5rem 3rem 0;
-
-                img {
-                    object-fit: contain;
-                    filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.5));
-                }
-            }
-
-            .projectDetails {
-                position: relative;
-                flex: none;
-            }
-        }
-    }
-
     @media (max-width: 600px) {
+        display: flex;
+        flex-direction: column;
         height: auto;
-        padding: 6rem 1rem 0;
-        &::after { display: none; }
+        min-height: 100svh;
+        padding-top: 5.5rem;
 
         .imageWrapper {
+            position: relative;
+            inset: auto;
+            flex: 1 0 14rem;
             height: auto;
-            aspect-ratio: 16 / 11;
-            border-radius: 18px;
-            overflow: hidden;
-            background: #151515;
 
-            img { object-fit: contain; }
+            img {
+                position: absolute;
+                inset: 0;
+            }
         }
 
         .projectDetails {
             position: relative;
-            padding: 1.5rem 0.25rem 0;
+            flex: none;
             .titleRow { gap: 1rem; }
-            .category h5 { background: #ffffff12; }
         }
-
-        &.blackText { color: $white; }
-        &.blackText .projectDetails .category h5 { background: #ffffff12; }
     }
 }
 
@@ -299,6 +270,14 @@
                 font-size: 1.2rem;
                 line-height: 1.6;
                 color: $textGrey;
+            }
+
+            .implementationDetail {
+                @include mT2;
+
+                h3 {
+                    @include font-1_8;
+                }
             }
 
             &:first-child {
