@@ -1,6 +1,7 @@
 export const SITE_URL = "https://www.shivvyas.com";
 export const PHOTO_SITE_URL = "https://awannabephotographer.shivvyas.com";
 export const ASTRA_URL = "https://astra.shivvyas.com";
+export const STILLSHORE_URL = "https://stillshore.shivvyas.com";
 
 // Every profile that is unambiguously "this Shiv Vyas". Google uses this list
 // to merge them into one entity (and one knowledge panel). Once the knowledge
@@ -30,7 +31,7 @@ export const person = {
   image: `${SITE_URL}/images/about.jpeg`,
   // Search-only: matches the LinkedIn profile so Google links the two. The
   // visible UI can keep its own wording.
-  jobTitle: "Software Developer",
+  jobTitle: "AI Software Developer",
   worksFor: {
     "@type": "Organization",
     name: "Luna Social Inc",
@@ -38,10 +39,10 @@ export const person = {
     url: "https://www.contextualintelligence.co",
   },
   description:
-    "Shiv Vyas is a software engineer in New York building web, mobile, and AI applications. He has released music on Spotify and Apple Music, runs a YouTube channel, and shoots photography as A Wannabe Photographer.",
+    "Shiv Vyas (shivvyas) is an AI software developer in New York who builds native apps for iPhone and Mac and AI products for the web, including Stillshore, Stash, PrepBoard, Astrya, MacBook Launchpad, Neuralyzer, SATistics and WhyKnot. Before software he made music, released on Spotify and Apple Music, and he is also a photographer who shoots as A Wannabe Photographer.",
   // Separates this Shiv Vyas from similarly named people in search.
   disambiguatingDescription:
-    "New York software developer and photographer, creator of Astra and shivvyas.com.",
+    "New York AI software developer, photographer and former musician; creator of Stillshore, Stash, PrepBoard and Astrya.",
   alumniOf: [
     {
       "@type": "CollegeOrUniversity",
@@ -59,14 +60,21 @@ export const person = {
     name: "New York, NY",
   },
   hasOccupation: [
+    { "@type": "Occupation", name: "AI Software Developer" },
     { "@type": "Occupation", name: "Software Developer" },
     { "@type": "Occupation", name: "Photographer" },
+    { "@type": "Occupation", name: "Musician" },
   ],
   knowsAbout: [
-    "Software Engineering",
-    "Web Development",
-    "iOS Development",
     "Artificial Intelligence",
+    "AI Applications",
+    "Software Engineering",
+    "iOS Development",
+    "macOS Development",
+    "Swift",
+    "SwiftUI",
+    "Web Development",
+    "Next.js",
     "Photography",
     "Music Production",
   ],
@@ -109,11 +117,23 @@ export const ownedSites = [
     "@type": "WebApplication",
     "@id": `${ASTRA_URL}/#app`,
     name: "Astra",
+    alternateName: "Astrya",
     url: `${ASTRA_URL}/`,
     applicationCategory: "LifestyleApplication",
     operatingSystem: "Web, iOS",
     description:
-      "Astra computes a real birth chart and uses Claude to write a reading grounded in the exact positions.",
+      "Astra (Astrya on the App Store) computes a real birth chart and uses Claude to write a reading grounded in the exact positions.",
+    creator: personRef,
+  },
+  {
+    "@type": "MobileApplication",
+    "@id": `${STILLSHORE_URL}/#app`,
+    name: "Stillshore",
+    url: `${STILLSHORE_URL}/`,
+    applicationCategory: "HealthApplication",
+    operatingSystem: "iOS, iPadOS, watchOS",
+    description:
+      "Stillshore composes focus, rest and sleep sound live on the iPhone, over a looping film of a real place.",
     creator: personRef,
   },
 ];

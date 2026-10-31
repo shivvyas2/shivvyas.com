@@ -8,8 +8,8 @@ export default function AboutPage() {
   return (
     <>
       <Seo
-        title="About Shiv Vyas | Engineer, Music Maker & Photographer"
-        description="Meet Shiv Vyas, a New York software engineer and creative developer. Explore his experience in web and mobile development, music, and photography."
+        title="About Shiv Vyas | AI Software Developer, Photographer & Musician"
+        description="Meet Shiv Vyas (shivvyas), a New York AI software developer who makes apps for iPhone, Mac and the web, shoots photography, and used to make music."
         path="/about"
         type="profile"
         structuredData={{

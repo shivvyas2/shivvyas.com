@@ -11,8 +11,8 @@ export default function HomePage() {
   return (
     <>
       <Seo
-        title="Shiv Vyas | Software Engineer & Creative Developer"
-        description="Shiv Vyas (shivvyas) is a software engineer in New York building web, iOS, and AI applications. Explore his projects, music, and creative work."
+        title="Shiv Vyas (shivvyas) | AI Software Developer, Photographer & Musician"
+        description="Shiv Vyas (shivvyas) is an AI software developer in New York building apps for iPhone, Mac and the web: Stillshore, Stash, PrepBoard, Astrya and more. Also a photographer and former musician."
         path="/"
         structuredData={{
           "@context": "https://schema.org",

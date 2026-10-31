@@ -36,6 +36,65 @@ export type Project = {
 export const projects: Project[] = [
   {
     // For Post
+    title: "Stillshore",
+    slug: "stillshore",
+    category: ["Swift", "SwiftUI", "iOS", "watchOS", "Audio", "AI"],
+    img: "/images/stillshore/cover.jpg",
+    textColor: "black",
+    logo: "/images/stillshore/logo.png",
+    gallery: [
+      "/images/stillshore/scene.jpg",
+      "/images/stillshore/breathe.jpg",
+      "/images/stillshore/noise.jpg",
+    ],
+
+    // Sticky
+    owner: "Shiv Vyas",
+    date: "Ongoing",
+    services: "iOS Development, Swift, Audio Engineering, AI Voice, Product Design",
+    duration: "Ongoing",
+    budget: "Personal Project",
+    live: "https://stillshore.shivvyas.com",
+    downloads: [{ label: "Visit Website", href: "https://stillshore.shivvyas.com" }],
+    legal: [
+      { label: "Privacy Policy", href: "/projects/lifeos-focus/privacy" },
+      { label: "Terms of Use", href: "/projects/lifeos-focus/terms" },
+      { label: "EULA", href: "/projects/lifeos-focus/eula" },
+    ],
+
+    // Scroll
+    overview:
+      "Stillshore is sound for focus, rest and sleep. It has five moods, Focus, Brainstorm, Chill, Relax and Sleep, and composes each one live on the iPhone while a looping film of a real place plays behind it. It runs on iPhone, iPad and Apple Watch, with guided breathing, a sleep and wake routine, and a live channel that every phone plays in sync.",
+
+    objective:
+      "Most focus and sleep apps loop the same recordings until you can hear the seams. The goal was music that never repeats because it is made on the device as you listen, paired with films calm enough to leave on all day. It had to start instantly, keep a small download, and be tunable without shipping a new build.",
+
+    process:
+      "The sound comes from a Swift synthesis engine that turns a mood recipe into music in real time. Recipes, the live channel schedule and app messages are served by a small Express API, so they can change without an App Store update. A separate admin dashboard has a Sound Lab where recipes are edited and previewed with the same engine, rendered on a Mac. The breathing guide and the companion lines are voiced with ElevenLabs, and the morning briefing combines weather, calendar and on-device Foundation Models text before it is spoken. The films ship as Apple-hosted Background Assets, which cut the app download from 542 MB to 43 MB.",
+
+    implementation: [
+      {
+        title: "Live generative sound",
+        description:
+          "Each mood is a recipe that the Swift engine plays as it goes, so a session never loops back on itself.",
+      },
+      {
+        title: "Films of real places",
+        description:
+          "Looping 4K films are delivered as Background Assets and trimmed by a cache limit, so only what you watch stays on the phone.",
+      },
+      {
+        title: "Tunable without a release",
+        description:
+          "Moods, the live schedule and feature switches come from the API and the admin dashboard, not from the app binary.",
+      },
+    ],
+
+    impact:
+      "Stillshore is in testing on TestFlight. It is where Shiv's years of making music meet his work as a software developer: the app is, at its core, a composer that runs on your phone.",
+  },
+  {
+    // For Post
     title: "Neuralyzer",
     slug: "neuralyzer",
     category: ["Swift", "SwiftUI", "macOS", "Open Source"],

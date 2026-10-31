@@ -9,8 +9,8 @@ export default function ProjectPage() {
   return (
     <>
       <Seo
-        title="Projects by Shiv Vyas | Web, iOS & AI Applications"
-        description="Explore software projects by Shiv Vyas, including Life OS, Astra, ELXR Creative, and more. Case studies in web development, iOS apps, and AI."
+        title="Apps by Shiv Vyas | iPhone, Mac & AI Projects"
+        description="Apps and AI products by Shiv Vyas: Stillshore, Stash (Windows games on Mac), PrepBoard, Astrya, MacBook Launchpad, Neuralyzer, SATistics, WhyKnot and more."
         path="/projects"
         structuredData={{
           "@context": "https://schema.org",
