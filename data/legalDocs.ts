@@ -480,4 +480,231 @@ const lifeosFocus: AppLegal = {
   },
 };
 
-export const legalDocs: Record<string, AppLegal> = { cinemahud, "lifeos-focus": lifeosFocus };
+const trashee: AppLegal = {
+  app: "Trashee",
+  docs: {
+    privacy: {
+      title: "Privacy Policy",
+      summary:
+        "Trashee keeps the account details and reward history needed to credit your points and run partner coupons. We never sell your data or use it for advertising tracking.",
+      effective: "November 14, 2026",
+      sections: [
+        {
+          heading: "Who we are",
+          body: [
+            'Trashee for iPhone and iPad is developed by Shiv Vyas ("we", "us"). It rewards people for depositing waste in Trashee bins and lets partner businesses offer coupons for those rewards. This policy covers every version of the app.',
+          ],
+        },
+        {
+          heading: "What we collect",
+          body: [
+            "Account details you enter when you sign up: your name, email address, phone number and PIN code, plus your password, which is stored only as a secure hash by our authentication provider. Partner accounts also give a shop name and shop address.",
+            "Activity needed to run rewards: bin deposits and QR scans, points earned and spent, coupons redeemed, referrals, pickups you request, complaints and support messages you send, and in-app notifications.",
+            "We do not collect your precise location, contacts, photos, health data or advertising identifiers, and the app contains no third-party analytics or advertising SDKs.",
+          ],
+        },
+        {
+          heading: "How we use it",
+          body: [
+            "To create and secure your account, credit points for verified deposits, show your wallet and history, let partners validate coupons, answer complaints and support requests, and send account emails such as sign-up codes and password resets. We do not sell personal data and do not use it to track you across other companies' apps or websites.",
+          ],
+        },
+        {
+          heading: "Who processes it",
+          body: [
+            "Data is stored with Supabase (database and authentication) and account emails are sent through Resend. Both act only on our instructions. When you redeem a coupon, the partner business sees the details needed to honour it, such as your name and the coupon code.",
+          ],
+        },
+        {
+          heading: "Retention and deletion",
+          body: [
+            `We keep your data while your account is open. To delete your account and its personal data, email ${CONTACT} from the address on the account; we delete it within 30 days, except records we must keep by law, such as partner payment statements.`,
+          ],
+        },
+        {
+          heading: "Apple",
+          body: [
+            "If you download Trashee from the App Store or TestFlight, Apple may collect information under its own privacy policy. We receive only the aggregate statistics and crash reports Apple provides to developers.",
+          ],
+        },
+        {
+          heading: "Children",
+          body: ["Trashee is not directed at children under 13, and we do not knowingly collect data from them."],
+        },
+        {
+          heading: "Changes",
+          body: ["If this policy changes, the new version will appear on this page with a new effective date."],
+        },
+        {
+          heading: "Contact",
+          body: [`Questions about privacy: ${CONTACT}.`],
+        },
+      ],
+    },
+
+    terms: {
+      title: "Terms of Use",
+      summary: "The terms for using Trashee on iPhone and iPad.",
+      effective: "November 14, 2026",
+      sections: [
+        {
+          heading: "Agreement",
+          body: [
+            'By downloading or using Trashee ("the app") you agree to these terms and to the Trashee End User License Agreement. Apple\'s Licensed Application End User License Agreement also applies.',
+          ],
+        },
+        {
+          heading: "The app",
+          body: [
+            "Trashee credits points for waste deposited in Trashee bins and lets you exchange points for coupons offered by partner businesses. Partner accounts can publish coupons and validate redemptions.",
+          ],
+        },
+        {
+          heading: "Points and coupons",
+          body: [
+            "Points have no cash value, cannot be sold or transferred outside the app, and may be adjusted or removed if they were earned through fraud, error or misuse. Coupons are offered by partners, who are responsible for honouring them under their own conditions. Availability of bins, rewards and coupons can change.",
+          ],
+        },
+        {
+          heading: "Your account",
+          body: [
+            "Keep your login details private and give accurate information. We may suspend accounts that abuse the reward system, harass partners or staff, or break the law.",
+          ],
+        },
+        {
+          heading: "Provided as is",
+          body: [
+            'THE APP IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.',
+          ],
+        },
+        {
+          heading: "Limitation of liability",
+          body: [
+            "To the fullest extent permitted by law, Shiv Vyas is not liable for any indirect or consequential loss arising from use of the app or from a partner's coupon.",
+          ],
+        },
+        {
+          heading: "Changes to the app or these terms",
+          body: [
+            "Features may change between versions. Updated terms will appear on this page with a new effective date; continued use after an update means you accept the new terms.",
+          ],
+        },
+        {
+          heading: "Contact",
+          body: [`Questions about these terms: ${CONTACT}.`],
+        },
+      ],
+    },
+
+    eula: {
+      title: "End User License Agreement",
+      summary: "The license under which you may use Trashee on iPhone and iPad.",
+      effective: "November 14, 2026",
+      sections: [
+        {
+          heading: "Which agreement applies",
+          body: [
+            'Your license is Apple\'s Licensed Application End User License Agreement (the "Standard EULA", apple.com/legal/internet-services/itunes/dev/stdeula), and the terms below add to it without reducing any right it gives you.',
+          ],
+        },
+        {
+          heading: "Parties",
+          body: [
+            'This agreement is between you and Shiv Vyas ("the developer"), not Apple Inc. The developer, not Apple, is solely responsible for Trashee ("the app") and its content.',
+          ],
+        },
+        {
+          heading: "License",
+          body: [
+            "The developer grants you a non-exclusive, non-transferable, revocable license to install and use the app on devices you own or control, as limited by the Usage Rules in the Apple Media Services Terms and Conditions.",
+            "You may not rent, lease, sell, redistribute or sublicense the app.",
+          ],
+        },
+        {
+          heading: "Maintenance and support",
+          body: [
+            `The developer alone is responsible for any maintenance and support of the app. Apple has no obligation to provide maintenance or support. Contact: ${CONTACT}.`,
+          ],
+        },
+        {
+          heading: "Warranty",
+          body: [
+            "The app is provided as is, to the fullest extent permitted by law. If the app fails to conform to any warranty that applies by law, you may notify Apple, and Apple will refund the purchase price, if any. To the maximum extent permitted by law, Apple has no other warranty obligation for the app.",
+          ],
+        },
+        {
+          heading: "Product claims",
+          body: [
+            "The developer, not Apple, is responsible for addressing any claims by you or a third party relating to the app, including product liability claims, claims that the app fails to conform to any legal or regulatory requirement, and claims under consumer protection, privacy or similar laws.",
+          ],
+        },
+        {
+          heading: "Intellectual property",
+          body: [
+            "If a third party claims that the app infringes their intellectual property rights, the developer, not Apple, is solely responsible for the investigation, defence, settlement and discharge of that claim.",
+          ],
+        },
+        {
+          heading: "Legal compliance",
+          body: [
+            "You represent that you are not located in a country subject to a U.S. Government embargo or designated by the U.S. Government as a terrorist-supporting country, and that you are not listed on any U.S. Government list of prohibited or restricted parties.",
+          ],
+        },
+        {
+          heading: "Third-party beneficiary",
+          body: [
+            "Apple and its subsidiaries are third-party beneficiaries of this agreement and may enforce it against you.",
+          ],
+        },
+        {
+          heading: "Termination",
+          body: ["This license ends automatically if you fail to comply with it. When it ends, you must stop using the app and delete it."],
+        },
+        {
+          heading: "Developer contact",
+          body: [`Shiv Vyas, New York, NY, United States. Questions, complaints or claims about the app: ${CONTACT}.`],
+        },
+      ],
+    },
+
+    support: {
+      title: "Support",
+      summary: "Help with Trashee: signing in, points, coupons and your account.",
+      effective: "November 14, 2026",
+      sections: [
+        {
+          heading: "Contact",
+          body: [
+            `Email ${CONTACT} with your question, the email on your account and your device. We usually reply within two working days.`,
+          ],
+        },
+        {
+          heading: "I didn't get my sign-up code",
+          body: [
+            "Check spam and promotions folders for a message from Trashee, then tap Resend on the code screen. Codes expire after a short time, so use the newest one.",
+          ],
+        },
+        {
+          heading: "My points didn't arrive",
+          body: [
+            "Points are credited after the bin confirms the deposit, usually within a minute. If they are still missing after an hour, file a complaint in the app with the bin and time, or email us.",
+          ],
+        },
+        {
+          heading: "A partner won't accept my coupon",
+          body: [
+            "Show the coupon code from your wallet before it expires. If a partner still refuses a valid coupon, file a complaint in the app so we can follow up with them.",
+          ],
+        },
+        {
+          heading: "How do I delete my account?",
+          body: [
+            `Email ${CONTACT} from the address on your account and ask for deletion. We remove the account and its personal data within 30 days.`,
+          ],
+        },
+      ],
+    },
+  },
+};
+
+export const legalDocs: Record<string, AppLegal> = { cinemahud, "lifeos-focus": lifeosFocus, trashee };
