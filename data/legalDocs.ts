@@ -29,7 +29,7 @@ const cinemahud: AppLegal = {
       title: "Privacy Policy",
       summary:
         "CinemaHUD collects no personal data. It talks only to your camera or your own Mac on the local network, and everything it saves stays on your device.",
-      effective: "October 27, 2026",
+      effective: "November 25, 2026",
       sections: [
         {
           heading: "Who we are",
@@ -46,13 +46,13 @@ const cinemahud: AppLegal = {
         {
           heading: "Local network",
           body: [
-            "The app talks only to your Sony camera, over the camera's own Wi-Fi network, or to a Mac running CinemaHUD on the same local network. iOS and iPadOS ask for Local Network permission for this reason alone. The Mac app can also connect to the camera over USB. The app sends nothing to the Internet.",
+            "The app talks only to your Sony camera, over the camera's own Wi-Fi network, or to a Mac running CinemaHUD on the same local network. iOS and iPadOS ask for Local Network permission for this reason alone. The Mac app can also connect to the camera over USB. While a Mac shares its camera, devices on the same local network can see the live view, control the camera and receive that session's JPEGs; sharing has no password and can be turned off in Camera › Share Camera. The app sends nothing to the Internet.",
           ],
         },
         {
           heading: "Photos, video and audio",
           body: [
-            "Images the camera hands over during a session are saved on your device: on iPhone and iPad in the app's own folder (visible in the Files app under CinemaHUD), on the Mac in Pictures › CinemaHUD. They stay there until you delete them. The app does not read your photo library and does not upload anything.",
+            "Images the camera hands over during a session are saved on your device: on iPhone and iPad in the app's own folder (visible in the Files app under CinemaHUD), on the Mac in Pictures › CinemaHUD. They stay there until you delete them. On iPhone and iPad, JPEGs are also added to your photo library if you allow it; you can turn that off in Settings. The app can only add to the library, never read it. Blur, exposure and grain are measured on your device. Export hands a photo to the app you pick in the share menu. The app does not upload anything.",
             "On the Mac, if you choose to record from an audio interface, the app asks for microphone access and writes the audio to files on your Mac. Audio is never transmitted.",
           ],
         },
